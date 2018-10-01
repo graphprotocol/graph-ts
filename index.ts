@@ -18,7 +18,7 @@ export declare namespace ipfs {
 }
 
 /** Host crypto utilities interface */
-declare namespace crypto {
+export declare namespace crypto {
   function keccak256(input: ByteArray): ByteArray
 }
 
