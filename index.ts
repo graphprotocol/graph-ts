@@ -11,7 +11,7 @@ export declare namespace store {
   function remove(entity: string, id: string): void
 }
 
-/** Host ethereum interface */
+/** Host Ethereum interface */
 declare namespace ethereum {
   function call(call: SmartContractCall): Array<EthereumValue>
 }
