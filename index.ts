@@ -772,12 +772,41 @@ export class Entity extends TypedMap<string, Value> {
 }
 
 /**
+ * An Ethereum block.
+ */
+export class EthereumBlock {
+  hash: H256
+  parentHash: H256
+  unclesHash: H256
+  author: Address
+  stateRoot: H256
+  transactionsRoot: H256
+  receiptsRoot: H256
+  number: U128
+  gasUsed: U256
+  gasLimit: U256
+  timestamp: U256
+  difficulty: U256
+  totalDifficulty: U256
+}
+
+/**
+ * An Ethereum transaction.
+ */
+export class EthereumTransaction {
+  hash: H256
+  blockHash: H256
+  blockNumber: U256
+  gasUsed: U256
+}
+
+/**
  * Common representation for Ethereum smart contract events.
  */
 export class EthereumEvent {
   address: Address
-  eventSignature: string
-  blockHash: H256
+  block: EthereumBlock
+  transaction: EthereumTransaction
   parameters: Array<EthereumEventParam>
 }
 
