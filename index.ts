@@ -489,9 +489,9 @@ export class Value {
     return changetype<Bytes>(this.data as u32)
   }
 
-  toU32(): u32 {
-    assert(this.kind == ValueKind.INT, 'Value is not an u32.')
-    return this.data as u32
+  toI32(): i32 {
+    assert(this.kind == ValueKind.INT, 'Value is not an i32.')
+    return this.data as i32
   }
 
   toString(): string {
@@ -555,7 +555,7 @@ export class Value {
     return value
   }
 
-  static fromU32(n: u32): Value {
+  static fromI32(n: i32): Value {
     let value = new Value()
     value.kind = ValueKind.INT
     value.data = n as u64
@@ -606,8 +606,8 @@ export class Entity extends TypedMap<string, Value> {
     return this.get(key).toBytes()
   }
 
-  getU32(key: string): u32 {
-    return this.get(key).toU32()
+  getI32(key: string): i32 {
+    return this.get(key).toI32()
   }
 
   getString(key: string): string {
@@ -630,8 +630,8 @@ export class Entity extends TypedMap<string, Value> {
     this.set(key, Value.fromString(value))
   }
 
-  setInt(key: string, value: u32): void {
-    this.set(key, Value.fromU32(value))
+  setInt(key: string, value: i32): void {
+    this.set(key, Value.fromI32(value))
   }
 
   setBoolean(key: string, value: boolean): void {
