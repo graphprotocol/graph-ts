@@ -48,6 +48,18 @@ declare namespace typeConversion {
   function int256ToBigInt(u: U64Array): BigInt
   function stringToH160(s: String): H160
   function bigIntToInt256(i: BigInt): U64Array
+
+  // Primitive to/from ethereum 256-bit number conversions.
+  function u64ToU256(x: u64): U64Array
+  function i64ToU256(x: i64): U64Array
+  function u256ToU8(x: U64Array): u8
+  function u256ToU16(x: U64Array): u16
+  function u256ToU32(x: U64Array): u32
+  function u256ToU64(x: U64Array): u64
+  function u256ToI8(x: U64Array): i8
+  function u256ToI16(x: U64Array): i16
+  function u256ToI32(x: U64Array): i32
+  function u256ToI64(x: U64Array): i64
 }
 
 /**
@@ -155,13 +167,55 @@ export class H256 extends ByteArray {}
 export class I128 extends U64Array {}
 
 /** A signed 256-bit integer. */
-export class I256 extends U64Array {}
+export class I256 extends U64Array {
+
+  static fromI64(x: i64): I256 {
+    return changetype<I256>(typeConversion.i64ToU256(x))
+  }
+
+  toI8(): i8 {
+    return typeConversion.u256ToI8(this)
+  }
+
+  toI16(): i16 {
+    return typeConversion.u256ToI16(this)
+  }
+
+  toI32(): i32 {
+    return typeConversion.u256ToI32(this)
+  }
+
+  toI64(): i64 {
+    return typeConversion.u256ToI64(this)
+  }
+}
 
 /** An unsigned 128-bit integer. */
 export class U128 extends U64Array {}
 
 /** An unsigned 256-bit integer. */
-export class U256 extends U64Array {}
+export class U256 extends U64Array {
+  
+  static fromU64(x: u64): U256 {
+    return changetype<U256>(typeConversion.u64ToU256(x))
+  }
+
+  toU8(): u8 {
+    return typeConversion.u256ToU8(this)
+  }
+
+  toU16(): u16 {
+    return typeConversion.u256ToU16(this)
+  }
+
+  toU32(): u32 {
+    return typeConversion.u256ToU32(this)
+  }
+
+  toU64(): u64 {
+    return typeConversion.u256ToU64(this)
+  }
+}
 
 /** Type hint for Ethereum values. */
 export enum EthereumValueKind {
@@ -222,31 +276,43 @@ export class EthereumValue {
 
   toI8(): i8 {
     assert(
-      this.kind == EthereumValueKind.INT || this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an int or uint.'
+      this.kind == EthereumValueKind.INT,
+      'EthereumValue is not an int.'
     )
-    return this.data as i8
+    let i256 = changetype<I256>(this.data as u32)
+    return i256.toI8()
   }
 
   toI16(): i16 {
     assert(
-      this.kind == EthereumValueKind.INT || this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an int or uint.'
+      this.kind == EthereumValueKind.INT,
+      'EthereumValue is not an int.'
     )
-    return this.data as i16
+    let i256 = changetype<I256>(this.data as u32)
+    return i256.toI16()
   }
 
   toI32(): i32 {
     assert(
-      this.kind == EthereumValueKind.INT || this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an int or uint.'
+      this.kind == EthereumValueKind.INT,
+      'EthereumValue is not an int.'
     )
-    return this.data as i32
+    let i256 = changetype<I256>(this.data as u32)
+    return i256.toI32()
+  }
+
+  toI64(): i64 {
+    assert(
+      this.kind == EthereumValueKind.INT,
+      'EthereumValue is not an int.'
+    )
+    let i256 = changetype<I256>(this.data as u32)
+    return i256.toI64()
   }
 
   toI128(): I128 {
     assert(
-      this.kind == EthereumValueKind.INT || this.kind == EthereumValueKind.UINT,
+      this.kind == EthereumValueKind.INT,
       'EthereumValue is not an int or uint.'
     )
     return changetype<I128>(this.data as u32)
@@ -254,34 +320,46 @@ export class EthereumValue {
 
   toI256(): I256 {
     assert(
-      this.kind == EthereumValueKind.INT || this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an int or uint.'
+      this.kind == EthereumValueKind.INT,
+      'EthereumValue is not an int.'
     )
     return changetype<I256>(this.data as u32)
   }
 
   toU8(): u8 {
     assert(
-      this.kind == EthereumValueKind.INT || this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an int or uint.'
+      this.kind == EthereumValueKind.UINT,
+      'EthereumValue is not an uint.'
     )
-    return this.data as u8
+    let u256 = changetype<U256>(this.data as u32)
+    return u256.toU8()
   }
 
   toU16(): u16 {
     assert(
-      this.kind == EthereumValueKind.INT || this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an int or uint.'
+      this.kind == EthereumValueKind.UINT,
+      'EthereumValue is not an uint.'
     )
-    return this.data as u16
+    let u256 = changetype<U256>(this.data as u32)
+    return u256.toU16()
   }
 
   toU32(): u32 {
     assert(
-      this.kind == EthereumValueKind.INT || this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an int or uint.'
+      this.kind == EthereumValueKind.UINT,
+      'EthereumValue is not an uint.'
     )
-    return this.data as u32
+    let u256 = changetype<U256>(this.data as u32)
+    return u256.toU32()
+  }
+
+  toU64(): u64 {
+    assert(
+      this.kind == EthereumValueKind.UINT,
+      'EthereumValue is not an uint.'
+    )
+    let u256 = changetype<U256>(this.data as u32)
+    return u256.toU64()
   }
 
   toU128(): U128 {
@@ -359,21 +437,28 @@ export class EthereumValue {
   static fromI8(i: i8): EthereumValue {
     let token = new EthereumValue()
     token.kind = EthereumValueKind.INT
-    token.data = i as u64
+    token.data = I256.fromI64(i as i64) as u64
     return token
   }
 
   static fromI16(i: i16): EthereumValue {
     let token = new EthereumValue()
     token.kind = EthereumValueKind.INT
-    token.data = i as u64
+    token.data = I256.fromI64(i as i64) as u64
     return token
   }
 
   static fromI32(i: i32): EthereumValue {
     let token = new EthereumValue()
     token.kind = EthereumValueKind.INT
-    token.data = i as u64
+    token.data = I256.fromI64(i as i64) as u64
+    return token
+  }
+
+  static fromI64(i: i64): EthereumValue {
+    let token = new EthereumValue()
+    token.kind = EthereumValueKind.INT
+    token.data = I256.fromI64(i) as u64
     return token
   }
 
@@ -394,21 +479,28 @@ export class EthereumValue {
   static fromU8(u: u8): EthereumValue {
     let token = new EthereumValue()
     token.kind = EthereumValueKind.UINT
-    token.data = u as u64
+    token.data = U256.fromU64(u as u64) as u64
     return token
   }
 
   static fromU16(u: u16): EthereumValue {
     let token = new EthereumValue()
     token.kind = EthereumValueKind.UINT
-    token.data = u as u64
+    token.data = U256.fromU64(u as u64) as u64
     return token
   }
 
   static fromU32(u: u32): EthereumValue {
     let token = new EthereumValue()
     token.kind = EthereumValueKind.UINT
-    token.data = u as u64
+    token.data = U256.fromU64(u as u64) as u64
+    return token
+  }
+
+  static fromU64(u: u64): EthereumValue {
+    let token = new EthereumValue()
+    token.kind = EthereumValueKind.UINT
+    token.data = U256.fromU64(u) as u64
     return token
   }
 
