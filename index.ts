@@ -37,7 +37,7 @@ export declare namespace json {
 
 /** Host type conversion interface */
 declare namespace typeConversion {
-  function bytesToString(bytes: Bytes): string
+  function bytesToString(bytes: ByteArray): string
   function bytesToHex(bytes: Uint8Array): string
   function u64ArrayToHex(array: U64Array): string
   function u64ArrayToString(array: U64Array): string
