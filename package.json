@@ -6,6 +6,12 @@
   "types": "index.ts",
   "main": "index.ts",
   "dependencies": {
-    "assemblyscript": "^0.3.0"
+    "assemblyscript": "https://github.com/AssemblyScript/assemblyscript#c4ebc8c291c1068da73ddf1a381eab93e1f69e11"
+  },
+  "devDependencies": {
+    "glob": "^7.1.2"
+  },
+  "scripts": {
+    "test": "node test/test.js"
   }
 }
