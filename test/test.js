@@ -9,7 +9,7 @@ fs.mkdirSync("test/temp_lib");
 fs.copyFileSync("index.ts", "test/temp_lib/index.ts");
 
 try {
-  asc.main(["test/test.ts", "--lib", "test", "--validate", "--noTreeShaking"]);
+  asc.main(["test/test.ts", "--lib", "test", "--validate", "--noTreeShaking", "--noEmit"]);
 } finally {
   fs.unlinkSync("test/temp_lib/index.ts");
   fs.rmdirSync("test/temp_lib");
