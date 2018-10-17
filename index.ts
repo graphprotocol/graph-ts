@@ -598,12 +598,12 @@ export class Value {
 
   toI256(): I256 {
     assert(this.kind == ValueKind.BIGINT, 'Value is not an I256.')
-    return typeConversion.bigIntToInt256(changetype<BigInt>(this.data as u32))
+    return typeConversion.bigIntToInt256(changetype<BigInt>(this.data as u32)) as I256
   }
 
   toU256(): U256 {
     assert(this.kind == ValueKind.BIGINT, 'Value is not an U256.')
-    return typeConversion.bigIntToInt256(changetype<BigInt>(this.data as u32))
+    return typeConversion.bigIntToInt256(changetype<BigInt>(this.data as u32)) as U256
   }
 
   static fromAddress(address: Address): Value {
