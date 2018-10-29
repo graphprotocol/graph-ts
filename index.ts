@@ -6,7 +6,7 @@ export const allocate_memory = allocate
  * Host store interface.
  */
 export declare namespace store {
-  function get(entity: string, id: string): Entity | null
+  function get(entity: String, id: string): Entity | null
   function set(entity: string, id: string, data: Entity): void
   function remove(entity: string, id: string): void
 }
@@ -39,27 +39,15 @@ export declare namespace json {
 declare namespace typeConversion {
   function bytesToString(bytes: ByteArray): string
   function bytesToHex(bytes: Uint8Array): string
-  function u64ArrayToHex(array: U64Array): string
-  function u64ArrayToString(array: U64Array): string
-  function h256ToH160(h: H256): H160
-  function h160ToH256(h: H160): H256
-  function u256ToH160(u: U64Array): H160
-  function u256ToH256(u: U64Array): H256
-  function int256ToBigInt(u: U64Array): BigInt
-  function stringToH160(s: String): H160
-  function bigIntToInt256(i: BigInt): U64Array
+  function u64ArrayToHex(array: Uint64Array): string
+  function u64ArrayToString(array: Uint64Array): string
+  function stringToH160(s: String): Bytes
 
-  // Primitive to/from ethereum 256-bit number conversions.
-  function u64ToU256(x: u64): U64Array
-  function i64ToU256(x: i64): U64Array
-  function u256ToU8(x: U64Array): u8
-  function u256ToU16(x: U64Array): u16
-  function u256ToU32(x: U64Array): u32
-  function u256ToU64(x: U64Array): u64
-  function u256ToI8(x: U64Array): i8
-  function u256ToI16(x: U64Array): i16
-  function u256ToI32(x: U64Array): i32
-  function u256ToI64(x: U64Array): i64
+  //// Primitive to/from ethereum 256-bit number conversions.
+  function i32ToBigInt(x: i32): Uint64Array
+  function u32ToBigInt(x: i32): Uint64Array
+  function bigIntToU32(x: Uint64Array): u32
+  function bigIntToI32(x: Uint64Array): i32
 }
 
 /**
@@ -80,7 +68,7 @@ export class TypedMap<K, V> {
   entries: Array<TypedMapEntry<K, V>>
 
   constructor() {
-    this.entries = new Array<TypedMapEntry<K, V>>()
+    this.entries = new Array<TypedMapEntry<K, V>>(0)
   }
 
   set(key: K, value: V): void {
@@ -134,86 +122,40 @@ export class U64Array extends Uint64Array {
   toString(): string {
     return typeConversion.u64ArrayToString(this)
   }
+}
 
-  toAddress(): Address {
-    return typeConversion.u256ToH160(this) as Address
-  }
+/** A dynamically-sized byte array. */
+export class Bytes extends ByteArray {
+  constructor() {}
 }
 
 /** An Ethereum address (20 bytes). */
-export class Address extends ByteArray {
-  static fromString(s: String): Address {
-    return changetype<Address>(typeConversion.stringToH160(s))
+export class Address extends Bytes {
+  constructor() {}
+
+  static fromString(s: string): Address {
+    return typeConversion.stringToH160(s) as Address
   }
 }
 
-/** An arbitrary size integer. */
-export class BigInt extends ByteArray {}
+/** An arbitrary size integer represented as an array of 64 bit values. */
+export class BigInt extends U64Array {
+  constructor() {}
 
-/** A dynamically-sized byte array. */
-export class Bytes extends ByteArray {}
-
-/** A 160-bit hash. */
-export class H160 extends ByteArray {
-  static fromString(s: String): H160 {
-    return typeConversion.stringToH160(s)
-  }
-}
-
-/** A 256-bit hash. */
-export class H256 extends ByteArray {}
-
-/** A signed 128-bit integer. */
-export class I128 extends U64Array {}
-
-/** A signed 256-bit integer. */
-export class I256 extends U64Array {
-
-  static fromI64(x: i64): I256 {
-    return changetype<I256>(typeConversion.i64ToU256(x))
+  static fromI32(x: i32): BigInt {
+    return typeConversion.i32ToBigInt(x) as BigInt
   }
 
-  toI8(): i8 {
-    return typeConversion.u256ToI8(this)
-  }
-
-  toI16(): i16 {
-    return typeConversion.u256ToI16(this)
+  static fromU32(x: u32): BigInt {
+    return typeConversion.u32ToBigInt(x) as BigInt
   }
 
   toI32(): i32 {
-    return typeConversion.u256ToI32(this)
-  }
-
-  toI64(): i64 {
-    return typeConversion.u256ToI64(this)
-  }
-}
-
-/** An unsigned 128-bit integer. */
-export class U128 extends U64Array {}
-
-/** An unsigned 256-bit integer. */
-export class U256 extends U64Array {
-  
-  static fromU64(x: u64): U256 {
-    return changetype<U256>(typeConversion.u64ToU256(x))
-  }
-
-  toU8(): u8 {
-    return typeConversion.u256ToU8(this)
-  }
-
-  toU16(): u16 {
-    return typeConversion.u256ToU16(this)
+    return typeConversion.bigIntToI32(this)
   }
 
   toU32(): u32 {
-    return typeConversion.u256ToU32(this)
-  }
-
-  toU64(): u64 {
-    return typeConversion.u256ToU64(this)
+    return typeConversion.bigIntToU32(this)
   }
 }
 
@@ -245,20 +187,8 @@ export class EthereumValue {
   data: EthereumValuePayload
 
   toAddress(): Address {
-    assert(
-      this.kind == EthereumValueKind.ADDRESS ||
-        this.kind == EthereumValueKind.UINT ||
-        this.kind == EthereumValueKind.INT,
-      'EthereumValue is not an address, uint or int.'
-    )
-    if (this.kind == EthereumValueKind.ADDRESS) {
-      return changetype<Address>(this.data as u32)
-    } else if (this.kind == EthereumValueKind.UINT) {
-      return typeConversion.u256ToH160(this.toU256()) as Address
-    } else if (this.kind == EthereumValueKind.INT) {
-      return typeConversion.u256ToH160(this.toI128()) as Address
-    }
-    throw new Error('Type conversion from ' + this.kind + ' to address not supported')
+    assert(this.kind == EthereumValueKind.ADDRESS, 'EthereumValue is not an address')
+    return changetype<Address>(this.data as u32)
   }
 
   toBoolean(): boolean {
@@ -274,121 +204,24 @@ export class EthereumValue {
     return changetype<Bytes>(this.data as u32)
   }
 
-  toI8(): i8 {
-    assert(
-      this.kind == EthereumValueKind.INT,
-      'EthereumValue is not an int.'
-    )
-    let i256 = changetype<I256>(this.data as u32)
-    return i256.toI8()
-  }
-
-  toI16(): i16 {
-    assert(
-      this.kind == EthereumValueKind.INT,
-      'EthereumValue is not an int.'
-    )
-    let i256 = changetype<I256>(this.data as u32)
-    return i256.toI16()
-  }
-
   toI32(): i32 {
-    assert(
-      this.kind == EthereumValueKind.INT,
-      'EthereumValue is not an int.'
-    )
-    let i256 = changetype<I256>(this.data as u32)
-    return i256.toI32()
-  }
-
-  toI64(): i64 {
-    assert(
-      this.kind == EthereumValueKind.INT,
-      'EthereumValue is not an int.'
-    )
-    let i256 = changetype<I256>(this.data as u32)
-    return i256.toI64()
-  }
-
-  toI128(): I128 {
-    assert(
-      this.kind == EthereumValueKind.INT,
-      'EthereumValue is not an int or uint.'
-    )
-    return changetype<I128>(this.data as u32)
-  }
-
-  toI256(): I256 {
-    assert(
-      this.kind == EthereumValueKind.INT,
-      'EthereumValue is not an int.'
-    )
-    return changetype<I256>(this.data as u32)
-  }
-
-  toU8(): u8 {
-    assert(
-      this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an uint.'
-    )
-    let u256 = changetype<U256>(this.data as u32)
-    return u256.toU8()
-  }
-
-  toU16(): u16 {
-    assert(
-      this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an uint.'
-    )
-    let u256 = changetype<U256>(this.data as u32)
-    return u256.toU16()
+    assert(this.kind == EthereumValueKind.INT, 'EthereumValue is not an int.')
+    let bigInt = changetype<BigInt>(this.data as u32)
+    return bigInt.toI32()
   }
 
   toU32(): u32 {
-    assert(
-      this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an uint.'
-    )
-    let u256 = changetype<U256>(this.data as u32)
-    return u256.toU32()
+    assert(this.kind == EthereumValueKind.UINT, 'EthereumValue is not a uint.')
+    let bigInt = changetype<BigInt>(this.data as u32)
+    return bigInt.toU32()
   }
 
-  toU64(): u64 {
-    assert(
-      this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an uint.'
-    )
-    let u256 = changetype<U256>(this.data as u32)
-    return u256.toU64()
-  }
-
-  toU128(): U128 {
+  toBigInt(): BigInt {
     assert(
       this.kind == EthereumValueKind.INT || this.kind == EthereumValueKind.UINT,
       'EthereumValue is not an int or uint.'
     )
-    return changetype<U128>(this.data as u32)
-  }
-
-  toU256(): U256 {
-    assert(
-      this.kind == EthereumValueKind.INT || this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an int or uint.'
-    )
-    return changetype<U256>(this.data as u32)
-  }
-
-  toU256Array(): Array<U256> {
-    assert(
-      this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
-      'EthereumValue is not an array or fixed array.'
-    )
-    let valueArray = this.toArray()
-    let u256Array = new Array<U256>()
-    for (let i: i32 = 0; i < valueArray.length; i++) {
-      u256Array.push(valueArray[i].toU256())
-    }
-    return u256Array
+    return changetype<BigInt>(this.data as u32)
   }
 
   toString(): string {
@@ -398,10 +231,101 @@ export class EthereumValue {
 
   toArray(): Array<EthereumValue> {
     assert(
-      this.kind == EthereumValueKind.FIXED_ARRAY || this.kind == EthereumValueKind.ARRAY,
+      this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
       'EthereumValue is not an array.'
     )
     return changetype<Array<EthereumValue>>(this.data as u32)
+  }
+
+  toBooleanArray(): Array<boolean> {
+    assert(
+      this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
+      'EthereumValue is not an array or fixed array.'
+    )
+    let valueArray = this.toArray()
+    let out = new Array<boolean>(valueArray.length)
+    for (let i: i32 = 0; i < valueArray.length; i++) {
+      out[i] = valueArray[i].toBoolean()
+    }
+    return out
+  }
+
+  toBytesArray(): Array<Bytes> {
+    assert(
+      this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
+      'EthereumValue is not an array or fixed array.'
+    )
+    let valueArray = this.toArray()
+    let out = new Array<Bytes>(valueArray.length)
+    for (let i: i32 = 0; i < valueArray.length; i++) {
+      out[i] = valueArray[i].toBytes()
+    }
+    return out
+  }
+
+  toAddressArray(): Array<Address> {
+    assert(
+      this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
+      'EthereumValue is not an array or fixed array.'
+    )
+    let valueArray = this.toArray()
+    let out = new Array<Address>(valueArray.length)
+    for (let i: i32 = 0; i < valueArray.length; i++) {
+      out[i] = valueArray[i].toAddress()
+    }
+    return out
+  }
+
+  toStringArray(): Array<string> {
+    assert(
+      this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
+      'EthereumValue is not an array or fixed array.'
+    )
+    let valueArray = this.toArray()
+    let out = new Array<string>(valueArray.length)
+    for (let i: i32 = 0; i < valueArray.length; i++) {
+      out[i] = valueArray[i].toString()
+    }
+    return out
+  }
+
+  toI32Array(): Array<i32> {
+    assert(
+      this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
+      'EthereumValue is not an array or fixed array.'
+    )
+    let valueArray = this.toArray()
+    let out = new Array<i32>(valueArray.length)
+    for (let i: i32 = 0; i < valueArray.length; i++) {
+      out[i] = valueArray[i].toI32()
+    }
+    return out
+  }
+
+  toU32Array(): Array<u32> {
+    assert(
+      this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
+      'EthereumValue is not an array or fixed array.'
+    )
+    let valueArray = this.toArray()
+    let out = new Array<u32>(valueArray.length)
+    for (let i: i32 = 0; i < valueArray.length; i++) {
+      out[i] = valueArray[i].toU32()
+    }
+    return out
+  }
+
+  toBigIntArray(): Array<BigInt> {
+    assert(
+      this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
+      'EthereumValue is not an array or fixed array.'
+    )
+    let valueArray = this.toArray()
+    let out = new Array<BigInt>(valueArray.length)
+    for (let i: i32 = 0; i < valueArray.length; i++) {
+      out[i] = valueArray[i].toBigInt()
+    }
+    return out
   }
 
   static fromAddress(address: Address): EthereumValue {
@@ -434,87 +358,31 @@ export class EthereumValue {
     return token
   }
 
-  static fromI8(i: i8): EthereumValue {
-    let token = new EthereumValue()
-    token.kind = EthereumValueKind.INT
-    token.data = I256.fromI64(i as i64) as u64
-    return token
-  }
-
-  static fromI16(i: i16): EthereumValue {
-    let token = new EthereumValue()
-    token.kind = EthereumValueKind.INT
-    token.data = I256.fromI64(i as i64) as u64
-    return token
-  }
-
   static fromI32(i: i32): EthereumValue {
     let token = new EthereumValue()
     token.kind = EthereumValueKind.INT
-    token.data = I256.fromI64(i as i64) as u64
-    return token
-  }
-
-  static fromI64(i: i64): EthereumValue {
-    let token = new EthereumValue()
-    token.kind = EthereumValueKind.INT
-    token.data = I256.fromI64(i) as u64
-    return token
-  }
-
-  static fromI128(i: I128): EthereumValue {
-    let token = new EthereumValue()
-    token.kind = EthereumValueKind.INT
-    token.data = i as u64
-    return token
-  }
-
-  static fromI256(i: I256): EthereumValue {
-    let token = new EthereumValue()
-    token.kind = EthereumValueKind.INT
-    token.data = i as u64
-    return token
-  }
-
-  static fromU8(u: u8): EthereumValue {
-    let token = new EthereumValue()
-    token.kind = EthereumValueKind.UINT
-    token.data = U256.fromU64(u as u64) as u64
-    return token
-  }
-
-  static fromU16(u: u16): EthereumValue {
-    let token = new EthereumValue()
-    token.kind = EthereumValueKind.UINT
-    token.data = U256.fromU64(u as u64) as u64
+    token.data = BigInt.fromI32(i) as u64
     return token
   }
 
   static fromU32(u: u32): EthereumValue {
     let token = new EthereumValue()
     token.kind = EthereumValueKind.UINT
-    token.data = U256.fromU64(u as u64) as u64
+    token.data = BigInt.fromU32(u) as u64
     return token
   }
 
-  static fromU64(u: u64): EthereumValue {
+  static fromSignedBigInt(i: BigInt): EthereumValue {
     let token = new EthereumValue()
-    token.kind = EthereumValueKind.UINT
-    token.data = U256.fromU64(u) as u64
+    token.kind = EthereumValueKind.INT
+    token.data = i as u64
     return token
   }
 
-  static fromU128(u: U128): EthereumValue {
+  static fromUnsignedBigInt(i: BigInt): EthereumValue {
     let token = new EthereumValue()
     token.kind = EthereumValueKind.UINT
-    token.data = u as u64
-    return token
-  }
-
-  static fromU256(u: U256): EthereumValue {
-    let token = new EthereumValue()
-    token.kind = EthereumValueKind.UINT
-    token.data = u as u64
+    token.data = i as u64
     return token
   }
 
@@ -525,11 +393,75 @@ export class EthereumValue {
     return token
   }
 
-  static fromArray(arr: EthereumValue): EthereumValue {
+  static fromArray(values: Array<EthereumValue>): EthereumValue {
     let token = new EthereumValue()
     token.kind = EthereumValueKind.ARRAY
-    token.data = arr as u64
+    token.data = values as u64
     return token
+  }
+
+  static fromBooleanArray(values: Array<boolean>): EthereumValue {
+    let out = new Array<EthereumValue>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = EthereumValue.fromBoolean(values[i])
+    }
+    return EthereumValue.fromArray(out)
+  }
+
+  static fromBytesArray(values: Array<Bytes>): EthereumValue {
+    let out = new Array<EthereumValue>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = EthereumValue.fromBytes(values[i])
+    }
+    return EthereumValue.fromArray(out)
+  }
+
+  static fromAddressArray(values: Array<Address>): EthereumValue {
+    let out = new Array<EthereumValue>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = EthereumValue.fromAddress(values[i])
+    }
+    return EthereumValue.fromArray(out)
+  }
+
+  static fromStringArray(values: Array<string>): EthereumValue {
+    let out = new Array<EthereumValue>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = EthereumValue.fromString(values[i])
+    }
+    return EthereumValue.fromArray(out)
+  }
+
+  static fromI32Array(values: Array<i32>): EthereumValue {
+    let out = new Array<EthereumValue>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = EthereumValue.fromI32(values[i])
+    }
+    return EthereumValue.fromArray(out)
+  }
+
+  static fromU32Array(values: Array<u32>): EthereumValue {
+    let out = new Array<EthereumValue>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = EthereumValue.fromU32(values[i])
+    }
+    return EthereumValue.fromArray(out)
+  }
+
+  static fromSignedBigIntArray(values: Array<BigInt>): EthereumValue {
+    let out = new Array<EthereumValue>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = EthereumValue.fromSignedBigInt(values[i])
+    }
+    return EthereumValue.fromArray(out)
+  }
+
+  static fromUnsignedBigIntArray(values: Array<BigInt>): EthereumValue {
+    let out = new Array<EthereumValue>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = EthereumValue.fromUnsignedBigInt(values[i])
+    }
+    return EthereumValue.fromArray(out)
   }
 }
 
@@ -571,11 +503,6 @@ export class Value {
     return this.data != 0
   }
 
-  toBigInt(): BigInt {
-    assert(this.kind == ValueKind.BIGINT, 'Value is not an I256, U256 or BigInt.')
-    return changetype<BigInt>(this.data as u32)
-  }
-
   toBytes(): Bytes {
     assert(this.kind == ValueKind.BYTES, 'Value is not a byte array.')
     return changetype<Bytes>(this.data as u32)
@@ -586,9 +513,19 @@ export class Value {
     return this.data as i32
   }
 
+  toU32(): u32 {
+    assert(this.kind == ValueKind.INT, 'Value is not an u32.')
+    return this.data as u32
+  }
+
   toString(): string {
     assert(this.kind == ValueKind.STRING, 'Value is not a string.')
     return changetype<string>(this.data as u32)
+  }
+
+  toBigInt(): BigInt {
+    assert(this.kind == ValueKind.BIGINT, 'Value is not a BigInt.')
+    return changetype<BigInt>(this.data as u32)
   }
 
   toArray(): Array<Value> {
@@ -596,20 +533,104 @@ export class Value {
     return changetype<Array<Value>>(this.data as u32)
   }
 
-  toI256(): I256 {
-    assert(this.kind == ValueKind.BIGINT, 'Value is not an I256.')
-    return typeConversion.bigIntToInt256(changetype<BigInt>(this.data as u32)) as I256
+  toBooleanArray(): Array<boolean> {
+    let values = this.toArray()
+    let output = new Array<boolean>(values.length)
+    for (let i: i32; i < values.length; i++) {
+      output[i] = values[i].toBoolean()
+    }
+    return output
   }
 
-  toU256(): U256 {
-    assert(this.kind == ValueKind.BIGINT, 'Value is not an U256.')
-    return typeConversion.bigIntToInt256(changetype<BigInt>(this.data as u32)) as U256
+  toBytesArray(): Array<Bytes> {
+    let values = this.toArray()
+    let output = new Array<Bytes>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      output[i] = values[i].toBytes()
+    }
+    return output
   }
 
-  static fromAddress(address: Address): Value {
+  toStringArray(): Array<string> {
+    let values = this.toArray()
+    let output = new Array<string>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      output[i] = values[i].toString()
+    }
+    return output
+  }
+
+  toI32Array(): Array<i32> {
+    let values = this.toArray()
+    let output = new Array<i32>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      output[i] = values[i].toI32()
+    }
+    return output
+  }
+
+  toU32Array(): Array<u32> {
+    let values = this.toArray()
+    let output = new Array<i32>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      output[i] = values[i].toU32()
+    }
+    return output
+  }
+
+  toBigIntArray(): Array<BigInt> {
+    let values = this.toArray()
+    let output = new Array<BigInt>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      output[i] = values[i].toBigInt()
+    }
+    return output
+  }
+
+  static fromBooleanArray(input: Array<boolean>): Value {
+    let output = new Array<Value>(input.length)
+    for (let i: i32 = 0; i < input.length; i++) {
+      output[i] = Value.fromBoolean(input[i])
+    }
+    return Value.fromArray(output)
+  }
+
+  static fromBytesArray(input: Array<Bytes>): Value {
+    let output = new Array<Value>(input.length)
+    for (let i: i32 = 0; i < input.length; i++) {
+      output[i] = Value.fromBytes(input[i])
+    }
+    return Value.fromArray(output)
+  }
+
+  static fromI32Array(input: Array<i32>): Value {
+    let output = new Array<Value>(input.length)
+    for (let i: i32 = 0; i < input.length; i++) {
+      output[i] = Value.fromI32(input[i])
+    }
+    return Value.fromArray(output)
+  }
+
+  static fromBigIntArray(input: Array<BigInt>): Value {
+    let output = new Array<Value>(input.length)
+    for (let i: i32 = 0; i < input.length; i++) {
+      output[i] = Value.fromBigInt(input[i])
+    }
+    return Value.fromArray(output)
+  }
+
+  static fromStringArray(input: Array<string>): Value {
+    let output = new Array<Value>(input.length)
+    for (let i: i32 = 0; i < input.length; i++) {
+      output[i] = Value.fromString(input[i])
+    }
+    return Value.fromArray(output)
+  }
+
+  static fromArray(input: Array<Value>): Value {
     let value = new Value()
-    value.kind = ValueKind.BYTES
-    value.data = address as u64
+    value.kind = ValueKind.ARRAY
+    value.data = input as u64
     return value
   }
 
@@ -634,13 +655,6 @@ export class Value {
     return value
   }
 
-  static fromI256(i: I256): Value {
-    let value = new Value()
-    value.kind = ValueKind.BIGINT
-    value.data = typeConversion.int256ToBigInt(i) as u64
-    return value
-  }
-
   static fromNull(): Value {
     let value = new Value()
     value.kind = ValueKind.NULL
@@ -654,10 +668,10 @@ export class Value {
     return value
   }
 
-  static fromU256(n: U256): Value {
+  static fromU32(n: u32): Value {
     let value = new Value()
-    value.kind = ValueKind.BIGINT
-    value.data = typeConversion.int256ToBigInt(n) as u64
+    value.kind = ValueKind.UINT
+    value.data = n as u64
     return value
   }
 
@@ -665,13 +679,6 @@ export class Value {
     let value = new Value()
     value.kind = ValueKind.STRING
     value.data = s as u64
-    return value
-  }
-
-  static fromArray(array: Array<Value>): Value {
-    let value = new Value()
-    value.kind = ValueKind.ARRAY
-    value.data = array as u64
     return value
   }
 }
@@ -682,77 +689,7 @@ export class Value {
  * `Value` objects.
  */
 export class Entity extends TypedMap<string, Value> {
-  getAddress(key: string): Address {
-    return this.get(key).toAddress()
-  }
-
-  getBoolean(key: string): boolean {
-    return this.get(key).toBoolean()
-  }
-
-  getBigInt(key: string): BigInt {
-    return this.get(key).toBigInt()
-  }
-
-  getBytes(key: string): Bytes {
-    return this.get(key).toBytes()
-  }
-
-  getI32(key: string): i32 {
-    return this.get(key).toI32()
-  }
-
-  getString(key: string): string {
-    return this.get(key).toString()
-  }
-
-  getArray(key: string): Array<Value> {
-    return this.get(key).toArray()
-  }
-
-  getI256(key: string): I256 {
-    return this.get(key).toI256()
-  }
-
-  getU256(key: string): U256 {
-    return this.get(key).toU256()
-  }
-
-  setString(key: string, value: string): void {
-    this.set(key, Value.fromString(value))
-  }
-
-  setInt(key: string, value: i32): void {
-    this.set(key, Value.fromI32(value))
-  }
-
-  setBoolean(key: string, value: boolean): void {
-    this.set(key, Value.fromBoolean(value))
-  }
-
-  setBytes(key: string, value: Bytes): void {
-    this.set(key, Value.fromBytes(value))
-  }
-
-  setBigInt(key: string, value: BigInt): void {
-    this.set(key, Value.fromBigInt(value))
-  }
-
-  setAddress(key: string, value: Address): void {
-    this.set(key, Value.fromAddress(value))
-  }
-
-  setI256(key: string, value: I256): void {
-    this.set(key, Value.fromI256(value))
-  }
-
-  setU256(key: string, value: U256): void {
-    this.set(key, Value.fromU256(value))
-  }
-
-  setArray(key: string, array: Array<Value>): void {
-    this.set(key, Value.fromArray(array))
-  }
+  constructor() {}
 
   unset(key: string): void {
     this.set(key, Value.fromNull())
@@ -775,29 +712,29 @@ export class Entity extends TypedMap<string, Value> {
  * An Ethereum block.
  */
 export class EthereumBlock {
-  hash: H256
-  parentHash: H256
-  unclesHash: H256
+  hash: Bytes
+  parentHash: Bytes
+  unclesHash: Bytes
   author: Address
-  stateRoot: H256
-  transactionsRoot: H256
-  receiptsRoot: H256
-  number: U128
-  gasUsed: U256
-  gasLimit: U256
-  timestamp: U256
-  difficulty: U256
-  totalDifficulty: U256
+  stateRoot: Bytes
+  transactionsRoot: Bytes
+  receiptsRoot: Bytes
+  number: BigInt
+  gasUsed: BigInt
+  gasLimit: BigInt
+  timestamp: BigInt
+  difficulty: BigInt
+  totalDifficulty: BigInt
 }
 
 /**
  * An Ethereum transaction.
  */
 export class EthereumTransaction {
-  hash: H256
-  blockHash: H256
-  blockNumber: U256
-  gasUsed: U256
+  hash: Bytes
+  blockHash: Bytes
+  blockNumber: BigInt
+  gasUsed: BigInt
 }
 
 /**
