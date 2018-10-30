@@ -385,6 +385,14 @@ export class EthereumValue {
     return EthereumValue.fromArray(out)
   }
 
+  static fromFixedBytesArray(values: Array<Bytes>): EthereumValue {
+    let out = new Array<EthereumValue>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = EthereumValue.fromFixedBytes(values[i])
+    }
+    return EthereumValue.fromArray(out)
+  }
+
   static fromAddressArray(values: Array<Address>): EthereumValue {
     let out = new Array<EthereumValue>(values.length)
     for (let i: i32 = 0; i < values.length; i++) {
