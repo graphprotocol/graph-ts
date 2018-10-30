@@ -46,7 +46,6 @@ declare namespace typeConversion {
   //// Primitive to/from ethereum 256-bit number conversions.
   function i32ToBigInt(x: i32): Uint64Array
   function u32ToBigInt(x: i32): Uint64Array
-  function bigIntToU32(x: Uint64Array): u32
   function bigIntToI32(x: Uint64Array): i32
 }
 
@@ -153,10 +152,6 @@ export class BigInt extends U64Array {
   toI32(): i32 {
     return typeConversion.bigIntToI32(this)
   }
-
-  toU32(): u32 {
-    return typeConversion.bigIntToU32(this)
-  }
 }
 
 /** Type hint for Ethereum values. */
@@ -208,12 +203,6 @@ export class EthereumValue {
     assert(this.kind == EthereumValueKind.INT, 'EthereumValue is not an int.')
     let bigInt = changetype<BigInt>(this.data as u32)
     return bigInt.toI32()
-  }
-
-  toU32(): u32 {
-    assert(this.kind == EthereumValueKind.UINT, 'EthereumValue is not a uint.')
-    let bigInt = changetype<BigInt>(this.data as u32)
-    return bigInt.toU32()
   }
 
   toBigInt(): BigInt {
@@ -302,19 +291,6 @@ export class EthereumValue {
     return out
   }
 
-  toU32Array(): Array<u32> {
-    assert(
-      this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
-      'EthereumValue is not an array or fixed array.'
-    )
-    let valueArray = this.toArray()
-    let out = new Array<u32>(valueArray.length)
-    for (let i: i32 = 0; i < valueArray.length; i++) {
-      out[i] = valueArray[i].toU32()
-    }
-    return out
-  }
-
   toBigIntArray(): Array<BigInt> {
     assert(
       this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
@@ -362,13 +338,6 @@ export class EthereumValue {
     let token = new EthereumValue()
     token.kind = EthereumValueKind.INT
     token.data = BigInt.fromI32(i) as u64
-    return token
-  }
-
-  static fromU32(u: u32): EthereumValue {
-    let token = new EthereumValue()
-    token.kind = EthereumValueKind.UINT
-    token.data = BigInt.fromU32(u) as u64
     return token
   }
 
@@ -440,14 +409,6 @@ export class EthereumValue {
     return EthereumValue.fromArray(out)
   }
 
-  static fromU32Array(values: Array<u32>): EthereumValue {
-    let out = new Array<EthereumValue>(values.length)
-    for (let i: i32 = 0; i < values.length; i++) {
-      out[i] = EthereumValue.fromU32(values[i])
-    }
-    return EthereumValue.fromArray(out)
-  }
-
   static fromSignedBigIntArray(values: Array<BigInt>): EthereumValue {
     let out = new Array<EthereumValue>(values.length)
     for (let i: i32 = 0; i < values.length; i++) {
@@ -513,11 +474,6 @@ export class Value {
     return this.data as i32
   }
 
-  toU32(): u32 {
-    assert(this.kind == ValueKind.INT, 'Value is not an u32.')
-    return this.data as u32
-  }
-
   toString(): string {
     assert(this.kind == ValueKind.STRING, 'Value is not a string.')
     return changetype<string>(this.data as u32)
@@ -565,15 +521,6 @@ export class Value {
     let output = new Array<i32>(values.length)
     for (let i: i32 = 0; i < values.length; i++) {
       output[i] = values[i].toI32()
-    }
-    return output
-  }
-
-  toU32Array(): Array<u32> {
-    let values = this.toArray()
-    let output = new Array<i32>(values.length)
-    for (let i: i32 = 0; i < values.length; i++) {
-      output[i] = values[i].toU32()
     }
     return output
   }
@@ -664,13 +611,6 @@ export class Value {
   static fromI32(n: i32): Value {
     let value = new Value()
     value.kind = ValueKind.INT
-    value.data = n as u64
-    return value
-  }
-
-  static fromU32(n: u32): Value {
-    let value = new Value()
-    value.kind = ValueKind.UINT
     value.data = n as u64
     return value
   }
