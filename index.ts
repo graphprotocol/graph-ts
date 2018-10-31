@@ -44,9 +44,8 @@ declare namespace typeConversion {
   function stringToH160(s: String): Bytes
 
   //// Primitive to/from ethereum 256-bit number conversions.
-  function i32ToBigInt(x: i32): Uint64Array
-  function u32ToBigInt(x: i32): Uint64Array
-  function bigIntToI32(x: Uint64Array): i32
+  function i32ToBigInt(x: i32): Uint8Array
+  function bigIntToI32(x: Uint8Array): i32
 }
 
 /**
@@ -138,15 +137,11 @@ export class Address extends Bytes {
 }
 
 /** An arbitrary size integer represented as an array of 64 bit values. */
-export class BigInt extends U64Array {
+export class BigInt extends Uint8Array {
   constructor() {}
 
   static fromI32(x: i32): BigInt {
     return typeConversion.i32ToBigInt(x) as BigInt
-  }
-
-  static fromU32(x: u32): BigInt {
-    return typeConversion.u32ToBigInt(x) as BigInt
   }
 
   toI32(): i32 {
