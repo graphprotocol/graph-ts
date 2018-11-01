@@ -37,10 +37,10 @@ export declare namespace json {
 
 /** Host type conversion interface */
 declare namespace typeConversion {
-  function bytesToString(bytes: ByteArray): string
+  function bytesToString(bytes: Uint8Array): string
   function bytesToHex(bytes: Uint8Array): string
-  function u64ArrayToHex(array: Uint64Array): string
-  function u64ArrayToString(array: Uint64Array): string
+  function bigIntToString(bigInt: Uint8Array): string
+  function bigIntToHex(bigInt: Uint8Array): string
   function stringToH160(s: String): Bytes
 
   //// Primitive to/from ethereum 256-bit number conversions.
@@ -111,17 +111,6 @@ export class ByteArray extends Uint8Array {
   }
 }
 
-/** U64Array */
-export class U64Array extends Uint64Array {
-  toHex(): string {
-    return typeConversion.u64ArrayToHex(this)
-  }
-
-  toString(): string {
-    return typeConversion.u64ArrayToString(this)
-  }
-}
-
 /** A dynamically-sized byte array. */
 export class Bytes extends ByteArray {
   constructor() {}
@@ -136,9 +125,17 @@ export class Address extends Bytes {
   }
 }
 
-/** An arbitrary size integer represented as an array of 64 bit values. */
+/** An arbitrary size integer represented as an array of bytes. */
 export class BigInt extends Uint8Array {
   constructor() {}
+
+  toHex(): string {
+    return typeConversion.bigIntToHex(this)
+  }
+
+  toString(): string {
+    return typeConversion.bigIntToString(this)
+  }
 
   static fromI32(x: i32): BigInt {
     return typeConversion.i32ToBigInt(x) as BigInt
