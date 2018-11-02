@@ -668,9 +668,22 @@ export class EthereumBlock {
  */
 export class EthereumTransaction {
   hash: Bytes
-  blockHash: Bytes
-  blockNumber: BigInt
+  index: BigInt
+  from: Address
+  to: Address
+  value: BigInt
   gasUsed: BigInt
+  gasPrice: BigInt
+}
+
+/**
+ * An Ethereum log.
+ */
+export class EthereumLog {
+    hash: Bytes
+    logIndex: BigInt
+    transactionLogIndex: BigInt
+    logType: String
 }
 
 /**
@@ -680,6 +693,7 @@ export class EthereumEvent {
   address: Address
   block: EthereumBlock
   transaction: EthereumTransaction
+  log: EthereumLog
   parameters: Array<EthereumEventParam>
 }
 
