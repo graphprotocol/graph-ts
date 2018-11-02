@@ -1,7 +1,3 @@
-// Export allocator functions for hosts to manage WASM memory
-import { allocate_memory as allocate } from 'allocator/arena'
-export const allocate_memory = allocate
-
 /**
  * Host store interface.
  */
