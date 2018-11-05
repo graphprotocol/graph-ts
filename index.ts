@@ -677,23 +677,15 @@ export class EthereumTransaction {
 }
 
 /**
- * An Ethereum log.
- */
-export class EthereumLog {
-    hash: Bytes
-    logIndex: BigInt
-    transactionLogIndex: BigInt
-    logType: String
-}
-
-/**
  * Common representation for Ethereum smart contract events.
  */
 export class EthereumEvent {
   address: Address
+  logIndex: BigInt
+  transactionLogIndex: BigInt
+  logType: String
   block: EthereumBlock
   transaction: EthereumTransaction
-  log: EthereumLog
   parameters: Array<EthereumEventParam>
 }
 
