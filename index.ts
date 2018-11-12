@@ -661,6 +661,7 @@ export class EthereumBlock {
   timestamp: BigInt
   difficulty: BigInt
   totalDifficulty: BigInt
+  size: BigInt | null
 }
 
 /**
@@ -670,7 +671,7 @@ export class EthereumTransaction {
   hash: Bytes
   index: BigInt
   from: Address
-  to: Address
+  to: Address | null
   value: BigInt
   gasUsed: BigInt
   gasPrice: BigInt
