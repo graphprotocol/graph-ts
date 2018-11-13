@@ -684,7 +684,7 @@ export class EthereumEvent {
   address: Address
   logIndex: BigInt
   transactionLogIndex: BigInt
-  logType: String
+  logType: String | null
   block: EthereumBlock
   transaction: EthereumTransaction
   parameters: Array<EthereumEventParam>
