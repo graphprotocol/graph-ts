@@ -2,7 +2,7 @@
  * Host store interface.
  */
 export declare namespace store {
-  function get(entity: String, id: string): Entity | null
+  function get(entity: string, id: string): Entity | null
   function set(entity: string, id: string, data: Entity): void
   function remove(entity: string, id: string): void
 }
@@ -14,7 +14,7 @@ declare namespace ethereum {
 
 /** Host IPFS interface */
 export declare namespace ipfs {
-  function cat(hash: String): Bytes
+  function cat(hash: string): Bytes
 }
 
 /** Host crypto utilities interface */
@@ -37,7 +37,7 @@ declare namespace typeConversion {
   function bytesToHex(bytes: Uint8Array): string
   function bigIntToString(bigInt: Uint8Array): string
   function bigIntToHex(bigInt: Uint8Array): string
-  function stringToH160(s: String): Bytes
+  function stringToH160(s: string): Bytes
 
   //// Primitive to/from ethereum 256-bit number conversions.
   function i32ToBigInt(x: i32): Uint8Array
@@ -718,7 +718,7 @@ export class EthereumEvent {
   address: Address
   logIndex: BigInt
   transactionLogIndex: BigInt
-  logType: String | null
+  logType: string | null
   block: EthereumBlock
   transaction: EthereumTransaction
   parameters: Array<EthereumEventParam>
