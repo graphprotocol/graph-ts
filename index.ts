@@ -44,6 +44,15 @@ declare namespace typeConversion {
   function bigIntToI32(x: Uint8Array): i32
 }
 
+/** Host interface for BigInt arithmetic */
+declare namespace bigInt {
+  function plus(x: BigInt, y: BigInt): BigInt
+  function minus(x: BigInt, y: BigInt): BigInt
+  function times(x: BigInt, y: BigInt): BigInt
+  function dividedBy(x: BigInt, y: BigInt): BigInt
+  function mod(x: BigInt, y: BigInt): BigInt
+}
+
 /**
  * TypedMap entry.
  */
@@ -139,6 +148,31 @@ export class BigInt extends Uint8Array {
 
   toI32(): i32 {
     return typeConversion.bigIntToI32(this)
+  }
+
+  @operator('+')
+  plus(other: BigInt): BigInt {
+    return bigInt.plus(this, other)
+  }
+
+  @operator('-')
+  minus(other: BigInt): BigInt {
+    return bigInt.minus(this, other)
+  }
+
+  @operator('*')
+  times(other: BigInt): BigInt {
+    return bigInt.times(this, other)
+  }
+
+  @operator('/')
+  div(other: BigInt): BigInt {
+    return bigInt.dividedBy(this, other)
+  }
+
+  @operator('%')
+  mod(other: BigInt): BigInt {
+    return bigInt.mod(this, other)
   }
 }
 
