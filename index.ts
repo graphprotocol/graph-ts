@@ -222,7 +222,10 @@ export class EthereumValue {
   }
 
   toI32(): i32 {
-    assert(this.kind == EthereumValueKind.INT, 'EthereumValue is not an int.')
+    assert(
+      this.kind == EthereumValueKind.INT || this.kind == EthereumValueKind.UINT,
+      'EthereumValue is not an int or uint.'
+    )
     let bigInt = changetype<BigInt>(this.data as u32)
     return bigInt.toI32()
   }
