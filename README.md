@@ -59,6 +59,14 @@ We will document the functionality provided by `graph-ts` soon. Until
 then, please check the types and modules exported from the
 [library source code](index.ts).
 
+Also check out subgraphs that use the `graph-ts` library:
+* https://github.com/graphprotocol/ens-subgraph
+* https://github.com/graphprotocol/decentraland-subgraph
+* https://github.com/graphprotocol/adchain-subgraph
+* https://github.com/graphprotocol/0x-subgraph
+* https://github.com/graphprotocol/aragon-subgraph
+* https://github.com/graphprotocol/dharma-subgraph  
+
 ## License
 
 Copyright &copy; 2018 Graph Protocol, Inc. and contributors.
