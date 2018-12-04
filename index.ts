@@ -662,7 +662,9 @@ export class Value {
  * `Value` objects.
  */
 export class Entity extends TypedMap<string, Value> {
-  constructor() {}
+  constructor() {
+    this.entries = new Array<TypedMapEntry<string, Value>>(0)
+  }
 
   unset(key: string): void {
     this.set(key, Value.fromNull())
