@@ -10,6 +10,9 @@ fs.copyFileSync("index.ts", "test/temp_lib/index.ts");
 
 try {
   asc.main(["test/test.ts", "--lib", "test", "--validate", "--noTreeShaking", "--noEmit"]);
+} catch(e) {
+  process.exitCode = 1
+  throw e
 } finally {
   fs.unlinkSync("test/temp_lib/index.ts");
   fs.rmdirSync("test/temp_lib");

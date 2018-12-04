@@ -1,3 +1,6 @@
+// For testing isolated compilation.
+import 'allocator/arena'
+
 /**
  * Host store interface.
  */
