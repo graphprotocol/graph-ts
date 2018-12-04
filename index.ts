@@ -181,15 +181,15 @@ export class BigInt extends Uint8Array {
 
 /** Type hint for Ethereum values. */
 export enum EthereumValueKind {
-  ADDRESS,
-  FIXED_BYTES,
-  BYTES,
-  INT,
-  UINT,
-  BOOL,
-  STRING,
-  FIXED_ARRAY,
-  ARRAY,
+  ADDRESS = 0,
+  FIXED_BYTES = 1,
+  BYTES = 2,
+  INT = 3,
+  UINT = 4,
+  BOOL = 5,
+  STRING = 6,
+  FIXED_ARRAY = 7,
+  ARRAY = 8,
 }
 
 /**
@@ -466,14 +466,14 @@ export class EthereumValue {
  * Enum for supported value types.
  */
 export enum ValueKind {
-  STRING,
-  INT,
-  FLOAT,
-  BOOL,
-  ARRAY,
-  NULL,
-  BYTES,
-  BIGINT,
+  STRING = 0,
+  INT = 1,
+  FLOAT = 2,
+  BOOL = 3,
+  ARRAY = 4,
+  NULL = 5,
+  BYTES = 6,
+  BIGINT = 7,
 }
 
 /**
@@ -779,12 +779,12 @@ export class SmartContract {
 
 /** Type hint for JSON values. */
 export enum JSONValueKind {
-  NULL,
-  BOOL,
-  NUMBER,
-  STRING,
-  ARRAY,
-  OBJECT,
+  NULL = 0,
+  BOOL = 1,
+  NUMBER = 2,
+  STRING = 3,
+  ARRAY = 4,
+  OBJECT = 5,
 }
 
 /**
