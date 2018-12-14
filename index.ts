@@ -505,6 +505,9 @@ export class Value {
   }
 
   toBoolean(): boolean {
+    if (this.kind == ValueKind.NULL) {
+      return false;
+    }
     assert(this.kind == ValueKind.BOOL, 'Value is not a boolean.')
     return this.data != 0
   }
@@ -515,6 +518,9 @@ export class Value {
   }
 
   toI32(): i32 {
+    if (this.kind == ValueKind.NULL) {
+      return 0;
+    }
     assert(this.kind == ValueKind.INT, 'Value is not an i32.')
     return this.data as i32
   }
