@@ -104,6 +104,15 @@ export class TypedMap<K, V> {
     }
     return null
   }
+
+  isSet(key: K): bool {
+    for (let i: i32 = 0; i < this.entries.length; i++) {
+      if (this.entries[i].key == key) {
+        return true
+      }
+    }
+    return false
+  }
 }
 
 /**
