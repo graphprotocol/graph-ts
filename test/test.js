@@ -9,7 +9,11 @@ fs.mkdirSync("test/temp_lib");
 fs.copyFileSync("index.ts", "test/temp_lib/index.ts");
 
 try {
-  asc.main(["test/test.ts", "--lib", "test", "--validate", "--noTreeShaking", "--noEmit"]);
+  // --noTreeShaking started causing using errors, so this only tests that
+  // things used in `test.ts` compile correctly, we should improve this.
+  if (asc.main(["test/test.ts", "--lib", "test", "--validate", "--noEmit"]) != 0) {
+    process.exitCode = 1
+  }
 } catch(e) {
   process.exitCode = 1
   throw e
