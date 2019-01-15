@@ -41,6 +41,7 @@ declare namespace typeConversion {
   function bigIntToString(bigInt: Uint8Array): string
   function bigIntToHex(bigInt: Uint8Array): string
   function stringToH160(s: string): Bytes
+  function bytesToBase58(n: Uint8Array): string
 
   //// Primitive to/from ethereum 256-bit number conversions.
   function i32ToBigInt(x: i32): Uint8Array
@@ -125,6 +126,10 @@ export class ByteArray extends Uint8Array {
 
   toString(): string {
     return typeConversion.bytesToString(this)
+  }
+
+  toBase58(): string {
+    return typeConversion.bytesToBase58(this)
   }
 }
 
