@@ -732,6 +732,7 @@ export class EthereumTransaction {
   value: BigInt
   gasUsed: BigInt
   gasPrice: BigInt
+  input: Bytes
 }
 
 /**
