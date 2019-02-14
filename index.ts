@@ -191,6 +191,19 @@ export class BigInt extends Uint8Array {
   mod(other: BigInt): BigInt {
     return bigInt.mod(this, other)
   }
+
+  @operator('==')
+  equals(other: BigInt): boolean {
+    if (this.length !== other.length) {
+      return false;
+    }
+    for (let i = 0; i < this.length; i++) {
+      if (this[i] !== other[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
 /** Type hint for Ethereum values. */

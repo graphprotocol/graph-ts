@@ -64,24 +64,6 @@ function parseCSV(csv: string): Array<string> {
 }
 
 /**
- * Check if two BigInts are equal by comparing each character in the string
- * @param a - 1st BigInt to compare
- * @param b - 2nd BigInt to compare
- * @returns   True if they are equal, false if they are not
- */
-export function equals(a: BigInt, b: BigInt): boolean {
-  if (a.length !== b.length) {
-    return false;
-  }
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) {
-      return false;
-    }
-  }
-  return true;
-}
-
-/**
  * Adds 0x1220 to the front of a ByteArray. This can be used when an IPFS hash is stored in an Etherum Bytes32 type.
  * The IPFS hash will fit in a Bytes32 when 0x1220 is removed. Since 0x1220 is currently in front of every single IPFS
  * hash, this works. But it is possible in the future that IPFS will update their spec.
