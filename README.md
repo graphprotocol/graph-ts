@@ -40,7 +40,7 @@ import { Domain } from './types/schema'
 
 function handleNameRegistered(event: NameRegistered) {
   // Example use of a crypto function
-  let id = crypto.keccak256(name).toHex()
+  let id = crypto.keccak256(name).toHexString()
 
   // Example use of the generated `Entry` class
   let domain = new Domain()
@@ -59,11 +59,9 @@ Refer to the `helper-functions.ts` file in this repository for a few common func
 
 ## API
 
-We will document the functionality provided by `graph-ts` soon. Until
-then, please check the types and modules exported from the
-[library source code](index.ts).
+Documentation on the API can be found [here](https://thegraph.com/docs/assemblyscript-api#api-reference).
 
-Also check out subgraphs that use the `graph-ts` library:
+For examples of `graph-ts` in use take a look at one of the following subgraphs:
 * https://github.com/graphprotocol/ens-subgraph
 * https://github.com/graphprotocol/decentraland-subgraph
 * https://github.com/graphprotocol/adchain-subgraph
