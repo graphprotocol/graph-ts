@@ -124,6 +124,10 @@ export class ByteArray extends Uint8Array {
     return typeConversion.bytesToHex(this)
   }
 
+  toHexString(): string {
+    return typeConversion.bytesToHex(this)
+  }
+
   toString(): string {
     return typeConversion.bytesToString(this)
   }
@@ -152,6 +156,10 @@ export class BigInt extends Uint8Array {
   constructor() {}
 
   toHex(): string {
+    return typeConversion.bigIntToHex(this)
+  }
+
+  toHexString(): string {
     return typeConversion.bigIntToHex(this)
   }
 
