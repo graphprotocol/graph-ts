@@ -78,6 +78,11 @@ declare namespace bigDecimal {
   function fromString(s: string): BigDecimal
 }
 
+/** Host interface for managing data sources */
+declare namespace dataSource {
+  function create(name: string, params: Array<string>): void
+}
+
 /**
  * TypedMap entry.
  */
@@ -1012,5 +1017,20 @@ export class JSONValue {
   toObject(): TypedMap<string, JSONValue> {
     assert(this.kind == JSONValueKind.OBJECT, 'JSON value is not an object.')
     return changetype<TypedMap<string, JSONValue>>(this.data as u32)
+  }
+}
+
+/**
+ * Base class for data source templates. Allows to dynamically create
+ * data sources from templates at runtime.
+ */
+export class DataSourceTemplate {
+  /**
+   * Dynamically creates a data source from the template with the
+   * given name, using the parameter strings to configure the new
+   * data source.
+   */
+  static create(name: string, params: Array<string>): void {
+    dataSource.create(name, params)
   }
 }
