@@ -18,6 +18,15 @@ declare namespace ethereum {
 /** Host IPFS interface */
 export declare namespace ipfs {
   function cat(hash: string): Bytes | null
+  function map(hash: string, callback: string, userData: Value,
+               flags: string[]): void
+}
+
+export namespace ipfs {
+  export function mapJSON(hash: string, callback: string,
+                          userData: Value): void {
+    map(hash, callback, userData, ["json"])
+  }
 }
 
 /** Host crypto utilities interface */
