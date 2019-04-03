@@ -53,8 +53,19 @@ declare namespace bigInt {
   function plus(x: BigInt, y: BigInt): BigInt
   function minus(x: BigInt, y: BigInt): BigInt
   function times(x: BigInt, y: BigInt): BigInt
-  function dividedBy(x: BigInt, y: BigInt): BigInt
+  function dividedByDecimal(x: BigInt, y: BigInt): BigDecimal
   function mod(x: BigInt, y: BigInt): BigInt
+}
+
+/** Host interface for BigDecimal */
+declare namespace bigDecimal {
+  function plus(x: BigDecimal, y: BigDecimal): BigDecimal
+  function minus(x: BigDecimal, y: BigDecimal): BigDecimal
+  function times(x: BigDecimal, y: BigDecimal): BigDecimal
+  function dividedBy(x: BigDecimal, y: BigDecimal): BigDecimal
+  function equals(x: BigDecimal, y: BigDecimal): boolean
+  function toString(bigDecimal: BigDecimal): string
+  function fromString(s: string): BigDecimal
 }
 
 /**
@@ -191,8 +202,8 @@ export class BigInt extends Uint8Array {
   }
 
   @operator('/')
-  div(other: BigInt): BigInt {
-    return bigInt.dividedBy(this, other)
+  div(other: BigInt): BigDecimal {
+    return bigInt.dividedByDecimal(this, other)
   }
 
   @operator('%')
@@ -211,6 +222,49 @@ export class BigInt extends Uint8Array {
       }
     }
     return true;
+  }
+}
+
+export class BigDecimal {
+  digits: BigInt
+  exp: BigInt
+  
+  constructor(bigInt: BigInt) {
+    this.digits = bigInt
+    this.exp = BigInt.fromI32(0)
+  }
+
+  static fromString(s: string): BigDecimal {
+    return bigDecimal.fromString(s)
+  }
+
+  toString(): string {
+    return bigDecimal.toString(this)
+  }
+
+  @operator('+')
+  plus(other: BigDecimal): BigDecimal {
+    return bigDecimal.plus(this, other)
+  }
+
+  @operator('-')
+  minus(other: BigDecimal): BigDecimal {
+    return bigDecimal.minus(this, other)
+  }
+
+  @operator('*')
+  times(other: BigDecimal): BigDecimal {
+    return bigDecimal.times(this, other)
+  }
+
+  @operator('/')
+  div(other: BigDecimal): BigDecimal {
+    return bigDecimal.dividedBy(this, other)
+  }
+
+  @operator('==')
+  equals(other: BigDecimal): boolean {
+    return bigDecimal.equals(this, other)
   }
 }
 
@@ -503,7 +557,7 @@ export class EthereumValue {
 export enum ValueKind {
   STRING = 0,
   INT = 1,
-  FLOAT = 2,
+  BIGDECIMAL = 2,
   BOOL = 3,
   ARRAY = 4,
   NULL = 5,
@@ -561,6 +615,11 @@ export class Value {
     return changetype<BigInt>(this.data as u32)
   }
 
+  toBigDecimal(): BigDecimal {
+    assert(this.kind == ValueKind.BIGDECIMAL, 'Value is not a BigDecimal.')
+    return changetype<BigDecimal>(this.data as u32)
+  }
+
   toArray(): Array<Value> {
     assert(this.kind == ValueKind.ARRAY, 'Value is not an array.')
     return changetype<Array<Value>>(this.data as u32)
@@ -611,6 +670,15 @@ export class Value {
     return output
   }
 
+  toBigDecimalArray(): Array<BigDecimal> {
+    let values = this.toArray()
+    let output = new Array<BigDecimal>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      output[i] = values[i].toBigDecimal()
+    }
+    return output
+  }
+
   static fromBooleanArray(input: Array<boolean>): Value {
     let output = new Array<Value>(input.length)
     for (let i: i32 = 0; i < input.length; i++) {
@@ -639,6 +707,14 @@ export class Value {
     let output = new Array<Value>(input.length)
     for (let i: i32 = 0; i < input.length; i++) {
       output[i] = Value.fromBigInt(input[i])
+    }
+    return Value.fromArray(output)
+  }
+
+  static fromBigDecimalArray(input: Array<BigDecimal>): Value {
+    let output = new Array<Value>(input.length)
+    for (let i: i32 = 0; i < input.length; i++) {
+      output[i] = Value.fromBigDecimal(input[i])
     }
     return Value.fromArray(output)
   }
@@ -696,6 +772,13 @@ export class Value {
     let value = new Value()
     value.kind = ValueKind.STRING
     value.data = s as u64
+    return value
+  }
+
+  static fromBigDecimal(n: BigDecimal): Value {
+    let value = new Value()
+    value.kind = ValueKind.BIGDECIMAL
+    value.data = n as u64
     return value
   }
 }
