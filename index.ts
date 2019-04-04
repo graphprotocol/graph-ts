@@ -53,7 +53,8 @@ declare namespace bigInt {
   function plus(x: BigInt, y: BigInt): BigInt
   function minus(x: BigInt, y: BigInt): BigInt
   function times(x: BigInt, y: BigInt): BigInt
-  function dividedByDecimal(x: BigInt, y: BigInt): BigDecimal
+  function dividedBy(x: BigInt, y: BigInt): BigInt
+  function dividedByDecimal(x: BigInt, y: BigDecimal): BigDecimal
   function mod(x: BigInt, y: BigInt): BigInt
 }
 
@@ -202,7 +203,11 @@ export class BigInt extends Uint8Array {
   }
 
   @operator('/')
-  div(other: BigInt): BigDecimal {
+  div(other: BigInt): BigInt {
+    return bigInt.dividedBy(this, other)
+  }
+
+  divDecimal(other: BigDecimal): BigDecimal {
     return bigInt.dividedByDecimal(this, other)
   }
 
