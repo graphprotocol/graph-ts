@@ -228,6 +228,10 @@ export class BigInt extends Uint8Array {
     }
     return true;
   }
+  
+  toBigDecimal(): BigDecimal {
+    return new BigDecimal(this)
+  }
 }
 
 export class BigDecimal {
