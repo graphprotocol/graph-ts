@@ -362,12 +362,12 @@ export class EthereumValue {
     return changetype<Array<EthereumValue>>(this.data as u32)
   }
 
-  toTuple(): Tuple {
+  toTuple(): EthereumTuple {
     assert(
         this.kind == EthereumValueKind.TUPLE,
         'EthereumValue is not a tuple.'
     )
-    return changetype<Tuple>(this.data as u32)
+    return changetype<EthereumTuple>(this.data as u32)
   }
 
   toBooleanArray(): Array<boolean> {
@@ -513,7 +513,7 @@ export class EthereumValue {
     return token
   }
 
-  static fromTuple(values: Tuple): EthereumValue {
+  static fromTuple(values: EthereumTuple): EthereumValue {
     let token = new EthereumValue()
     token.kind = EthereumValueKind.TUPLE
     token.data = values as u64
@@ -817,7 +817,13 @@ export class Value {
   }
 }
 
-export class Tuple extends Array<EthereumValue> {}
+/**
+ * An array of dynamically typed Ethereum Values
+ *
+ * Represents a Tuple in the ABI which corresponds to a Struct in Solidity
+ *
+ */
+export class EthereumTuple extends Array<EthereumValue> {}
 
 /**
  * Common representation for entity data, storing entity attributes
