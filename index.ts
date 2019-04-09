@@ -818,10 +818,11 @@ export class Value {
 }
 
 /**
- * An array of dynamically typed Ethereum Values
+ * Common representation for Ethereum tuples / Solidity structs.
  *
- * Represents a Tuple in the ABI which corresponds to a Struct in Solidity
- *
+ * This base class stores the tuple/struct values in an array. The Graph CLI
+ * code generation then creates subclasses that provide named getters to
+ * access the members by name.
  */
 export class EthereumTuple extends Array<EthereumValue> {}
 
