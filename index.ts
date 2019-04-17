@@ -76,6 +76,7 @@ declare namespace bigDecimal {
   function equals(x: BigDecimal, y: BigDecimal): boolean
   function toString(bigDecimal: BigDecimal): string
   function fromString(s: string): BigDecimal
+  function truncate(x: BigDecimal, y: i32): BigDecimal
 }
 
 /**
@@ -258,6 +259,21 @@ export class BigDecimal {
 
   toString(): string {
     return bigDecimal.toString(this)
+  }
+
+  truncate(bd: BigDecimal, decimals: i32): BigDecimal {
+    let digitsRightOfZero = bd.digits.toString().length + bd.exp.toI32()
+    let newDigitLength = decimals + digitsRightOfZero
+    let truncateLength = bd.digits.toString().length - newDigitLength
+    if (truncateLength < 0) {
+      return bd
+    } else {
+      for (let i = 0; i < truncateLength; i++) {
+        bd.digits = bd.digits.div(BigInt.fromI32(10))
+      }
+      bd.exp = BigInt.fromI32(decimals* -1)
+      return bd
+    }
   }
 
   @operator('+')
