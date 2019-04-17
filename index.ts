@@ -261,18 +261,18 @@ export class BigDecimal {
     return bigDecimal.toString(this)
   }
 
-  truncate(bd: BigDecimal, decimals: i32): BigDecimal {
-    let digitsRightOfZero = bd.digits.toString().length + bd.exp.toI32()
+  truncate(decimals: i32): BigDecimal {
+    let digitsRightOfZero = this.digits.toString().length + this.exp.toI32()
     let newDigitLength = decimals + digitsRightOfZero
-    let truncateLength = bd.digits.toString().length - newDigitLength
+    let truncateLength = this.digits.toString().length - newDigitLength
     if (truncateLength < 0) {
-      return bd
+      return this
     } else {
       for (let i = 0; i < truncateLength; i++) {
-        bd.digits = bd.digits.div(BigInt.fromI32(10))
+        this.digits = this.digits.div(BigInt.fromI32(10))
       }
-      bd.exp = BigInt.fromI32(decimals* -1)
-      return bd
+      this.exp = BigInt.fromI32(decimals* -1)
+      return this
     }
   }
 
