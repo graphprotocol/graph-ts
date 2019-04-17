@@ -164,14 +164,10 @@ export class ByteArray extends Uint8Array {
 }
 
 /** A dynamically-sized byte array. */
-export class Bytes extends ByteArray {
-  constructor() {}
-}
+export class Bytes extends ByteArray { }
 
 /** An Ethereum address (20 bytes). */
 export class Address extends Bytes {
-  constructor() {}
-
   static fromString(s: string): Address {
     return typeConversion.stringToH160(s) as Address
   }
@@ -179,8 +175,6 @@ export class Address extends Bytes {
 
 /** An arbitrary size integer represented as an array of bytes. */
 export class BigInt extends Uint8Array {
-  constructor() {}
-
   toHex(): string {
     return typeConversion.bigIntToHex(this)
   }
@@ -837,10 +831,6 @@ export class EthereumTuple extends Array<EthereumValue> {}
  * `Value` objects.
  */
 export class Entity extends TypedMap<string, Value> {
-  constructor() {
-    this.entries = new Array<TypedMapEntry<string, Value>>(0)
-  }
-
   unset(key: string): void {
     this.set(key, Value.fromNull())
   }
