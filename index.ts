@@ -76,7 +76,7 @@ declare namespace bigDecimal {
   function equals(x: BigDecimal, y: BigDecimal): boolean
   function toString(bigDecimal: BigDecimal): string
   function fromString(s: string): BigDecimal
-  function truncate(x: BigDecimal, y: i32): BigDecimal
+  function truncate(x: i32): BigDecimal
 }
 
 /**
