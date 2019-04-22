@@ -259,6 +259,21 @@ export class BigDecimal {
     return bigDecimal.toString(this)
   }
 
+  truncate(decimals: i32): BigDecimal {
+    let digitsRightOfZero = this.digits.toString().length + this.exp.toI32()
+    let newDigitLength = decimals + digitsRightOfZero
+    let truncateLength = this.digits.toString().length - newDigitLength
+    if (truncateLength < 0) {
+      return this
+    } else {
+      for (let i = 0; i < truncateLength; i++) {
+        this.digits = this.digits.div(BigInt.fromI32(10))
+      }
+      this.exp = BigInt.fromI32(decimals* -1)
+      return this
+    }
+  }
+
   @operator('+')
   plus(other: BigDecimal): BigDecimal {
     return bigDecimal.plus(this, other)
