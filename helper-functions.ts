@@ -6,7 +6,7 @@ import {ByteArray, BigInt} from "./index";
  * @param b - 2nd ByteArray
  * @returns A concatenated ByteArray
  */
-function concat(a: ByteArray, b: ByteArray): ByteArray {
+export function concat(a: ByteArray, b: ByteArray): ByteArray {
   let out = new Uint8Array(a.length + b.length);
   for (let i = 0; i < a.length; i++) {
     out[i] = a[i];
@@ -31,7 +31,7 @@ enum CSVState {
  * @param csv CSV string.
  * @returns Array of strings.
  */
-function parseCSV(csv: string): Array<string> {
+export function parseCSV(csv: string): Array<string> {
   let values = new Array<string>()
   let valueStart = 0
   let state = CSVState.BETWEEN
