@@ -182,6 +182,11 @@ export class Address extends Bytes {
 
 /** An arbitrary size integer represented as an array of bytes. */
 export class BigInt extends Uint8Array {
+  /// `bytes` assumed to be little-endian.
+  static fromSignedBytes(bytes: Bytes): BigInt {
+    return bytes as Uint8Array as BigInt
+  }
+
   toHex(): string {
     return typeConversion.bigIntToHex(this)
   }
@@ -201,6 +206,25 @@ export class BigInt extends Uint8Array {
   toI32(): i32 {
     return typeConversion.bigIntToI32(this)
   }
+
+  toBigDecimal(): BigDecimal {
+    return new BigDecimal(this)
+  }
+
+  isZero(): boolean {
+    for (let i = 0; i < this.length; i++) {
+      if (this[i] != 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  isI32(): boolean {
+    return BigInt.fromI32(i32.MIN_VALUE) <= this && this <= BigInt.fromI32(i32.MAX_VALUE)
+  }
+
+  // Operators
 
   @operator('+')
   plus(other: BigInt): BigInt {
@@ -243,9 +267,34 @@ export class BigInt extends Uint8Array {
     }
     return true;
   }
-  
-  toBigDecimal(): BigDecimal {
-    return new BigDecimal(this)
+
+  @operator('!=')
+  not_equal(other: BigInt): boolean {
+    return !(this == other)
+  }
+
+  @operator('<')
+  lt(other: BigInt): boolean {
+    // If the subtraction is negative, `other` is larger.
+    let diff = this - other;
+    return (diff[0] >> 7) == 1
+  }
+
+  @operator('>')
+  gt(other: BigInt): boolean {
+    // If not equal and the subtraction is not negative, `other` is smaller.
+    let diff = this - other;
+    return this != other && (diff[0] >> 7) == 1
+  }
+
+  @operator('<=')
+  le(other: BigInt): boolean {
+    return !(this > other)
+  }
+
+  @operator('>=')
+  ge(other: BigInt): boolean {
+    return !(this < other)
   }
 }
 
