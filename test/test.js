@@ -1,5 +1,3 @@
-// Tests that index.ts compiles without erros.
-
 const fs = require("fs");
 const asc = require("assemblyscript/cli/asc");
 
@@ -7,17 +5,33 @@ const asc = require("assemblyscript/cli/asc");
 // index.ts exports in the global namespace.
 fs.mkdirSync("test/temp_lib");
 fs.copyFileSync("index.ts", "test/temp_lib/index.ts");
+let output_path = "test/temp_out/test.wasm"
 
 try {
-  // --noTreeShaking started causing using errors, so this only tests that
-  // things used in `test.ts` compile correctly, we should improve this.
-  if (asc.main(["test/test.ts", "--lib", "test", "--validate", "--noEmit"]) != 0) {
-    process.exitCode = 1
+    const env = {
+      abort: function(message, fileName, lineNumber, columnNumber) {
+        console.log("aborted")
+      }
+    }
+
+  if (asc.main(["test/test.ts", "--lib", "test", "--validate", "-b", output_path]) != 0) {
+    throw Error("failed to compile")
   }
-} catch(e) {
-  process.exitCode = 1
-  throw e
-} finally {
+  let test_wasm = new Uint8Array(fs.readFileSync(output_path))
+ 
+  WebAssembly.instantiate(test_wasm, {
+    env
+  }).then(module => {
+    module.instance.exports.test();
+  });
+
   fs.unlinkSync("test/temp_lib/index.ts");
   fs.rmdirSync("test/temp_lib");
+  fs.unlinkSync(output_path);
+} catch(e) {
+  process.exitCode = 1
+  fs.unlinkSync("test/temp_lib/index.ts");
+  fs.rmdirSync("test/temp_lib");
+  fs.unlinkSync(output_path);
+  throw e
 }
