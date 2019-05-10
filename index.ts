@@ -53,7 +53,6 @@ declare namespace typeConversion {
   function bytesToBase58(n: Uint8Array): string
 
   //// Primitive to/from ethereum 256-bit number conversions.
-  function i32ToBigInt(x: i32): Uint8Array
   function bigIntToI32(x: Uint8Array): i32
 }
 
@@ -153,6 +152,16 @@ export class TypedMap<K, V> {
  * Byte array
  */
 export class ByteArray extends Uint8Array {
+  /// Returns bytes in little-endian order.
+  static fromI32(x: i32): ByteArray {
+    let self = new ByteArray(4)
+    self[0] = x as u8
+    self[1] = (x >> 8) as u8
+    self[2] = (x >> 16) as u8
+    self[3] = (x >> 24) as u8
+    return self
+  }
+
   toHex(): string {
     return typeConversion.bytesToHex(this)
   }
@@ -182,6 +191,10 @@ export class Address extends Bytes {
 
 /** An arbitrary size integer represented as an array of bytes. */
 export class BigInt extends Uint8Array {
+  static fromI32(x: i32): BigInt {
+    return ByteArray.fromI32(x) as Uint8Array as BigInt
+  }
+
   /// `bytes` assumed to be little-endian.
   static fromSignedBytes(bytes: Bytes): BigInt {
     return bytes as Uint8Array as BigInt
@@ -199,10 +212,6 @@ export class BigInt extends Uint8Array {
     return typeConversion.bigIntToString(this)
   }
 
-  static fromI32(x: i32): BigInt {
-    return typeConversion.i32ToBigInt(x) as BigInt
-  }
-
   toI32(): i32 {
     return typeConversion.bigIntToI32(this)
   }
@@ -212,16 +221,15 @@ export class BigInt extends Uint8Array {
   }
 
   isZero(): boolean {
-    for (let i = 0; i < this.length; i++) {
-      if (this[i] != 0) {
-        return false;
-      }
-    }
-    return true;
+    return this == BigInt.fromI32(0)
   }
 
   isI32(): boolean {
     return BigInt.fromI32(i32.MIN_VALUE) <= this && this <= BigInt.fromI32(i32.MAX_VALUE)
+  }
+
+  abs(): BigInt {
+    return this < BigInt.fromI32(0) ? -this : this
   }
 
   // Operators
@@ -257,15 +265,7 @@ export class BigInt extends Uint8Array {
 
   @operator('==')
   equals(other: BigInt): boolean {
-    if (this.length !== other.length) {
-      return false;
-    }
-    for (let i = 0; i < this.length; i++) {
-      if (this[i] !== other[i]) {
-        return false;
-      }
-    }
-    return true;
+    return BigInt.compare(this, other) == 0
   }
 
   @operator('!=')
@@ -275,16 +275,12 @@ export class BigInt extends Uint8Array {
 
   @operator('<')
   lt(other: BigInt): boolean {
-    // If the subtraction is negative, `other` is larger.
-    let diff = this - other;
-    return (diff[0] >> 7) == 1
+    return BigInt.compare(this, other) == -1
   }
 
   @operator('>')
   gt(other: BigInt): boolean {
-    // If not equal and the subtraction is not negative, `other` is smaller.
-    let diff = this - other;
-    return this != other && (diff[0] >> 7) == 1
+    return BigInt.compare(this, other) == 1
   }
 
   @operator('<=')
@@ -295,6 +291,61 @@ export class BigInt extends Uint8Array {
   @operator('>=')
   ge(other: BigInt): boolean {
     return !(this < other)
+  }
+
+  @operator.prefix('-')
+  neg(): BigInt {
+    return BigInt.fromI32(0) - this
+  }
+
+  /// Returns −1 if a < b, 1 if a > b, and 0 if A == B
+  static compare(a: BigInt, b: BigInt): i32 {
+    // Check if a and b have the same sign.
+    let a_is_neg = a.length > 0 && (a[a.length - 1] >> 7) == 1
+    let b_is_neg = b.length > 0 && (b[b.length - 1] >> 7) == 1
+    
+    if (!a_is_neg && b_is_neg) {
+      return 1
+    } else if (a_is_neg && !b_is_neg) {
+      return -1
+    }
+    
+    // Check how many bytes of a and b are relevant to the magnitude.
+    let a_relevant_bytes = a.length;
+    while(a_relevant_bytes > 0 &&
+      (!a_is_neg && a[a_relevant_bytes - 1] == 0 ||
+      a_is_neg && a[a_relevant_bytes - 1] == 255)) {
+        a_relevant_bytes -= 1;
+    }
+    let b_relevant_bytes = b.length;
+    while(b_relevant_bytes > 0 &&
+      (!b_is_neg && b[b_relevant_bytes - 1] == 0 ||
+      b_is_neg && b[b_relevant_bytes - 1] == 255)) {
+        b_relevant_bytes -= 1;
+    }
+
+    // If a and b are positive then the one with more relevant bytes is larger.
+    // Otherwise the one with less relevant bytes is larger.
+    if (a_relevant_bytes > b_relevant_bytes) {
+        return a_is_neg ? -1 : 1;
+    } else if (b_relevant_bytes > a_relevant_bytes) {
+        return a_is_neg ? 1 : -1;
+    }
+ 
+    // We now know that a and b have the same sign and number of relevant bytes.
+    // If a and b are both negative then the one of lesser magnitude is the
+    // largest, however since in two's complement the magnitude is flipped, we
+    // may use the same logic as if a and are positive.
+    let shortest_length = a.length < b.length ? a.length : b.length;
+    for(let i = shortest_length - 2; i >= 0; i--) {
+      if (a[i] < b[i]) {
+          return  -1
+      } else if (a[i] > b[i]) {
+          return 1
+      }
+    }
+
+    return 0
   }
 }
 
