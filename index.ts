@@ -83,6 +83,13 @@ declare namespace dataSource {
   function create(name: string, params: Array<string>): void
 }
 
+/** Special function for ENS name lookups, not meant for general purpose
+ * use. This function will only be useful if the graph-node instance has
+ * additional data loaded **/
+export declare namespace ens {
+    function nameByHash(hash: string): string|null
+}
+
 /**
  * TypedMap entry.
  */
