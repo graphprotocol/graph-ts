@@ -24,4 +24,31 @@ export function test(): void {
     assert(zero != minus_five)
     assert(minus_five < zero && minus_five <= zero)
     assert(five > zero && five >= zero)
+
+    let a = BigInt.fromI32(77123455)
+    assert(a == a && a.isI32())
+
+    let b = BigInt.fromI32(48294181)
+    assert(b == b && b.isI32())
+    assert(a < b && a <= b)
+
+    a = BigInt.fromI32(9292928)
+    assert(a == a && a.isI32())
+    assert(a < b && a <= b)
+
+    b = BigInt.fromI32(-9717735)
+    assert(b == b && b.isI32())
+    assert(b < a && b <= a)
+
+    a = BigInt.fromI32(53499369)
+    assert(a == a && a.isI32())
+    assert(b < a && b <= a)
+
+    b = BigInt.fromI32(10242178)
+    assert(b == b && b.isI32())
+    assert(b < a && b <= a)
+
+    a = BigInt.fromI32(1000)
+    b = BigInt.fromI32(900)
+    assert(b < a && b <= a)
 }
