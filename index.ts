@@ -177,6 +177,24 @@ export class ByteArray extends Uint8Array {
   toBase58(): string {
     return typeConversion.bytesToBase58(this)
   }
+
+  /// Interprets the first 4 bytes as a little-endian U32.
+  toU32(): u32 {
+    let padded_bytes = new Bytes(4);
+    padded_bytes[0] = 0;
+    padded_bytes[1] = 0;
+    padded_bytes[2] = 0;
+    padded_bytes[3] = 0;
+    for (let i = 0; i < this.length; i++) {
+      padded_bytes[i] = this[i]
+    }
+    let x: u32 = 0;
+    x = (x | padded_bytes[3]) << 8;
+    x = (x | padded_bytes[2]) << 8;
+    x = (x | padded_bytes[1]) << 8;
+    x = (x | padded_bytes[0]);
+    return x;
+  }
 }
 
 /** A dynamically-sized byte array. */
@@ -195,12 +213,12 @@ export class BigInt extends Uint8Array {
     return ByteArray.fromI32(x) as Uint8Array as BigInt
   }
 
-  /// `bytes` assumed to be little-endian.
+  /// `bytes` assumed to be little-endian. If your input is big-endian, call `.reverse()` first.
   static fromSignedBytes(bytes: Bytes): BigInt {
     return bytes as Uint8Array as BigInt
   }
 
-  /// `bytes` assumed to be little-endian.
+  /// `bytes` assumed to be little-endian. If your input is big-endian, call `.reverse()` first.
   static fromUnsignedBytes(bytes: Bytes): BigInt {
     let signed_bytes = new BigInt(bytes.length + 1);
     for (let i = 0; i < bytes.length; i++) {
