@@ -51,9 +51,6 @@ declare namespace typeConversion {
   function bigIntToHex(bigInt: Uint8Array): string
   function stringToH160(s: string): Bytes
   function bytesToBase58(n: Uint8Array): string
-
-  //// Primitive to/from ethereum 256-bit number conversions.
-  function bigIntToI32(x: Uint8Array): i32
 }
 
 /** Host interface for BigInt arithmetic */
@@ -178,17 +175,51 @@ export class ByteArray extends Uint8Array {
     return typeConversion.bytesToBase58(this)
   }
 
-  /// Interprets the first 4 bytes as a little-endian U32.
+  /// Interprets the byte array as a little-endian U32.
+  /// Fails in case of overflow.
   toU32(): u32 {
+    for (let i = 4; i < this.length; i++) {
+      if (this[i] != 0) {
+        assert(false, "overflow converting " + this.toHexString() + " to u32")
+      }
+    }
     let padded_bytes = new Bytes(4);
     padded_bytes[0] = 0;
     padded_bytes[1] = 0;
     padded_bytes[2] = 0;
     padded_bytes[3] = 0;
-    for (let i = 0; i < this.length; i++) {
+    let min_len = padded_bytes.length < this.length ? padded_bytes.length : this.length;
+    for (let i = 0; i < min_len; i++) {
       padded_bytes[i] = this[i]
     }
     let x: u32 = 0;
+    x = (x | padded_bytes[3]) << 8;
+    x = (x | padded_bytes[2]) << 8;
+    x = (x | padded_bytes[1]) << 8;
+    x = (x | padded_bytes[0]);
+    return x;
+  }
+
+  /// Interprets the byte array as a little-endian I32.
+  /// Fails in case of overflow.
+  toI32(): i32 {
+    let is_neg = this.length > 0 && (this[this.length - 1] >> 7) == 1;
+    let padding = is_neg ? 255 : 0;
+    for (let i = 4; i < this.length; i++) {
+      if (this[i] != padding) {
+        assert(false, "overflow converting " + this.toHexString() + " to u32")
+      }
+    }
+    let padded_bytes = new Bytes(4);
+    padded_bytes[0] = padding;
+    padded_bytes[1] = padding;
+    padded_bytes[2] = padding;
+    padded_bytes[3] = padding;
+    let min_len = padded_bytes.length < this.length ? padded_bytes.length : this.length
+    for (let i = 0; i < min_len; i++) {
+      padded_bytes[i] = this[i]
+    }
+    let x: i32 = 0;
     x = (x | padded_bytes[3]) << 8;
     x = (x | padded_bytes[2]) << 8;
     x = (x | padded_bytes[1]) << 8;
@@ -241,7 +272,7 @@ export class BigInt extends Uint8Array {
   }
 
   toI32(): i32 {
-    return typeConversion.bigIntToI32(this)
+    return (this as Uint8Array as ByteArray).toI32()
   }
 
   toBigDecimal(): BigDecimal {
