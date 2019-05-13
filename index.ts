@@ -782,6 +782,14 @@ export class Value {
     return Value.fromArray(output)
   }
 
+  static fromAddressArray(input: Array<Address>): Value {
+      let output = new Array<Value>(input.length)
+      for (let i: i32 = 0; i < input.length; i++) {
+          output[i] = Value.fromAddress(input[i])
+      }
+      return Value.fromArray(output)
+  }
+  
   static fromArray(input: Array<Value>): Value {
     let value = new Value()
     value.kind = ValueKind.ARRAY
@@ -830,6 +838,13 @@ export class Value {
     return value
   }
 
+  static fromAddress(s: Address): Value {
+      let value = new Value()
+      value.kind = ValueKind.BYTES
+      value.data = s as u64
+      return value
+  }
+  
   static fromBigDecimal(n: BigDecimal): Value {
     let value = new Value()
     value.kind = ValueKind.BIGDECIMAL
