@@ -20,7 +20,10 @@ try {
   let test_wasm = new Uint8Array(fs.readFileSync(output_path))
  
   WebAssembly.instantiate(test_wasm, {
-    env
+    env,
+    index: {
+      "typeConversion.bytesToHex": function() {}
+    }
   }).then(module => {
     module.instance.exports.test();
   });
