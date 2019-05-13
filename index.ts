@@ -200,6 +200,16 @@ export class BigInt extends Uint8Array {
     return bytes as Uint8Array as BigInt
   }
 
+  /// `bytes` assumed to be little-endian.
+  static fromUnsignedBytes(bytes: Bytes): BigInt {
+    let signed_bytes = new BigInt(bytes.length + 1);
+    for (let i = 0; i < bytes.length; i++) {
+      signed_bytes[i] = bytes[i]
+    }
+    signed_bytes[bytes.length] = 0
+    return signed_bytes
+  }
+
   toHex(): string {
     return typeConversion.bigIntToHex(this)
   }
