@@ -17,6 +17,11 @@ export function test(): void {
     assert(!five.isZero() && five.isI32())
     assert(five == BigInt.fromI32(5))
     assert(five != minus_five)
+    assert(five == BigInt.fromUnsignedBytes(five_bytes.subarray(0, 1) as Bytes))
+
+    let x = new ByteArray(1)
+    x[0] = 255
+    assert(BigInt.fromUnsignedBytes(x as Bytes) == BigInt.fromI32(255))
 
     let zero = BigInt.fromSignedBytes(new ByteArray(0) as Bytes)
     assert(zero.isZero() && zero.isI32())
