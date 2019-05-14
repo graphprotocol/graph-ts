@@ -158,6 +158,18 @@ export class ByteArray extends Uint8Array {
     self[3] = (x >> 24) as u8
     return self
   }
+  
+  static fromHexString(hex: string): Bytes {
+    // Skip possible `0x` prefix.
+    if (hex.length >= 2 && hex[0] == '0' && hex[1] == 'x') {
+      hex = hex.substr(2)
+    }
+    let output = new Bytes(hex.length / 2);
+    for (let i = 0; i < hex.length; i += 2) {
+      output[i / 2] = I8.parseInt(hex.substr(i, 2), 16);
+    }
+    return output;
+  }
 
   toHex(): string {
     return typeConversion.bytesToHex(this)

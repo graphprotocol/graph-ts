@@ -75,4 +75,14 @@ export function test(): void {
     long_array[4] = 0
     assert(long_array.toU32() == 4294705147)
     assert(long_array.toI32() == 4294705147)
+
+    let bytes = Bytes.fromHexString("0x56696b746f726961")
+    assert(bytes[0] = 0x56)
+    assert(bytes[1] = 0x69)
+    assert(bytes[2] = 0x6b)
+    assert(bytes[3] = 0x74)
+    assert(bytes[4] = 0x6f)
+    assert(bytes[5] = 0x72)
+    assert(bytes[6] = 0x69)
+    assert(bytes[7] = 0x61)
 }
