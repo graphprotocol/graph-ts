@@ -66,6 +66,18 @@ export function test(): void {
     b = BigInt.fromI32(900)
     assert(b < a && b <= a)
 
+    a = BigInt.fromI32(123)
+    b = BigInt.fromI32(124)
+    assert(a < b && a <= b)
+    assert(b > a && b >= a)
+
+    a = BigInt.fromI32(I32.MIN_VALUE)
+    b = BigInt.fromI32(I32.MAX_VALUE)
+    assert(a < b && a <= b)
+    assert(b > a && b >= a)
+    assert(a.toI32() == -2147483648)
+    assert(b.toI32() == 2147483647)
+
     let longArray = new ByteArray(5)
     longArray[0] = 251
     longArray[1] = 255
