@@ -149,7 +149,9 @@ export class TypedMap<K, V> {
  * Byte array
  */
 export class ByteArray extends Uint8Array {
-  /// Returns bytes in little-endian order.
+  /**
+   * Returns bytes in little-endian order.
+   */
   static fromI32(x: i32): ByteArray {
     let self = new ByteArray(4)
     self[0] = x as u8
@@ -159,7 +161,11 @@ export class ByteArray extends Uint8Array {
     return self
   }
   
+  /**
+   * Input length must be even.
+   */
   static fromHexString(hex: string): Bytes {
+    assert(hex.length % 2 == 0, "input " + hex + " has odd length");
     // Skip possible `0x` prefix.
     if (hex.length >= 2 && hex[0] == '0' && hex[1] == 'x') {
       hex = hex.substr(2)
@@ -187,8 +193,10 @@ export class ByteArray extends Uint8Array {
     return typeConversion.bytesToBase58(this)
   }
 
-  /// Interprets the byte array as a little-endian U32.
-  /// Fails in case of overflow.
+  /**
+   * Interprets the byte array as a little-endian U32.
+   * Throws in case of overflow.
+   */ 
   toU32(): u32 {
     for (let i = 4; i < this.length; i++) {
       if (this[i] != 0) {
@@ -212,8 +220,10 @@ export class ByteArray extends Uint8Array {
     return x;
   }
 
-  /// Interprets the byte array as a little-endian I32.
-  /// Fails in case of overflow.
+  /**
+   * Interprets the byte array as a little-endian I32.
+   * Throws in case of overflow.
+   */ 
   toI32(): i32 {
     let is_neg = this.length > 0 && (this[this.length - 1] >> 7) == 1;
     let padding = is_neg ? 255 : 0;
@@ -256,12 +266,16 @@ export class BigInt extends Uint8Array {
     return ByteArray.fromI32(x) as Uint8Array as BigInt
   }
 
-  /// `bytes` assumed to be little-endian. If your input is big-endian, call `.reverse()` first.
+  /**
+   * `bytes` assumed to be little-endian. If your input is big-endian, call `.reverse()` first.
+   */ 
   static fromSignedBytes(bytes: Bytes): BigInt {
     return bytes as Uint8Array as BigInt
   }
 
-  /// `bytes` assumed to be little-endian. If your input is big-endian, call `.reverse()` first.
+  /**
+   * `bytes` assumed to be little-endian. If your input is big-endian, call `.reverse()` first.
+   */ 
   static fromUnsignedBytes(bytes: Bytes): BigInt {
     let signed_bytes = new BigInt(bytes.length + 1);
     for (let i = 0; i < bytes.length; i++) {
@@ -369,7 +383,9 @@ export class BigInt extends Uint8Array {
     return BigInt.fromI32(0) - this
   }
 
-  /// Returns −1 if a < b, 1 if a > b, and 0 if A == B
+  /**
+   * Returns −1 if a < b, 1 if a > b, and 0 if A == B
+   */
   static compare(a: BigInt, b: BigInt): i32 {
     // Check if a and b have the same sign.
     let a_is_neg = a.length > 0 && (a[a.length - 1] >> 7) == 1
