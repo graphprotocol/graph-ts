@@ -18,14 +18,12 @@ declare namespace ethereum {
 /** Host IPFS interface */
 export declare namespace ipfs {
   function cat(hash: string): Bytes | null
-  function map(hash: string, callback: string, userData: Value,
-               flags: string[]): void
+  function map(hash: string, callback: string, userData: Value, flags: string[]): void
 }
 
 export namespace ipfs {
-  export function mapJSON(hash: string, callback: string,
-                          userData: Value): void {
-    map(hash, callback, userData, ["json"])
+  export function mapJSON(hash: string, callback: string, userData: Value): void {
+    map(hash, callback, userData, ['json'])
   }
 }
 
@@ -247,21 +245,21 @@ export class ByteArray extends Uint8Array {
     self[3] = (x >> 24) as u8
     return self
   }
-  
+
   /**
    * Input length must be even.
    */
   static fromHexString(hex: string): Bytes {
-    assert(hex.length % 2 == 0, "input " + hex + " has odd length");
+    assert(hex.length % 2 == 0, 'input ' + hex + ' has odd length')
     // Skip possible `0x` prefix.
     if (hex.length >= 2 && hex[0] == '0' && hex[1] == 'x') {
       hex = hex.substr(2)
     }
-    let output = new Bytes(hex.length / 2);
+    let output = new Bytes(hex.length / 2)
     for (let i = 0; i < hex.length; i += 2) {
-      output[i / 2] = I8.parseInt(hex.substr(i, 2), 16);
+      output[i / 2] = I8.parseInt(hex.substr(i, 2), 16)
     }
-    return output;
+    return output
   }
 
   toHex(): string {
@@ -283,62 +281,64 @@ export class ByteArray extends Uint8Array {
   /**
    * Interprets the byte array as a little-endian U32.
    * Throws in case of overflow.
-   */ 
+   */
+
   toU32(): u32 {
     for (let i = 4; i < this.length; i++) {
       if (this[i] != 0) {
-        assert(false, "overflow converting " + this.toHexString() + " to u32")
+        assert(false, 'overflow converting ' + this.toHexString() + ' to u32')
       }
     }
-    let paddedBytes = new Bytes(4);
-    paddedBytes[0] = 0;
-    paddedBytes[1] = 0;
-    paddedBytes[2] = 0;
-    paddedBytes[3] = 0;
-    let minLen = paddedBytes.length < this.length ? paddedBytes.length : this.length;
+    let paddedBytes = new Bytes(4)
+    paddedBytes[0] = 0
+    paddedBytes[1] = 0
+    paddedBytes[2] = 0
+    paddedBytes[3] = 0
+    let minLen = paddedBytes.length < this.length ? paddedBytes.length : this.length
     for (let i = 0; i < minLen; i++) {
       paddedBytes[i] = this[i]
     }
-    let x: u32 = 0;
-    x = (x | paddedBytes[3]) << 8;
-    x = (x | paddedBytes[2]) << 8;
-    x = (x | paddedBytes[1]) << 8;
-    x = (x | paddedBytes[0]);
-    return x;
+    let x: u32 = 0
+    x = (x | paddedBytes[3]) << 8
+    x = (x | paddedBytes[2]) << 8
+    x = (x | paddedBytes[1]) << 8
+    x = x | paddedBytes[0]
+    return x
   }
 
   /**
    * Interprets the byte array as a little-endian I32.
    * Throws in case of overflow.
-   */ 
+   */
+
   toI32(): i32 {
-    let isNeg = this.length > 0 && (this[this.length - 1] >> 7) == 1;
-    let padding = isNeg ? 255 : 0;
+    let isNeg = this.length > 0 && this[this.length - 1] >> 7 == 1
+    let padding = isNeg ? 255 : 0
     for (let i = 4; i < this.length; i++) {
       if (this[i] != padding) {
-        assert(false, "overflow converting " + this.toHexString() + " to u32")
+        assert(false, 'overflow converting ' + this.toHexString() + ' to u32')
       }
     }
-    let paddedBytes = new Bytes(4);
-    paddedBytes[0] = padding;
-    paddedBytes[1] = padding;
-    paddedBytes[2] = padding;
-    paddedBytes[3] = padding;
+    let paddedBytes = new Bytes(4)
+    paddedBytes[0] = padding
+    paddedBytes[1] = padding
+    paddedBytes[2] = padding
+    paddedBytes[3] = padding
     let minLen = paddedBytes.length < this.length ? paddedBytes.length : this.length
     for (let i = 0; i < minLen; i++) {
       paddedBytes[i] = this[i]
     }
-    let x: i32 = 0;
-    x = (x | paddedBytes[3]) << 8;
-    x = (x | paddedBytes[2]) << 8;
-    x = (x | paddedBytes[1]) << 8;
-    x = (x | paddedBytes[0]);
-    return x;
+    let x: i32 = 0
+    x = (x | paddedBytes[3]) << 8
+    x = (x | paddedBytes[2]) << 8
+    x = (x | paddedBytes[1]) << 8
+    x = x | paddedBytes[0]
+    return x
   }
 }
 
 /** A dynamically-sized byte array. */
-export class Bytes extends ByteArray { }
+export class Bytes extends ByteArray {}
 
 /** An Ethereum address (20 bytes). */
 export class Address extends Bytes {
@@ -350,21 +350,23 @@ export class Address extends Bytes {
 /** An arbitrary size integer represented as an array of bytes. */
 export class BigInt extends Uint8Array {
   static fromI32(x: i32): BigInt {
-    return ByteArray.fromI32(x) as Uint8Array as BigInt
+    return (ByteArray.fromI32(x) as Uint8Array) as BigInt
   }
 
   /**
    * `bytes` assumed to be little-endian. If your input is big-endian, call `.reverse()` first.
-   */ 
+   */
+
   static fromSignedBytes(bytes: Bytes): BigInt {
-    return bytes as Uint8Array as BigInt
+    return (bytes as Uint8Array) as BigInt
   }
 
   /**
    * `bytes` assumed to be little-endian. If your input is big-endian, call `.reverse()` first.
-   */ 
+   */
+
   static fromUnsignedBytes(bytes: Bytes): BigInt {
-    let signedBytes = new BigInt(bytes.length + 1);
+    let signedBytes = new BigInt(bytes.length + 1)
     for (let i = 0; i < bytes.length; i++) {
       signedBytes[i] = bytes[i]
     }
@@ -385,7 +387,7 @@ export class BigInt extends Uint8Array {
   }
 
   toI32(): i32 {
-    return (this as Uint8Array as ByteArray).toI32()
+    return ((this as Uint8Array) as ByteArray).toI32()
   }
 
   toBigDecimal(): BigDecimal {
@@ -475,47 +477,51 @@ export class BigInt extends Uint8Array {
    */
   static compare(a: BigInt, b: BigInt): i32 {
     // Check if a and b have the same sign.
-    let aIsNeg = a.length > 0 && (a[a.length - 1] >> 7) == 1
-    let bIsIneg = b.length > 0 && (b[b.length - 1] >> 7) == 1
-    
+    let aIsNeg = a.length > 0 && a[a.length - 1] >> 7 == 1
+    let bIsIneg = b.length > 0 && b[b.length - 1] >> 7 == 1
+
     if (!aIsNeg && bIsIneg) {
       return 1
     } else if (aIsNeg && !bIsIneg) {
       return -1
     }
-    
+
     // Check how many bytes of a and b are relevant to the magnitude.
-    let aRelevantBytes = a.length;
-    while(aRelevantBytes > 0 &&
-      (!aIsNeg && a[aRelevantBytes - 1] == 0 ||
-      aIsNeg && a[aRelevantBytes - 1] == 255)) {
-        aRelevantBytes -= 1;
+    let aRelevantBytes = a.length
+    while (
+      aRelevantBytes > 0 &&
+      ((!aIsNeg && a[aRelevantBytes - 1] == 0) ||
+        (aIsNeg && a[aRelevantBytes - 1] == 255))
+    ) {
+      aRelevantBytes -= 1
     }
-    let bRelevantBytes = b.length;
-    while(bRelevantBytes > 0 &&
-      (!bIsIneg && b[(bRelevantBytes) - 1] == 0 ||
-      bIsIneg && b[bRelevantBytes - 1] == 255)) {
-        bRelevantBytes -= 1;
+    let bRelevantBytes = b.length
+    while (
+      bRelevantBytes > 0 &&
+      ((!bIsIneg && b[bRelevantBytes - 1] == 0) ||
+        (bIsIneg && b[bRelevantBytes - 1] == 255))
+    ) {
+      bRelevantBytes -= 1
     }
 
     // If a and b are positive then the one with more relevant bytes is larger.
     // Otherwise the one with less relevant bytes is larger.
     if (aRelevantBytes > bRelevantBytes) {
-        return aIsNeg ? -1 : 1;
+      return aIsNeg ? -1 : 1
     } else if (bRelevantBytes > aRelevantBytes) {
-        return aIsNeg ? 1 : -1;
+      return aIsNeg ? 1 : -1
     }
- 
+
     // We now know that a and b have the same sign and number of relevant bytes.
     // If a and b are both negative then the one of lesser magnitude is the
     // largest, however since in two's complement the magnitude is flipped, we
     // may use the same logic as if a and are positive.
-    let shortestLength = a.length < b.length ? a.length : b.length;
-    for(let i = shortestLength - 2; i >= 0; i--) {
+    let shortestLength = a.length < b.length ? a.length : b.length
+    for (let i = shortestLength - 2; i >= 0; i--) {
       if (a[i] < b[i]) {
-          return  -1
+        return -1
       } else if (a[i] > b[i]) {
-          return 1
+        return 1
       }
     }
 
@@ -526,7 +532,7 @@ export class BigInt extends Uint8Array {
 export class BigDecimal {
   digits: BigInt
   exp: BigInt
-  
+
   constructor(bigInt: BigInt) {
     this.digits = bigInt
     this.exp = BigInt.fromI32(0)
@@ -550,7 +556,7 @@ export class BigDecimal {
       for (let i = 0; i < truncateLength; i++) {
         this.digits = this.digits.div(BigInt.fromI32(10))
       }
-      this.exp = BigInt.fromI32(decimals* -1)
+      this.exp = BigInt.fromI32(decimals * -1)
       return this
     }
   }
@@ -622,7 +628,7 @@ export class EthereumValue {
   toBytes(): Bytes {
     assert(
       this.kind == EthereumValueKind.FIXED_BYTES || this.kind == EthereumValueKind.BYTES,
-      'EthereumValue is not bytes.'
+      'EthereumValue is not bytes.',
     )
     return changetype<Bytes>(this.data as u32)
   }
@@ -630,7 +636,7 @@ export class EthereumValue {
   toI32(): i32 {
     assert(
       this.kind == EthereumValueKind.INT || this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an int or uint.'
+      'EthereumValue is not an int or uint.',
     )
     let bigInt = changetype<BigInt>(this.data as u32)
     return bigInt.toI32()
@@ -639,7 +645,7 @@ export class EthereumValue {
   toBigInt(): BigInt {
     assert(
       this.kind == EthereumValueKind.INT || this.kind == EthereumValueKind.UINT,
-      'EthereumValue is not an int or uint.'
+      'EthereumValue is not an int or uint.',
     )
     return changetype<BigInt>(this.data as u32)
   }
@@ -652,23 +658,20 @@ export class EthereumValue {
   toArray(): Array<EthereumValue> {
     assert(
       this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
-      'EthereumValue is not an array.'
+      'EthereumValue is not an array.',
     )
     return changetype<Array<EthereumValue>>(this.data as u32)
   }
 
   toTuple(): EthereumTuple {
-    assert(
-        this.kind == EthereumValueKind.TUPLE,
-        'EthereumValue is not a tuple.'
-    )
+    assert(this.kind == EthereumValueKind.TUPLE, 'EthereumValue is not a tuple.')
     return changetype<EthereumTuple>(this.data as u32)
   }
 
   toBooleanArray(): Array<boolean> {
     assert(
       this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
-      'EthereumValue is not an array or fixed array.'
+      'EthereumValue is not an array or fixed array.',
     )
     let valueArray = this.toArray()
     let out = new Array<boolean>(valueArray.length)
@@ -681,7 +684,7 @@ export class EthereumValue {
   toBytesArray(): Array<Bytes> {
     assert(
       this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
-      'EthereumValue is not an array or fixed array.'
+      'EthereumValue is not an array or fixed array.',
     )
     let valueArray = this.toArray()
     let out = new Array<Bytes>(valueArray.length)
@@ -694,7 +697,7 @@ export class EthereumValue {
   toAddressArray(): Array<Address> {
     assert(
       this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
-      'EthereumValue is not an array or fixed array.'
+      'EthereumValue is not an array or fixed array.',
     )
     let valueArray = this.toArray()
     let out = new Array<Address>(valueArray.length)
@@ -707,7 +710,7 @@ export class EthereumValue {
   toStringArray(): Array<string> {
     assert(
       this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
-      'EthereumValue is not an array or fixed array.'
+      'EthereumValue is not an array or fixed array.',
     )
     let valueArray = this.toArray()
     let out = new Array<string>(valueArray.length)
@@ -720,7 +723,7 @@ export class EthereumValue {
   toI32Array(): Array<i32> {
     assert(
       this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
-      'EthereumValue is not an array or fixed array.'
+      'EthereumValue is not an array or fixed array.',
     )
     let valueArray = this.toArray()
     let out = new Array<i32>(valueArray.length)
@@ -733,7 +736,7 @@ export class EthereumValue {
   toBigIntArray(): Array<BigInt> {
     assert(
       this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
-      'EthereumValue is not an array or fixed array.'
+      'EthereumValue is not an array or fixed array.',
     )
     let valueArray = this.toArray()
     let out = new Array<BigInt>(valueArray.length)
@@ -915,7 +918,7 @@ export class Value {
 
   toBoolean(): boolean {
     if (this.kind == ValueKind.NULL) {
-      return false;
+      return false
     }
     assert(this.kind == ValueKind.BOOL, 'Value is not a boolean.')
     return this.data != 0
@@ -928,7 +931,7 @@ export class Value {
 
   toI32(): i32 {
     if (this.kind == ValueKind.NULL) {
-      return 0;
+      return 0
     }
     assert(this.kind == ValueKind.INT, 'Value is not an i32.')
     return this.data as i32
@@ -1057,13 +1060,13 @@ export class Value {
   }
 
   static fromAddressArray(input: Array<Address>): Value {
-      let output = new Array<Value>(input.length)
-      for (let i: i32 = 0; i < input.length; i++) {
-          output[i] = Value.fromAddress(input[i])
-      }
-      return Value.fromArray(output)
+    let output = new Array<Value>(input.length)
+    for (let i: i32 = 0; i < input.length; i++) {
+      output[i] = Value.fromAddress(input[i])
+    }
+    return Value.fromArray(output)
   }
-  
+
   static fromArray(input: Array<Value>): Value {
     let value = new Value()
     value.kind = ValueKind.ARRAY
@@ -1113,12 +1116,12 @@ export class Value {
   }
 
   static fromAddress(s: Address): Value {
-      let value = new Value()
-      value.kind = ValueKind.BYTES
-      value.data = s as u64
-      return value
+    let value = new Value()
+    value.kind = ValueKind.BYTES
+    value.data = s as u64
+    return value
   }
-  
+
   static fromBigDecimal(n: BigDecimal): Value {
     let value = new Value()
     value.kind = ValueKind.BIGDECIMAL
@@ -1235,7 +1238,7 @@ class SmartContractCall {
     contractName: string,
     contractAddress: Address,
     functionName: string,
-    functionParams: Array<EthereumValue>
+    functionParams: Array<EthereumValue>,
   ) {
     this.contractName = contractName
     this.contractAddress = contractAddress
