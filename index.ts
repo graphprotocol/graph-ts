@@ -203,20 +203,20 @@ export class ByteArray extends Uint8Array {
         assert(false, "overflow converting " + this.toHexString() + " to u32")
       }
     }
-    let padded_bytes = new Bytes(4);
-    padded_bytes[0] = 0;
-    padded_bytes[1] = 0;
-    padded_bytes[2] = 0;
-    padded_bytes[3] = 0;
-    let min_len = padded_bytes.length < this.length ? padded_bytes.length : this.length;
-    for (let i = 0; i < min_len; i++) {
-      padded_bytes[i] = this[i]
+    let paddedBytes = new Bytes(4);
+    paddedBytes[0] = 0;
+    paddedBytes[1] = 0;
+    paddedBytes[2] = 0;
+    paddedBytes[3] = 0;
+    let minLen = paddedBytes.length < this.length ? paddedBytes.length : this.length;
+    for (let i = 0; i < minLen; i++) {
+      paddedBytes[i] = this[i]
     }
     let x: u32 = 0;
-    x = (x | padded_bytes[3]) << 8;
-    x = (x | padded_bytes[2]) << 8;
-    x = (x | padded_bytes[1]) << 8;
-    x = (x | padded_bytes[0]);
+    x = (x | paddedBytes[3]) << 8;
+    x = (x | paddedBytes[2]) << 8;
+    x = (x | paddedBytes[1]) << 8;
+    x = (x | paddedBytes[0]);
     return x;
   }
 
@@ -225,27 +225,27 @@ export class ByteArray extends Uint8Array {
    * Throws in case of overflow.
    */ 
   toI32(): i32 {
-    let is_neg = this.length > 0 && (this[this.length - 1] >> 7) == 1;
-    let padding = is_neg ? 255 : 0;
+    let isNeg = this.length > 0 && (this[this.length - 1] >> 7) == 1;
+    let padding = isNeg ? 255 : 0;
     for (let i = 4; i < this.length; i++) {
       if (this[i] != padding) {
         assert(false, "overflow converting " + this.toHexString() + " to u32")
       }
     }
-    let padded_bytes = new Bytes(4);
-    padded_bytes[0] = padding;
-    padded_bytes[1] = padding;
-    padded_bytes[2] = padding;
-    padded_bytes[3] = padding;
-    let min_len = padded_bytes.length < this.length ? padded_bytes.length : this.length
-    for (let i = 0; i < min_len; i++) {
-      padded_bytes[i] = this[i]
+    let paddedBytes = new Bytes(4);
+    paddedBytes[0] = padding;
+    paddedBytes[1] = padding;
+    paddedBytes[2] = padding;
+    paddedBytes[3] = padding;
+    let minLen = paddedBytes.length < this.length ? paddedBytes.length : this.length
+    for (let i = 0; i < minLen; i++) {
+      paddedBytes[i] = this[i]
     }
     let x: i32 = 0;
-    x = (x | padded_bytes[3]) << 8;
-    x = (x | padded_bytes[2]) << 8;
-    x = (x | padded_bytes[1]) << 8;
-    x = (x | padded_bytes[0]);
+    x = (x | paddedBytes[3]) << 8;
+    x = (x | paddedBytes[2]) << 8;
+    x = (x | paddedBytes[1]) << 8;
+    x = (x | paddedBytes[0]);
     return x;
   }
 }
@@ -277,12 +277,12 @@ export class BigInt extends Uint8Array {
    * `bytes` assumed to be little-endian. If your input is big-endian, call `.reverse()` first.
    */ 
   static fromUnsignedBytes(bytes: Bytes): BigInt {
-    let signed_bytes = new BigInt(bytes.length + 1);
+    let signedBytes = new BigInt(bytes.length + 1);
     for (let i = 0; i < bytes.length; i++) {
-      signed_bytes[i] = bytes[i]
+      signedBytes[i] = bytes[i]
     }
-    signed_bytes[bytes.length] = 0
-    return signed_bytes
+    signedBytes[bytes.length] = 0
+    return signedBytes
   }
 
   toHex(): string {
@@ -388,43 +388,43 @@ export class BigInt extends Uint8Array {
    */
   static compare(a: BigInt, b: BigInt): i32 {
     // Check if a and b have the same sign.
-    let a_is_neg = a.length > 0 && (a[a.length - 1] >> 7) == 1
-    let b_is_neg = b.length > 0 && (b[b.length - 1] >> 7) == 1
+    let aIsNeg = a.length > 0 && (a[a.length - 1] >> 7) == 1
+    let bIsIneg = b.length > 0 && (b[b.length - 1] >> 7) == 1
     
-    if (!a_is_neg && b_is_neg) {
+    if (!aIsNeg && bIsIneg) {
       return 1
-    } else if (a_is_neg && !b_is_neg) {
+    } else if (aIsNeg && !bIsIneg) {
       return -1
     }
     
     // Check how many bytes of a and b are relevant to the magnitude.
-    let a_relevant_bytes = a.length;
-    while(a_relevant_bytes > 0 &&
-      (!a_is_neg && a[a_relevant_bytes - 1] == 0 ||
-      a_is_neg && a[a_relevant_bytes - 1] == 255)) {
-        a_relevant_bytes -= 1;
+    let aRelevantBytes = a.length;
+    while(aRelevantBytes > 0 &&
+      (!aIsNeg && a[aRelevantBytes - 1] == 0 ||
+      aIsNeg && a[aRelevantBytes - 1] == 255)) {
+        aRelevantBytes -= 1;
     }
-    let b_relevant_bytes = b.length;
-    while(b_relevant_bytes > 0 &&
-      (!b_is_neg && b[b_relevant_bytes - 1] == 0 ||
-      b_is_neg && b[b_relevant_bytes - 1] == 255)) {
-        b_relevant_bytes -= 1;
+    let bRelevantBytes = b.length;
+    while(bRelevantBytes > 0 &&
+      (!bIsIneg && b[(bRelevantBytes) - 1] == 0 ||
+      bIsIneg && b[bRelevantBytes - 1] == 255)) {
+        bRelevantBytes -= 1;
     }
 
     // If a and b are positive then the one with more relevant bytes is larger.
     // Otherwise the one with less relevant bytes is larger.
-    if (a_relevant_bytes > b_relevant_bytes) {
-        return a_is_neg ? -1 : 1;
-    } else if (b_relevant_bytes > a_relevant_bytes) {
-        return a_is_neg ? 1 : -1;
+    if (aRelevantBytes > bRelevantBytes) {
+        return aIsNeg ? -1 : 1;
+    } else if (bRelevantBytes > aRelevantBytes) {
+        return aIsNeg ? 1 : -1;
     }
  
     // We now know that a and b have the same sign and number of relevant bytes.
     // If a and b are both negative then the one of lesser magnitude is the
     // largest, however since in two's complement the magnitude is flipped, we
     // may use the same logic as if a and are positive.
-    let shortest_length = a.length < b.length ? a.length : b.length;
-    for(let i = shortest_length - 2; i >= 0; i--) {
+    let shortestLength = a.length < b.length ? a.length : b.length;
+    for(let i = shortestLength - 2; i >= 0; i--) {
       if (a[i] < b[i]) {
           return  -1
       } else if (a[i] > b[i]) {
