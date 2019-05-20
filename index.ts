@@ -249,7 +249,7 @@ export class ByteArray extends Uint8Array {
   /**
    * Input length must be even.
    */
-  static fromHexString(hex: string): Bytes {
+  static fromHexString(hex: string): ByteArray {
     assert(hex.length % 2 == 0, 'input ' + hex + ' has odd length')
     // Skip possible `0x` prefix.
     if (hex.length >= 2 && hex[0] == '0' && hex[1] == 'x') {
