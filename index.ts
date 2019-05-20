@@ -443,7 +443,7 @@ export class BigInt extends Uint8Array {
   }
 
   @operator('!=')
-  not_equal(other: BigInt): boolean {
+  notEqual(other: BigInt): boolean {
     return !(this == other)
   }
 
