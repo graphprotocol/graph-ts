@@ -1200,7 +1200,8 @@ export class EthereumTransaction {
  * Common representation for Ethereum smart contract calls.
  */
 export class EthereumCall {
-  address: Address
+  to: Address
+  from: Address
   block: EthereumBlock
   transaction: EthereumTransaction
   inputValues: Array<EthereumEventParam>
