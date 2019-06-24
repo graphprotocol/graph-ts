@@ -478,11 +478,11 @@ export class BigInt extends Uint8Array {
   static compare(a: BigInt, b: BigInt): i32 {
     // Check if a and b have the same sign.
     let aIsNeg = a.length > 0 && a[a.length - 1] >> 7 == 1
-    let bIsIneg = b.length > 0 && b[b.length - 1] >> 7 == 1
+    let bIsNeg = b.length > 0 && b[b.length - 1] >> 7 == 1
 
-    if (!aIsNeg && bIsIneg) {
+    if (!aIsNeg && bIsNeg) {
       return 1
-    } else if (aIsNeg && !bIsIneg) {
+    } else if (aIsNeg && !bIsNeg) {
       return -1
     }
 
@@ -498,8 +498,8 @@ export class BigInt extends Uint8Array {
     let bRelevantBytes = b.length
     while (
       bRelevantBytes > 0 &&
-      ((!bIsIneg && b[bRelevantBytes - 1] == 0) ||
-        (bIsIneg && b[bRelevantBytes - 1] == 255))
+      ((!bIsNeg && b[bRelevantBytes - 1] == 0) ||
+        (bIsNeg && b[bRelevantBytes - 1] == 255))
     ) {
       bRelevantBytes -= 1
     }
