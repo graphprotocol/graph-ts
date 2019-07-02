@@ -59,6 +59,7 @@ declare namespace bigInt {
   function dividedBy(x: BigInt, y: BigInt): BigInt
   function dividedByDecimal(x: BigInt, y: BigDecimal): BigDecimal
   function mod(x: BigInt, y: BigInt): BigInt
+  function pow(x: BigInt, exp: u8): BigInt
 }
 
 /** Host interface for BigDecimal */
@@ -470,6 +471,11 @@ export class BigInt extends Uint8Array {
   @operator.prefix('-')
   neg(): BigInt {
     return BigInt.fromI32(0) - this
+  }
+
+  /// Limited to a low exponent to discourage creating a huge BigInt.
+  pow(exp: u8): BigInt {
+    return bigInt.pow(this, exp)
   }
 
   /**
