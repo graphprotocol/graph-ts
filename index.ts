@@ -521,12 +521,12 @@ export class BigInt extends Uint8Array {
     // We now know that a and b have the same sign and number of relevant bytes.
     // If a and b are both negative then the one of lesser magnitude is the
     // largest, however since in two's complement the magnitude is flipped, we
-    // may use the same logic as if a and are positive.
-    let shortestLength = a.length < b.length ? a.length : b.length
-    for (let i = shortestLength - 2; i >= 0; i--) {
-      if (a[i] < b[i]) {
+    // may use the same logic as if a and b are positive.
+    let relevantBytes = aRelevantBytes
+    for (let i = 1; i <= relevantBytes; i++) {
+      if (a[relevantBytes - i] < b[relevantBytes - i]) {
         return -1
-      } else if (a[i] > b[i]) {
+      } else if (a[relevantBytes - i] > b[relevantBytes - i]) {
         return 1
       }
     }
