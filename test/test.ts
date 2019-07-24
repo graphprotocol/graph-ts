@@ -40,7 +40,7 @@ export function test(): void {
     let bI32 = 48294181
     let b = BigInt.fromI32(bI32)
     assert(b == b && b.isI32() && b.toI32() == bI32)
-    assert(a < b && a <= b)
+    assert(b < a && b <= a)
     
     aI32 = 9292928
     a = BigInt.fromI32(9292928)
@@ -77,6 +77,15 @@ export function test(): void {
     assert(b > a && b >= a)
     assert(a.toI32() == -2147483648)
     assert(b.toI32() == 2147483647)
+
+    // This is 8071860 in binary.
+    let blockNumber = new ByteArray(3)
+    blockNumber[0] = 180
+    blockNumber[1] = 42
+    blockNumber[2] = 123
+    let blockNumberBigInt = blockNumber as BigInt
+    let latestBlock = BigInt.fromI32(8200001)
+    assert(!blockNumberBigInt.gt(latestBlock))
 
     let longArray = new ByteArray(5)
     longArray[0] = 251
