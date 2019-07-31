@@ -767,6 +767,18 @@ export class EthereumValue {
     return changetype<EthereumTuple>(this.data as u32)
   }
 
+  toTupleArray(): Array<EthereumTuple> {
+    assert(this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
+      'EthereumValue is not an array.'
+    )
+    let valueArray = this.toArray()
+    let out = new Array<EthereumTuple>(valueArray.length)
+    for (let i: i32 = 0; i < valueArray.length; i++) {
+      out[i] = valueArray[i].toTuple()
+    }
+    return out
+  }
+
   toBooleanArray(): Array<boolean> {
     assert(
       this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
@@ -915,6 +927,14 @@ export class EthereumValue {
     token.kind = EthereumValueKind.TUPLE
     token.data = values as u64
     return token
+  }
+
+  static fromTupleArray(values: Array<EthereumTuple>): EthereumValue {
+    let out = new Array<EthereumValue>(values.length)
+    for(let i: i32 = 0; i < values.length; i++) {
+      out[i] = EthereumValue.fromTuple(values[i])
+    }
+    return EthereumValue.fromArray(out)
   }
 
   static fromBooleanArray(values: Array<boolean>): EthereumValue {
