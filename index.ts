@@ -767,14 +767,14 @@ export class EthereumValue {
     return changetype<EthereumTuple>(this.data as u32)
   }
 
-  toTupleArray(): Array<EthereumTuple> {
+  toTupleArray<T extends EthereumTuple>(): Array<T> {
     assert(this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
       'EthereumValue is not an array.'
     )
     let valueArray = this.toArray()
-    let out = new Array<EthereumTuple>(valueArray.length)
+    let out = new Array<T>(valueArray.length)
     for (let i: i32 = 0; i < valueArray.length; i++) {
-      out[i] = valueArray[i].toTuple()
+      out[i] = valueArray[i].toTuple() as T
     }
     return out
   }
