@@ -12,7 +12,7 @@ export declare namespace store {
 
 /** Host Ethereum interface */
 declare namespace ethereum {
-  function call(call: SmartContractCall): Array<EthereumValue>
+  function call(call: SmartContractCall): Array<EthereumValue> | null
 }
 
 /** Host IPFS interface */
@@ -1381,7 +1381,10 @@ export class SmartContract {
 
   call(name: string, params: Array<EthereumValue>): Array<EthereumValue> {
     let call = new SmartContractCall(this._name, this._address, name, params)
-    return ethereum.call(call)
+    let result = ethereum.call(call)
+    assert(result != null, 'Call reverted, consider using `try_' + name + 
+                           '` to handle this in the mapping.')
+    return ethereum.call(call) as Array<EthereumValue>
   }
 }
 
