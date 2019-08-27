@@ -656,7 +656,7 @@ export class BigDecimal {
 
     let aTotalLength = BigInt.fromI32(aRelevantDigits as i32) + a.exp
     let bTotalLength = BigInt.fromI32(bRelevantDigits as i32) + b.exp
-    
+
     // If a and b are positive then the longer one is larger.
     // Otherwise the shorter one is larger.
     if (aTotalLength > bTotalLength) {
@@ -664,7 +664,7 @@ export class BigDecimal {
     } else if (bTotalLength > aTotalLength) {
       return aIsNeg ? 1 : -1
     }
-    
+
     // We now know that a and b have the same sign and total length. If a and b
     // are both negative then the one of lesser magnitude is the largest,
     // however since in two's complement the magnitude is flipped, we may use
@@ -681,7 +681,7 @@ export class BigDecimal {
         return 1
       }
     }
-  
+
     return 0
   }
 }
@@ -768,8 +768,9 @@ export class EthereumValue {
   }
 
   toTupleArray<T extends EthereumTuple>(): Array<T> {
-    assert(this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
-      'EthereumValue is not an array.'
+    assert(
+      this.kind == EthereumValueKind.ARRAY || this.kind == EthereumValueKind.FIXED_ARRAY,
+      'EthereumValue is not an array.',
     )
     let valueArray = this.toArray()
     let out = new Array<T>(valueArray.length)
@@ -931,7 +932,7 @@ export class EthereumValue {
 
   static fromTupleArray(values: Array<EthereumTuple>): EthereumValue {
     let out = new Array<EthereumValue>(values.length)
-    for(let i: i32 = 0; i < values.length; i++) {
+    for (let i: i32 = 0; i < values.length; i++) {
       out[i] = EthereumValue.fromTuple(values[i])
     }
     return EthereumValue.fromArray(out)
@@ -1382,9 +1383,21 @@ export class SmartContract {
   call(name: string, params: Array<EthereumValue>): Array<EthereumValue> {
     let call = new SmartContractCall(this._name, this._address, name, params)
     let result = ethereum.call(call)
-    assert(result != null, 'Call reverted, consider using `try_' + name + 
-                           '` to handle this in the mapping.')
+    assert(
+      result != null,
+      'Call reverted, consider using `try_' + name + '` to handle this in the mapping.',
+    )
     return ethereum.call(call) as Array<EthereumValue>
+  }
+
+  tryCall(name: string, params: Array<EthereumValue>): CallResult<Array<EthereumValue>> {
+    let call = new SmartContractCall(this._name, this._address, name, params)
+    let result = ethereum.call(call)
+    if (result == null) {
+      return new CallResult()
+    } else {
+      return CallResult.fromValue(result as Array<EthereumValue>)
+    }
   }
 }
 
@@ -1470,5 +1483,43 @@ export class DataSourceTemplate {
    */
   static create(name: string, params: Array<string>): void {
     dataSource.create(name, params)
+  }
+}
+
+// This is used to wrap a generic so that it can be unioned with `null`, working around limitations
+// with primitives.
+class Wrapped<T> {
+  inner: T
+
+  constructor(inner: T) {
+    this.inner = inner
+  }
+}
+
+export class CallResult<T> {
+  // `null` indicates a reverted call.
+  private _value: Wrapped<T> | null
+
+  constructor() {
+    this._value = null
+  }
+
+  static fromValue<T>(value: T): CallResult<T> {
+    let result = new CallResult<T>()
+    result._value = new Wrapped(value)
+    return result
+  }
+
+  get reverted(): bool {
+    return this._value == null
+  }
+
+  get value(): T {
+    assert(
+      !this.reverted,
+      'accessed value of a reverted call, '
+      + 'please check the `reverted` field before accessing the `value` field',
+    )
+    return (this._value as Wrapped<T>).inner
   }
 }
