@@ -1385,7 +1385,8 @@ export class SmartContract {
     let result = ethereum.call(call)
     assert(
       result != null,
-      'Call reverted, consider using `try_' + name + '` to handle this in the mapping.',
+      'Call reverted, probably because an `assert` or `require` in the contract failed, ' +
+      'consider using `try_' + name + '` to handle this in the mapping.',
     )
     return ethereum.call(call) as Array<EthereumValue>
   }
