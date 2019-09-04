@@ -336,6 +336,24 @@ export class ByteArray extends Uint8Array {
     x = x | paddedBytes[0]
     return x
   }
+
+  @operator('==')
+  equals(other: ByteArray): boolean {
+    if (this.length != other.length) {
+      return false
+    }
+    for (let i = 0; i < this.length; i++) {
+      if (this[i] != other[i]) {
+        return false
+      }
+    }
+    return true
+  }
+
+  @operator('!=')
+  notEqual(other: ByteArray): boolean {
+    return !(this == other)
+  }
 }
 
 /** A dynamically-sized byte array. */
@@ -1386,7 +1404,9 @@ export class SmartContract {
     assert(
       result != null,
       'Call reverted, probably because an `assert` or `require` in the contract failed, ' +
-      'consider using `try_' + name + '` to handle this in the mapping.',
+        'consider using `try_' +
+        name +
+        '` to handle this in the mapping.',
     )
     return ethereum.call(call) as Array<EthereumValue>
   }
@@ -1518,8 +1538,8 @@ export class CallResult<T> {
   get value(): T {
     assert(
       !this.reverted,
-      'accessed value of a reverted call, '
-      + 'please check the `reverted` field before accessing the `value` field',
+      'accessed value of a reverted call, ' +
+        'please check the `reverted` field before accessing the `value` field',
     )
     return (this._value as Wrapped<T>).inner
   }
