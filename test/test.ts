@@ -105,4 +105,7 @@ export function test(): void {
     assert(bytes[5] = 0x72)
     assert(bytes[6] = 0x69)
     assert(bytes[7] = 0x61)
+
+    assert(ByteArray.fromI32(1) == ByteArray.fromI32(1))
+    assert(ByteArray.fromI32(1) != ByteArray.fromI32(2))
 }
