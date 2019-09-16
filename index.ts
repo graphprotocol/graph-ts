@@ -1408,7 +1408,7 @@ export class SmartContract {
         name +
         '` to handle this in the mapping.',
     )
-    return ethereum.call(call) as Array<EthereumValue>
+    return result as Array<EthereumValue>
   }
 
   tryCall(name: string, params: Array<EthereumValue>): CallResult<Array<EthereumValue>> {
