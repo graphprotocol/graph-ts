@@ -1125,3 +1125,14 @@ export class Wrapped<T> {
     this.inner = inner
   }
 }
+
+export function stringToUTF8(string: String): ByteArray {
+  // AssemblyScript counts a null terminator, we don't want that.
+  let len = string.lengthUTF8 - 1;
+  let utf8 = string.toUTF8();
+  let bytes = new ByteArray(len);
+  for (let i: i32 = 0; i < len; i++) {
+    bytes[i] = load<u8>(utf8 + i)
+  }
+  return bytes;
+}
