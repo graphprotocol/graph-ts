@@ -644,63 +644,11 @@ export class BigDecimal {
    * Returns −1 if a < b, 1 if a > b, and 0 if A == B
    */
   static compare(a: BigDecimal, b: BigDecimal): i32 {
-    // Check if a and b have the same sign.
-    let aIsNeg = a.digits < new BigInt(0)
-    let bIsNeg = b.digits < new BigInt(0)
-
-    if (!aIsNeg && bIsNeg) {
-      return 1
-    } else if (aIsNeg && !bIsNeg) {
-      return -1
+    let diff = a - b
+    if (diff.digits.isZero()) {
+      return 0
     }
-
-    // Check how many digits of a and b are relevant to the magnitude.
-    let aRelevantDigits = a.digits.length
-    while (
-      aRelevantDigits > 0 &&
-      ((!aIsNeg && a.digits[aRelevantDigits - 1] == 0) ||
-        (aIsNeg && a.digits[aRelevantDigits - 1] == 255))
-    ) {
-      aRelevantDigits -= 1
-    }
-    let bRelevantDigits = b.digits.length
-    while (
-      bRelevantDigits > 0 &&
-      ((!bIsNeg && b.digits[bRelevantDigits - 1] == 0) ||
-        (bIsNeg && b.digits[bRelevantDigits - 1] == 255))
-    ) {
-      bRelevantDigits -= 1
-    }
-
-    let aTotalLength = BigInt.fromI32(aRelevantDigits as i32) + a.exp
-    let bTotalLength = BigInt.fromI32(bRelevantDigits as i32) + b.exp
-
-    // If a and b are positive then the longer one is larger.
-    // Otherwise the shorter one is larger.
-    if (aTotalLength > bTotalLength) {
-      return aIsNeg ? -1 : 1
-    } else if (bTotalLength > aTotalLength) {
-      return aIsNeg ? 1 : -1
-    }
-
-    // We now know that a and b have the same sign and total length. If a and b
-    // are both negative then the one of lesser magnitude is the largest,
-    // however since in two's complement the magnitude is flipped, we may use
-    // the same logic as if a and are positive.
-    //
-    // Compare from the most significant to the least significant byte, using 0
-    // for the bytes represented by the exponent, until one is larger.
-    for (let i = 0; i <= Math.max(aRelevantDigits, bRelevantDigits); i++) {
-      let aByte = aRelevantDigits > i ? a.digits[aRelevantDigits - 1 - i] : 0
-      let bByte = bRelevantDigits > i ? b.digits[bRelevantDigits - 1 - i] : 0
-      if (aByte < bByte) {
-        return -1
-      } else if (aByte > bByte) {
-        return 1
-      }
-    }
-
-    return 0
+    return diff.digits > BigInt.fromI32(0) ? 1 : -1
   }
 }
 
