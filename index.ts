@@ -74,8 +74,12 @@ declare namespace bigDecimal {
 }
 
 /** Host interface for managing data sources */
-declare namespace dataSource {
+export declare namespace dataSource {
   function create(name: string, params: Array<string>): void
+
+  // Properties of the data source that fired the event.
+  function address(): Bytes 
+  function network(): String 
 }
 
 /**
