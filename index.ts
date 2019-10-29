@@ -78,8 +78,8 @@ export declare namespace dataSource {
   function create(name: string, params: Array<string>): void
 
   // Properties of the data source that fired the event.
-  function address(): Bytes 
-  function network(): String 
+  function address(): Address 
+  function network(): string 
 }
 
 /**
