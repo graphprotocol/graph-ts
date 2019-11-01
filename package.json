@@ -12,6 +12,8 @@
     "glob": "^7.1.2"
   },
   "scripts": {
-    "test": "node test/test.js"
+    "test": "node test/test.js",
+    "release:patch": "npm version patch && npm publish && git push origin master && git push --tags",
+    "release:minor": "npm version minor && npm publish && git push origin master && git push --tags"
   }
 }
