@@ -321,7 +321,7 @@ export class ByteArray extends Uint8Array {
     let padding = isNeg ? 255 : 0
     for (let i = 4; i < this.length; i++) {
       if (this[i] != padding) {
-        assert(false, 'overflow converting ' + this.toHexString() + ' to u32')
+        assert(false, 'overflow converting ' + this.toHexString() + ' to i32')
       }
     }
     let paddedBytes = new Bytes(4)
