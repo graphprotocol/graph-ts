@@ -33,17 +33,17 @@ export namespace ethereum {
   class Value {
     kind: ValueKind
     data: ValuePayload
-  
+
     toAddress(): Address {
       assert(this.kind == ValueKind.ADDRESS, 'Ethereum value is not an address')
       return changetype<Address>(this.data as u32)
     }
-  
+
     toBoolean(): boolean {
       assert(this.kind == ValueKind.BOOL, 'Ethereum value is not a boolean.')
       return this.data != 0
     }
-  
+
     toBytes(): Bytes {
       assert(
         this.kind == ValueKind.FIXED_BYTES || this.kind == ValueKind.BYTES,
@@ -51,7 +51,7 @@ export namespace ethereum {
       )
       return changetype<Bytes>(this.data as u32)
     }
-  
+
     toI32(): i32 {
       assert(
         this.kind == ValueKind.INT || this.kind == ValueKind.UINT,
@@ -60,7 +60,7 @@ export namespace ethereum {
       let bigInt = changetype<BigInt>(this.data as u32)
       return bigInt.toI32()
     }
-  
+
     toBigInt(): BigInt {
       assert(
         this.kind == ValueKind.INT || this.kind == ValueKind.UINT,
@@ -68,12 +68,12 @@ export namespace ethereum {
       )
       return changetype<BigInt>(this.data as u32)
     }
-  
+
     toString(): string {
       assert(this.kind == ValueKind.STRING, 'Ethereum value is not a string.')
       return changetype<string>(this.data as u32)
     }
-  
+
     toArray(): Array<Value> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
@@ -81,12 +81,12 @@ export namespace ethereum {
       )
       return changetype<Array<Value>>(this.data as u32)
     }
-  
+
     toTuple(): Tuple {
       assert(this.kind == ValueKind.TUPLE, 'Ethereum value is not a tuple.')
       return changetype<Tuple>(this.data as u32)
     }
-  
+
     toTupleArray<T extends Tuple>(): Array<T> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
@@ -99,7 +99,7 @@ export namespace ethereum {
       }
       return out
     }
-  
+
     toBooleanArray(): Array<boolean> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
@@ -112,7 +112,7 @@ export namespace ethereum {
       }
       return out
     }
-  
+
     toBytesArray(): Array<Bytes> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
@@ -125,7 +125,7 @@ export namespace ethereum {
       }
       return out
     }
-  
+
     toAddressArray(): Array<Address> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
@@ -138,7 +138,7 @@ export namespace ethereum {
       }
       return out
     }
-  
+
     toStringArray(): Array<string> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
@@ -151,7 +151,7 @@ export namespace ethereum {
       }
       return out
     }
-  
+
     toI32Array(): Array<i32> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
@@ -164,7 +164,7 @@ export namespace ethereum {
       }
       return out
     }
-  
+
     toBigIntArray(): Array<BigInt> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
@@ -177,79 +177,79 @@ export namespace ethereum {
       }
       return out
     }
-  
+
     static fromAddress(address: Address): Value {
       assert(address.length == 20, 'Address must contain exactly 20 bytes')
-  
+
       let token = new Value()
       token.kind = ValueKind.ADDRESS
       token.data = address as u64
       return token
     }
-  
+
     static fromBoolean(b: boolean): Value {
       let token = new Value()
       token.kind = ValueKind.BOOL
       token.data = b ? 1 : 0
       return token
     }
-  
+
     static fromBytes(bytes: Bytes): Value {
       let token = new Value()
       token.kind = ValueKind.BYTES
       token.data = bytes as u64
       return token
     }
-  
+
     static fromFixedBytes(bytes: Bytes): Value {
       let token = new Value()
       token.kind = ValueKind.FIXED_BYTES
       token.data = bytes as u64
       return token
     }
-  
+
     static fromI32(i: i32): Value {
       let token = new Value()
       token.kind = ValueKind.INT
       token.data = BigInt.fromI32(i) as u64
       return token
     }
-  
+
     static fromSignedBigInt(i: BigInt): Value {
       let token = new Value()
       token.kind = ValueKind.INT
       token.data = i as u64
       return token
     }
-  
+
     static fromUnsignedBigInt(i: BigInt): Value {
       let token = new Value()
       token.kind = ValueKind.UINT
       token.data = i as u64
       return token
     }
-  
+
     static fromString(s: string): Value {
       let token = new Value()
       token.kind = ValueKind.STRING
       token.data = s as u64
       return token
     }
-  
+
     static fromArray(values: Array<Value>): Value {
       let token = new Value()
       token.kind = ValueKind.ARRAY
       token.data = values as u64
       return token
     }
-  
+
     static fromTuple(values: Tuple): Value {
       let token = new Value()
       token.kind = ValueKind.TUPLE
       token.data = values as u64
       return token
     }
-  
+
     static fromTupleArray(values: Array<Tuple>): Value {
       let out = new Array<Value>(values.length)
       for (let i: i32 = 0; i < values.length; i++) {
@@ -257,7 +257,7 @@ export namespace ethereum {
       }
       return Value.fromArray(out)
     }
-  
+
     static fromBooleanArray(values: Array<boolean>): Value {
       let out = new Array<Value>(values.length)
       for (let i: i32 = 0; i < values.length; i++) {
@@ -265,7 +265,7 @@ export namespace ethereum {
       }
       return Value.fromArray(out)
     }
-  
+
     static fromBytesArray(values: Array<Bytes>): Value {
       let out = new Array<Value>(values.length)
       for (let i: i32 = 0; i < values.length; i++) {
@@ -273,7 +273,7 @@ export namespace ethereum {
       }
       return Value.fromArray(out)
     }
-  
+
     static fromFixedBytesArray(values: Array<Bytes>): Value {
       let out = new Array<Value>(values.length)
       for (let i: i32 = 0; i < values.length; i++) {
@@ -281,7 +281,7 @@ export namespace ethereum {
       }
       return Value.fromArray(out)
     }
-  
+
     static fromAddressArray(values: Array<Address>): Value {
       let out = new Array<Value>(values.length)
       for (let i: i32 = 0; i < values.length; i++) {
@@ -289,7 +289,7 @@ export namespace ethereum {
       }
       return Value.fromArray(out)
     }
-  
+
     static fromStringArray(values: Array<string>): Value {
       let out = new Array<Value>(values.length)
       for (let i: i32 = 0; i < values.length; i++) {
@@ -297,7 +297,7 @@ export namespace ethereum {
       }
       return Value.fromArray(out)
     }
-  
+
     static fromI32Array(values: Array<i32>): Value {
       let out = new Array<Value>(values.length)
       for (let i: i32 = 0; i < values.length; i++) {
@@ -305,7 +305,7 @@ export namespace ethereum {
       }
       return Value.fromArray(out)
     }
-  
+
     static fromSignedBigIntArray(values: Array<BigInt>): Value {
       let out = new Array<Value>(values.length)
       for (let i: i32 = 0; i < values.length; i++) {
@@ -313,7 +313,7 @@ export namespace ethereum {
       }
       return Value.fromArray(out)
     }
-  
+
     static fromUnsignedBigIntArray(values: Array<BigInt>): Value {
       let out = new Array<Value>(values.length)
       for (let i: i32 = 0; i < values.length; i++) {
@@ -351,7 +351,7 @@ export namespace ethereum {
     totalDifficulty: BigInt
     size: BigInt | null
   }
-  
+
   /**
    * An Ethereum transaction.
    */
@@ -365,7 +365,7 @@ export namespace ethereum {
     gasPrice: BigInt
     input: Bytes
   }
-  
+
   /**
    * Common representation for Ethereum smart contract calls.
    */
@@ -377,7 +377,7 @@ export namespace ethereum {
     inputValues: Array<EventParam>
     outputValues: Array<EventParam>
   }
-  
+
   /**
    * Common representation for Ethereum smart contract events.
    */
@@ -390,7 +390,7 @@ export namespace ethereum {
     transaction: Transaction
     parameters: Array<EventParam>
   }
-  
+
   /**
    * A dynamically-typed Ethereum event parameter.
    */
@@ -398,22 +398,25 @@ export namespace ethereum {
     name: string
     value: Value
   }
-  
+
   class SmartContractCall {
     contractName: string
     contractAddress: Address
     functionName: string
+    functionSignature: string
     functionParams: Array<Value>
-  
+
     constructor(
       contractName: string,
       contractAddress: Address,
       functionName: string,
+      functionSignature: string,
       functionParams: Array<Value>,
     ) {
       this.contractName = contractName
       this.contractAddress = contractAddress
       this.functionName = functionName
+      this.functionSignature = functionSignature
       this.functionParams = functionParams
     }
   }
@@ -424,14 +427,14 @@ export namespace ethereum {
   class SmartContract {
     _name: string
     _address: Address
-  
+
     protected constructor(name: string, address: Address) {
       this._name = name
       this._address = address
     }
-  
-    call(name: string, params: Array<Value>): Array<Value> {
-      let call = new SmartContractCall(this._name, this._address, name, params)
+
+    call(name: string, signature: string, params: Array<Value>): Array<Value> {
+      let call = new SmartContractCall(this._name, this._address, name, signature, params)
       let result = ethereum.call(call)
       assert(
         result != null,
@@ -442,9 +445,13 @@ export namespace ethereum {
       )
       return result as Array<Value>
     }
-  
-    tryCall(name: string, params: Array<Value>): CallResult<Array<Value>> {
-      let call = new SmartContractCall(this._name, this._address, name, params)
+
+    tryCall(
+      name: string,
+      signature: string,
+      params: Array<Value>,
+    ): CallResult<Array<Value>> {
+      let call = new SmartContractCall(this._name, this._address, name, signature, params)
       let result = ethereum.call(call)
       if (result == null) {
         return new CallResult()
@@ -457,21 +464,21 @@ export namespace ethereum {
   class CallResult<T> {
     // `null` indicates a reverted call.
     private _value: Wrapped<T> | null
-  
+
     constructor() {
       this._value = null
     }
-  
+
     static fromValue<T>(value: T): CallResult<T> {
       let result = new CallResult<T>()
       result._value = new Wrapped(value)
       return result
     }
-  
+
     get reverted(): bool {
       return this._value == null
     }
-  
+
     get value(): T {
       assert(
         !this.reverted,
