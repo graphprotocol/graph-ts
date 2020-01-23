@@ -1,4 +1,4 @@
-import { BigInt, ByteArray, Bytes, stringToUTF8 } from 'temp_lib/index'
+import { BigInt, ByteArray, Bytes } from 'temp_lib/index'
 
 // Test some BigInt methods.
 export function test(): void {
@@ -109,5 +109,5 @@ export function test(): void {
     assert(ByteArray.fromI32(1) == ByteArray.fromI32(1))
     assert(ByteArray.fromI32(1) != ByteArray.fromI32(2))
 
-    assert(stringToUTF8("Hello, World!") == ByteArray.fromHexString("0x48656c6c6f2c20576f726c6421"))
+    assert(Bytes.fromUTF8("Hello, World!") == ByteArray.fromHexString("0x48656c6c6f2c20576f726c6421"))
 }
