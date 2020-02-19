@@ -427,6 +427,21 @@ export class BigInt extends Uint8Array {
     return this < BigInt.fromI32(0) ? -this : this
   }
 
+  sqrt(): BigInt {
+    let x = this
+    let z = x.plus(BigInt.fromI32(1)).div(BigInt.fromI32(2))
+    let y = x
+    while (z < y) {
+      y = z
+      z = x
+        .div(z)
+        .plus(z)
+        .div(BigInt.fromI32(2))
+    }
+
+    return y
+  }
+
   // Operators
 
   @operator('+')
