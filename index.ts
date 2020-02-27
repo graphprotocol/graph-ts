@@ -964,6 +964,38 @@ export class JSONValue {
     return this.kind == JSONValueKind.NULL
   }
 
+  isBool(): boolean {
+    return this.kind == JSONValueKind.BOOL
+  }
+
+  isI64(): boolean {
+    return this.kind == JSONValueKind.NUMBER
+  }
+
+  isU64(): boolean {
+    return this.kind == JSONValueKind.NUMBER
+  }
+
+  isF64(): boolean {
+    return this.kind == JSONValueKind.NUMBER
+  }
+
+  isBigInt(): boolean {
+    return this.kind == JSONValueKind.NUMBER
+  }
+
+  isString(): boolean {
+    return this.kind == JSONValueKind.STRING
+  }
+
+  isArray(): boolean {
+    return this.kind == JSONValueKind.ARRAY
+  }
+
+  isObject(): boolean {
+    return this.kind == JSONValueKind.OBJECT
+  }
+
   toBool(): boolean {
     assert(this.kind == JSONValueKind.BOOL, 'JSON value is not a boolean.')
     return this.data != 0
