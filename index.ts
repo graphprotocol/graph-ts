@@ -937,6 +937,54 @@ export class Entity extends TypedMap<string, Value> {
     }
     return target
   }
+
+  setString(key: string, value: string): void {
+    this.set(key, Value.fromString(value))
+  }
+
+  setI32(key: string, value: i32): void {
+    this.set(key, Value.fromI32(value))
+  }
+
+  setBigInt(key: string, value: BigInt): void {
+    this.set(key, Value.fromBigInt(value))
+  }
+
+  setBytes(key: string, value: Bytes): void {
+    this.set(key, Value.fromBytes(value))
+  }
+
+  setBoolean(key: string, value: bool): void {
+    this.set(key, Value.fromBoolean(value))
+  }
+
+  setBigDecimal(key, value: BigDecimal): void {
+    this.set(key, Value.fromBigDecimal(value))
+  }
+
+  getString(key: string): string {
+    return this.get(key).toString()
+  }
+
+  getI32(key: string): i32 {
+    return this.get(key).toI32()
+  }
+
+  getBigInt(key: string): BigInt {
+    return this.get(key).toBigInt()
+  }
+
+  getBytes(key: string): Bytes {
+    this.get(key).toBytes()
+  }
+
+  getBoolean(key: string): boolean {
+    this.get(key).toBoolean()
+  }
+
+  getBigDecimal(key: string): BigDecimal {
+    this.get(key).toBigDecimal()
+  }
 }
 
 /** Type hint for JSON values. */
