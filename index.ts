@@ -1072,6 +1072,10 @@ export class DataSourceTemplate {
   static create(name: string, params: Array<string>): void {
     dataSource.create(name, params)
   }
+
+  static createWithContext(name: string, params: Array<string>, context: Entity): void {
+    dataSource.createWithContext(name, params, context)
+  }
 }
 
 // This is used to wrap a generic so that it can be unioned with `null`, working around limitations
