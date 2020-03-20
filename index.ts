@@ -74,12 +74,16 @@ declare namespace bigDecimal {
 /** Host interface for managing data sources */
 export declare namespace dataSource {
   function create(name: string, params: Array<string>): void
-  function createWithContext(name: string, params: Array<string>, context: Entity): void
+  function createWithContext(
+    name: string,
+    params: Array<string>,
+    context: DataSourceContext,
+  ): void
 
   // Properties of the data source that fired the event.
   function address(): Address
   function network(): string
-  function context(): Entity
+  function context(): DataSourceContext
 }
 
 /**
@@ -989,6 +993,9 @@ export class Entity extends TypedMap<string, Value> {
   }
 }
 
+/** Context for dynamic data sources */
+export type DataSourceContext = Entity
+
 /** Type hint for JSON values. */
 export enum JSONValueKind {
   NULL = 0,
@@ -1073,7 +1080,11 @@ export class DataSourceTemplate {
     dataSource.create(name, params)
   }
 
-  static createWithContext(name: string, params: Array<string>, context: Entity): void {
+  static createWithContext(
+    name: string,
+    params: Array<string>,
+    context: DataSourceContext,
+  ): void {
     dataSource.createWithContext(name, params, context)
   }
 }
