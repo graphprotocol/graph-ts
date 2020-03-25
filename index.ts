@@ -994,7 +994,7 @@ export class Entity extends TypedMap<string, Value> {
 }
 
 /** Context for dynamic data sources */
-export type DataSourceContext = Entity
+export class DataSourceContext extends Entity {}
 
 /** Type hint for JSON values. */
 export enum JSONValueKind {
