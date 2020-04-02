@@ -32,22 +32,12 @@ export declare namespace crypto {
 
 /** Host JSON interface */
 export declare namespace json {
+  function fromBytes(data: Bytes): JSONValue
   function try_fromBytes(data: Bytes): Result<JSONValue, JSONError>
   function toI64(decimal: string): i64
   function toU64(decimal: string): u64
   function toF64(decimal: string): f64
   function toBigInt(decimal: string): BigInt
-}
-
-export namespace json {
-  export function fromBytes(data: Bytes): JSONValue {
-    let result = json.try_fromBytes(data)
-    if (result.error !== null) {
-      throw result.error
-    } else {
-      return result.value
-    }
-  }
 }
 
 /** Host type conversion interface */
