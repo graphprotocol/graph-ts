@@ -33,7 +33,7 @@ export declare namespace crypto {
 /** Host JSON interface */
 export declare namespace json {
   function fromBytes(data: Bytes): JSONValue
-  function try_fromBytes(data: Bytes): Result<JSONValue, JSONError>
+  function try_fromBytes(data: Bytes): Result<JSONValue, boolean>
   function toI64(decimal: string): i64
   function toU64(decimal: string): u64
   function toF64(decimal: string): f64
@@ -1091,12 +1091,6 @@ export class JSONValue {
     assert(this.kind == JSONValueKind.OBJECT, 'JSON value is not an object.')
     return changetype<TypedMap<string, JSONValue>>(this.data as u32)
   }
-}
-
-export class JSONError {
-  public line: u32
-  public column: u32
-  public message: string
 }
 
 /**
