@@ -181,6 +181,24 @@ export namespace log {
 }
 
 /**
+ * The result of an operation, with a corresponding value and error type.
+ */
+export class Result<V, E> {
+  public value: V | null
+  public error: E | null
+
+  unwrap(): V {
+    assert(this.value !== null, 'Called `Result::unwrap` on an error value')
+    return this.value as V
+  }
+
+  unwrapError(): E {
+    assert(this.error !== null, 'Called `Result::unwrapError` on a successful value')
+    return this.error as E
+  }
+}
+
+/**
  * TypedMap entry.
  */
 export class TypedMapEntry<K, V> {
