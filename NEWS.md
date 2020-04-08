@@ -7,7 +7,10 @@ repo.
 
 ## Unreleased
 
-- Add `json.try_fromBytes` for handling JSON parsing errors (#110).
+- Add `box.profile()` to access 3Box profile data (#109).
+- Add `areweave.transactionData()` to access Arweave transaction data (#109).
+- Add `Bytes.fromUTF8()` helper to create byte arrays from strings (#78).
+- Add `json.try_fromBytes()` for handling JSON parsing errors (#110).
 - Add a `DataSourceContext` class for `SomeTemplate.createWithContext()`
   (#106, #108).
 - Add support for calling overloaded Ethereum contract functions (#100).
