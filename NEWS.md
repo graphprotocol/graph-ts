@@ -7,6 +7,10 @@ repo.
 
 ## Unreleased
 
+tbd
+
+## 0.18.0
+
 - Add `box.profile()` to access 3Box profile data (#109).
 - Add `areweave.transactionData()` to access Arweave transaction data (#109).
 - Add `Bytes.fromUTF8()` helper to create byte arrays from strings (#78).
