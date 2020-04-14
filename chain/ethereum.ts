@@ -7,7 +7,7 @@ export declare namespace ethereum {
 
 export namespace ethereum {
   /** Type hint for Ethereum values. */
-  enum ValueKind {
+  export enum ValueKind {
     ADDRESS = 0,
     FIXED_BYTES = 1,
     BYTES = 2,
@@ -25,12 +25,12 @@ export namespace ethereum {
    *
    * Big enough to fit any pointer or native `this.data`.
    */
-  type ValuePayload = u64
+  export type ValuePayload = u64
 
   /**
    * A dynamically typed value used when accessing Ethereum data.
    */
-  class Value {
+  export class Value {
     kind: ValueKind
     data: ValuePayload
 
@@ -330,12 +330,12 @@ export namespace ethereum {
    * code generation then creates subclasses that provide named getters to
    * access the members by name.
    */
-  class Tuple extends Array<Value> {}
+  export class Tuple extends Array<Value> {}
 
   /**
    * An Ethereum block.
    */
-  class Block {
+  export class Block {
     hash: Bytes
     parentHash: Bytes
     unclesHash: Bytes
@@ -355,7 +355,7 @@ export namespace ethereum {
   /**
    * An Ethereum transaction.
    */
-  class Transaction {
+  export class Transaction {
     hash: Bytes
     index: BigInt
     from: Address
@@ -369,7 +369,7 @@ export namespace ethereum {
   /**
    * Common representation for Ethereum smart contract calls.
    */
-  class Call {
+  export class Call {
     to: Address
     from: Address
     block: Block
@@ -381,7 +381,7 @@ export namespace ethereum {
   /**
    * Common representation for Ethereum smart contract events.
    */
-  class Event {
+  export class Event {
     address: Address
     logIndex: BigInt
     transactionLogIndex: BigInt
@@ -394,12 +394,12 @@ export namespace ethereum {
   /**
    * A dynamically-typed Ethereum event parameter.
    */
-  class EventParam {
+  export class EventParam {
     name: string
     value: Value
   }
 
-  class SmartContractCall {
+  export class SmartContractCall {
     contractName: string
     contractAddress: Address
     functionName: string
@@ -424,7 +424,7 @@ export namespace ethereum {
   /**
    * Low-level interaction with Ethereum smart contracts
    */
-  class SmartContract {
+  export class SmartContract {
     _name: string
     _address: Address
 
@@ -461,7 +461,7 @@ export namespace ethereum {
     }
   }
 
-  class CallResult<T> {
+  export class CallResult<T> {
     // `null` indicates a reverted call.
     private _value: Wrapped<T> | null
 
