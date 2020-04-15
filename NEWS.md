@@ -9,6 +9,10 @@ repo.
 
 tbd
 
+## 0.18.1
+
+- Properly exprt all types in the `ethereum` module (#111).
+
 ## 0.18.0
 
 - Add `box.profile()` to access 3Box profile data (#109).
