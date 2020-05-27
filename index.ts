@@ -308,14 +308,14 @@ export class ByteArray extends Uint8Array {
   }
 
   static fromUTF8(string: String): ByteArray {
-      // AssemblyScript counts a null terminator, we don't want that.
-      let len = string.lengthUTF8 - 1;
-      let utf8 = string.toUTF8();
-      let bytes = new ByteArray(len);
-      for (let i: i32 = 0; i < len; i++) {
-        bytes[i] = load<u8>(utf8 + i)
-      }
-      return bytes;
+    // AssemblyScript counts a null terminator, we don't want that.
+    let len = string.lengthUTF8 - 1
+    let utf8 = string.toUTF8()
+    let bytes = new ByteArray(len)
+    for (let i: i32 = 0; i < len; i++) {
+      bytes[i] = load<u8>(utf8 + i)
+    }
+    return bytes
   }
 
   toHex(): string {
@@ -1008,7 +1008,7 @@ export class Entity extends TypedMap<string, Value> {
     this.set(key, Value.fromBoolean(value))
   }
 
-  setBigDecimal(key, value: BigDecimal): void {
+  setBigDecimal(key: string, value: BigDecimal): void {
     this.set(key, Value.fromBigDecimal(value))
   }
 
@@ -1025,15 +1025,15 @@ export class Entity extends TypedMap<string, Value> {
   }
 
   getBytes(key: string): Bytes {
-    this.get(key).toBytes()
+    return this.get(key).toBytes()
   }
 
   getBoolean(key: string): boolean {
-    this.get(key).toBoolean()
+    return this.get(key).toBoolean()
   }
 
   getBigDecimal(key: string): BigDecimal {
-    this.get(key).toBigDecimal()
+    return this.get(key).toBigDecimal()
   }
 }
 

@@ -20,7 +20,7 @@ fs.copyFileSync('index.ts', 'test/temp_lib/index.ts')
 let output_path = 'test/temp_out/test.wasm'
 
 const env = {
-  abort: function(message, fileName, lineNumber, columnNumber) {
+  abort: function (message, fileName, lineNumber, columnNumber) {
     console.log('aborted')
   },
 }
@@ -28,6 +28,7 @@ const env = {
 try {
   testFile('test/test.ts')
   testFile('test/testBytes.ts')
+  testFile('test/entity.ts')
 
   // Cleanup
   fs.unlinkSync('test/temp_lib/index.ts')
@@ -56,9 +57,9 @@ function testFile(path) {
   WebAssembly.instantiate(test_wasm, {
     env,
     index: {
-      'typeConversion.bytesToHex': function() {},
+      'typeConversion.bytesToHex': function () {},
     },
-  }).then(module => {
+  }).then((module) => {
     module.instance.exports.test()
   })
 }
