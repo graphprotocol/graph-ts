@@ -353,6 +353,20 @@ export namespace ethereum {
   }
 
   /**
+   * An Ethereum block with transactions.
+   */
+  export class BlockWithTransactions extends Block {
+    transactions: Array<Transaction>
+  }
+
+  /**
+   * An Ethereum block with transactions and their receipts.
+   */
+  export class BlockWithReceipts extends Block {
+    transactionsReceipts: Array<TransactionWithReceipt>
+  }
+
+  /**
    * An Ethereum transaction.
    */
   export class Transaction {
@@ -361,6 +375,24 @@ export namespace ethereum {
     from: Address
     to: Address | null
     value: BigInt
+    gasUsed: BigInt
+    gasPrice: BigInt
+    input: Bytes
+  }
+
+  /**
+   * An Ethereum transaction with receipt.
+   */
+  export class TransactionWithReceipt {
+    hash: Bytes
+    index: BigInt
+    from: Address
+    to: Address | null
+    value: BigInt
+    status: BigInt
+    root: Bytes
+    contractAddress: Address
+    cumulativeGasUsed: BigInt
     gasUsed: BigInt
     gasPrice: BigInt
     input: Bytes
