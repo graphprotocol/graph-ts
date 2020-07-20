@@ -6,7 +6,7 @@
   "types": "index.ts",
   "main": "index.ts",
   "dependencies": {
-    "assemblyscript": "https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3"
+    "assemblyscript": "^0.14.1"
   },
   "devDependencies": {
     "glob": "^7.1.2"
