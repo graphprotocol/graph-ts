@@ -30,6 +30,12 @@ export declare namespace crypto {
   function keccak256(input: ByteArray): ByteArray
 }
 
+/** Host abi utilities interface */
+export declare namespace abi {
+  function encode(params: Array<Value>): Bytes
+  function decode(params: Array<String>, data: Bytes): Array<Value>
+}
+
 /** Host JSON interface */
 export declare namespace json {
   function fromBytes(data: Bytes): JSONValue
