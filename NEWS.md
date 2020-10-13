@@ -7,7 +7,9 @@ repo.
 
 ## Unreleased
 
-tbd
+## 0.19.0
+
+- Fix `Entity` helpers like `getBoolean`.
 
 ## 0.18.1
 
