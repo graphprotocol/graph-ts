@@ -2,29 +2,22 @@
 # yarn lockfile v1
 
 
-"@protobufjs/utf8@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
-
-"assemblyscript@https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3":
-  version "0.6.0"
-  resolved "https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3"
+assemblyscript@^0.17.14:
+  version "0.17.14"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.17.14.tgz#9ea4a04a50dc53042b35d492fff947101ae00248"
+  integrity sha512-TLuwNvZAIH26wu2puKpAJokzLp10kJkVXxbgDjFFmbW9VF/qg7rkmi0hjsiu41bjoH1UaVgY4vYvbbUeOHtKyg==
   dependencies:
-    "@protobufjs/utf8" "^1.1.0"
-    binaryen "77.0.0-nightly.20190407"
-    glob "^7.1.3"
+    binaryen "98.0.0-nightly.20201109"
     long "^4.0.0"
-    opencollective-postinstall "^2.0.0"
-    source-map-support "^0.5.11"
 
 balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
 
-binaryen@77.0.0-nightly.20190407:
-  version "77.0.0-nightly.20190407"
-  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-77.0.0-nightly.20190407.tgz#fbe4f8ba0d6bd0809a84eb519d2d5b5ddff3a7d1"
-  integrity sha512-1mxYNvQ0xywMe582K7V6Vo2zzhZZxMTeGHH8aE/+/AND8f64D8Q1GThVY3RVRwGY/4p+p95ccw9Xbw2ovFXRIg==
+binaryen@98.0.0-nightly.20201109:
+  version "98.0.0-nightly.20201109"
+  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-98.0.0-nightly.20201109.tgz#512bf6ca15c67bf7402144734a4836e63993aa05"
+  integrity sha512-iRarAqdH5lMWlMBzrDuJgLYJR2g4QXk93iYE2zpr6gEZkb/jCgDpPUXdhuN11Ge1zZ/6By4DwA1mmifcx7FWaw==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -32,11 +25,6 @@ brace-expansion@^1.1.7:
   dependencies:
     balanced-match "^1.0.0"
     concat-map "0.0.1"
-
-buffer-from@^1.0.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.1.tgz#32713bc028f75c02fdb710d7c7bcec1f2c6070ef"
-  integrity sha512-MQcXEUbCKtEo7bhqEs6560Hyd4XaovZlO/k9V3hjVUF/zwW7KBVdSK4gIt/bzwS9MbR5qob+F5jusZsb0YQK2A==
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -46,7 +34,7 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
 
-glob@^7.1.2, glob@^7.1.3:
+glob@^7.1.2:
   version "7.1.6"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.6.tgz#141f33b81a7c2492e125594307480c46679278a6"
   integrity sha512-LwaxwyZ72Lk7vZINtNNrywX0ZuLyStrdDtabefZKAY5ZGJhVtgdznluResxNmPitE0SAO+O26sWTHeKSI2wMBA==
@@ -85,27 +73,9 @@ once@^1.3.0:
   dependencies:
     wrappy "1"
 
-opencollective-postinstall@^2.0.0:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
-  integrity sha512-pVOEP16TrAO2/fjej1IdOyupJY8KDUM1CvsaScRbw6oddvpQoOfGk4ywha0HKKVAD6RkW4x6Q+tNBwhf3Bgpuw==
-
 path-is-absolute@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/path-is-absolute/-/path-is-absolute-1.0.1.tgz#174b9268735534ffbc7ace6bf53a5a9e1b5c5f5f"
-
-source-map-support@^0.5.11:
-  version "0.5.12"
-  resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.12.tgz#b4f3b10d51857a5af0138d3ce8003b201613d599"
-  integrity sha512-4h2Pbvyy15EE02G+JOZpUCmqWJuqrs+sEkzewTm++BPi7Hvn/HwcqLAcNxYAyI0x13CpPPn+kMjl+hplXMHITQ==
-  dependencies:
-    buffer-from "^1.0.0"
-    source-map "^0.6.0"
-
-source-map@^0.6.0:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
-  integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
 wrappy@1:
   version "1.0.2"
