@@ -62,6 +62,7 @@ declare namespace bigInt {
   function fromString(s: string): BigInt
   function bitOr(x: BigInt, y: BigInt): BigInt
   function bitAnd(x: BigInt, y: BigInt): BigInt
+  function leftShift(x: BigInt, bits: u8): BigInt
 }
 
 /** Host interface for BigDecimal */
@@ -573,6 +574,11 @@ export class BigInt extends Uint8Array {
   @operator('&')
   bitAnd(other: BigInt): BigInt {
     return bigInt.bitAnd(this, other)
+  }
+
+  @operator('<<')
+  leftShift(bits: u8): BigInt {
+    return bigInt.leftShift(this, bits)
   }
 
   /// Limited to a low exponent to discourage creating a huge BigInt.
