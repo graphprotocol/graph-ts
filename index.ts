@@ -59,6 +59,7 @@ declare namespace bigInt {
   function dividedByDecimal(x: BigInt, y: BigDecimal): BigDecimal
   function mod(x: BigInt, y: BigInt): BigInt
   function pow(x: BigInt, exp: u8): BigInt
+  function fromString(s: string): BigInt
 }
 
 /** Host interface for BigDecimal */
@@ -458,6 +459,10 @@ export class BigInt extends Uint8Array {
 
   toString(): string {
     return typeConversion.bigIntToString(this)
+  }
+
+  static fromString(s: string): BigInt {
+    return bigInt.fromString(s)
   }
 
   toI32(): i32 {
