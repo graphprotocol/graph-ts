@@ -61,6 +61,7 @@ declare namespace bigInt {
   function pow(x: BigInt, exp: u8): BigInt
   function fromString(s: string): BigInt
   function bitOr(x: BigInt, y: BigInt): BigInt
+  function bitAnd(x: BigInt, y: BigInt): BigInt
 }
 
 /** Host interface for BigDecimal */
@@ -567,6 +568,11 @@ export class BigInt extends Uint8Array {
   @operator('|')
   bitOr(other: BigInt): BigInt {
     return bigInt.bitOr(this, other)
+  }
+
+  @operator('&')
+  bitAnd(other: BigInt): BigInt {
+    return bigInt.bitAnd(this, other)
   }
 
   /// Limited to a low exponent to discourage creating a huge BigInt.
