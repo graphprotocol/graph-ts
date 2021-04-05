@@ -3,6 +3,8 @@ import { Address, BigInt, Bytes, Wrapped } from '..'
 /** Host Ethereum interface */
 export declare namespace ethereum {
   function call(call: SmartContractCall): Array<Value> | null
+  function encode(params: Array<Value>): Bytes | null
+  function decode(types: String, data: Bytes): Value | null
 }
 
 export namespace ethereum {
