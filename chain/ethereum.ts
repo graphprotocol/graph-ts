@@ -3,6 +3,8 @@ import { Address, BigInt, Bytes, Wrapped } from '..'
 /** Host Ethereum interface */
 export declare namespace ethereum {
   function call(call: SmartContractCall): Array<Value> | null
+  function encode(token: Value): Bytes | null
+  function decode(types: String, data: Bytes): Value | null
 }
 
 export namespace ethereum {
@@ -239,6 +241,13 @@ export namespace ethereum {
     static fromArray(values: Array<Value>): Value {
       let token = new Value()
       token.kind = ValueKind.ARRAY
+      token.data = values as u64
+      return token
+    }
+
+    static fromFixedSizedArray(values: Array<Value>): Value {
+      let token = new Value()
+      token.kind = ValueKind.FIXED_ARRAY
       token.data = values as u64
       return token
     }
