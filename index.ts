@@ -9,13 +9,16 @@ export * from './chain/ethereum'
  */
 export declare namespace store {
   function get(entity: string, id: string): Entity | null
+
   function set(entity: string, id: string, data: Entity): void
+
   function remove(entity: string, id: string): void
 }
 
 /** Host IPFS interface */
 export declare namespace ipfs {
   function cat(hash: string): Bytes | null
+
   function map(hash: string, callback: string, userData: Value, flags: string[]): void
 }
 
@@ -33,53 +36,81 @@ export declare namespace crypto {
 /** Host JSON interface */
 export declare namespace json {
   function fromBytes(data: Bytes): JSONValue
+
   function try_fromBytes(data: Bytes): Result<JSONValue, boolean>
+
   function toI64(decimal: string): i64
+
   function toU64(decimal: string): u64
+
   function toF64(decimal: string): f64
+
   function toBigInt(decimal: string): BigInt
 }
 
 /** Host type conversion interface */
 declare namespace typeConversion {
   function bytesToString(bytes: Uint8Array): string
+
   function bytesToHex(bytes: Uint8Array): string
+
   function bigIntToString(bigInt: Uint8Array): string
+
   function bigIntToHex(bigInt: Uint8Array): string
+
   function stringToH160(s: string): Bytes
+
   function bytesToBase58(n: Uint8Array): string
 }
 
 /** Host interface for BigInt arithmetic */
 declare namespace bigInt {
   function plus(x: BigInt, y: BigInt): BigInt
+
   function minus(x: BigInt, y: BigInt): BigInt
+
   function times(x: BigInt, y: BigInt): BigInt
+
   function dividedBy(x: BigInt, y: BigInt): BigInt
+
   function dividedByDecimal(x: BigInt, y: BigDecimal): BigDecimal
+
   function mod(x: BigInt, y: BigInt): BigInt
+
   function pow(x: BigInt, exp: u8): BigInt
+
   function fromString(s: string): BigInt
+
   function bitOr(x: BigInt, y: BigInt): BigInt
+
   function bitAnd(x: BigInt, y: BigInt): BigInt
+
   function leftShift(x: BigInt, bits: u8): BigInt
+
   function rightShift(x: BigInt, bits: u8): BigInt
 }
 
 /** Host interface for BigDecimal */
 declare namespace bigDecimal {
   function plus(x: BigDecimal, y: BigDecimal): BigDecimal
+
   function minus(x: BigDecimal, y: BigDecimal): BigDecimal
+
   function times(x: BigDecimal, y: BigDecimal): BigDecimal
+
   function dividedBy(x: BigDecimal, y: BigDecimal): BigDecimal
+
   function equals(x: BigDecimal, y: BigDecimal): boolean
+
   function toString(bigDecimal: BigDecimal): string
+
   function fromString(s: string): BigDecimal
 }
 
 /** Host interface for managing data sources */
 export declare namespace dataSource {
   function create(name: string, params: Array<string>): void
+
   function createWithContext(
     name: string,
     params: Array<string>,
@@ -88,7 +119,9 @@ export declare namespace dataSource {
 
   // Properties of the data source that fired the event.
   function address(): Address
+
   function network(): string
+
   function context(): DataSourceContext
 }
 
@@ -312,15 +345,9 @@ export class ByteArray extends Uint8Array {
     return output
   }
 
-  static fromUTF8(string: String): ByteArray {
-    // AssemblyScript counts a null terminator, we don't want that.
-    let len = string.lengthUTF8 - 1
-    let utf8 = string.toUTF8()
-    let bytes = new ByteArray(len)
-    for (let i: i32 = 0; i < len; i++) {
-      bytes[i] = load<u8>(utf8 + i)
-    }
-    return bytes
+  static fromUTF8(str: string): ByteArray {
+    let utf8 = String.UTF8.encode(str)
+    return ByteArray.wrap(utf8) as ByteArray
   }
 
   toHex(): string {
@@ -767,18 +794,23 @@ export enum ValueKind {
  *
  * Big enough to fit any pointer or native `this.data`.
  */
-export type ValuePayload = u64
+export type ValuePayload = usize
 
 /**
  * A dynamically typed value.
  */
 export class Value {
-  kind: ValueKind
-  data: ValuePayload
+  readonly kind: ValueKind
+  private readonly data: ValuePayload
+
+  protected constructor(kind: ValueKind, data: ValuePayload) {
+    this.kind = kind
+    this.data = data
+  }
 
   toAddress(): Address {
     assert(this.kind == ValueKind.BYTES, 'Value is not an address.')
-    return changetype<Address>(this.data as u32)
+    return changetype<Address>(this.data)
   }
 
   toBoolean(): boolean {
@@ -791,7 +823,7 @@ export class Value {
 
   toBytes(): Bytes {
     assert(this.kind == ValueKind.BYTES, 'Value is not a byte array.')
-    return changetype<Bytes>(this.data as u32)
+    return changetype<Bytes>(this.data)
   }
 
   toI32(): i32 {
@@ -802,30 +834,54 @@ export class Value {
     return this.data as i32
   }
 
+  toU32(): u32 {
+    if (this.kind == ValueKind.NULL) {
+      return 0
+    }
+    assert(this.kind == ValueKind.INT, 'Value is not an u32.')
+    return this.data as u32
+  }
+
+  toI64(): i64 {
+    if (this.kind == ValueKind.NULL) {
+      return 0
+    }
+    assert(this.kind == ValueKind.INT, 'Value is not an i64.')
+    return this.data as i64
+  }
+
+  toU64(): u64 {
+    if (this.kind == ValueKind.NULL) {
+      return 0
+    }
+    assert(this.kind == ValueKind.INT, 'Value is not an u64.')
+    return this.data as u64
+  }
+
   toString(): string {
     assert(this.kind == ValueKind.STRING, 'Value is not a string.')
-    return changetype<string>(this.data as u32)
+    return changetype<string>(this.data)
   }
 
   toBigInt(): BigInt {
     assert(this.kind == ValueKind.BIGINT, 'Value is not a BigInt.')
-    return changetype<BigInt>(this.data as u32)
+    return changetype<BigInt>(this.data)
   }
 
   toBigDecimal(): BigDecimal {
     assert(this.kind == ValueKind.BIGDECIMAL, 'Value is not a BigDecimal.')
-    return changetype<BigDecimal>(this.data as u32)
+    return changetype<BigDecimal>(this.data)
   }
 
   toArray(): Array<Value> {
     assert(this.kind == ValueKind.ARRAY, 'Value is not an array.')
-    return changetype<Array<Value>>(this.data as u32)
+    return changetype<Array<Value>>(this.data)
   }
 
   toBooleanArray(): Array<boolean> {
     let values = this.toArray()
     let output = new Array<boolean>(values.length)
-    for (let i: i32; i < values.length; i++) {
+    for (let i: i32 = 0; i < values.length; i++) {
       output[i] = values[i].toBoolean()
     }
     return output
@@ -932,66 +988,40 @@ export class Value {
     return Value.fromArray(output)
   }
 
-  static fromArray(input: Array<Value>): Value {
-    let value = new Value()
-    value.kind = ValueKind.ARRAY
-    value.data = input as u64
-    return value
+  static fromArray(value: Array<Value>): Value {
+    return new Value(ValueKind.ARRAY, value)
   }
 
-  static fromBigInt(n: BigInt): Value {
-    let value = new Value()
-    value.kind = ValueKind.BIGINT
-    value.data = n as u64
-    return value
+  static fromBigInt(value: BigInt): Value {
+    return new Value(ValueKind.BIGINT, changetype<usize>(value))
   }
 
   static fromBoolean(b: boolean): Value {
-    let value = new Value()
-    value.kind = ValueKind.BOOL
-    value.data = b ? 1 : 0
-    return value
+    return new Value(ValueKind.BOOL, b ? 1 : 0)
   }
 
-  static fromBytes(bytes: Bytes): Value {
-    let value = new Value()
-    value.kind = ValueKind.BYTES
-    value.data = bytes as u64
-    return value
+  static fromBytes(value: Bytes): Value {
+    return new Value(ValueKind.BYTES, changetype<usize>(value))
   }
 
   static fromNull(): Value {
-    let value = new Value()
-    value.kind = ValueKind.NULL
-    return value
+    return new Value(ValueKind.NULL, 0)
   }
 
-  static fromI32(n: i32): Value {
-    let value = new Value()
-    value.kind = ValueKind.INT
-    value.data = n as u64
-    return value
+  static fromI32(value: i32): Value {
+    return new Value(ValueKind.INT, value)
   }
 
-  static fromString(s: string): Value {
-    let value = new Value()
-    value.kind = ValueKind.STRING
-    value.data = s as u64
-    return value
+  static fromString(value: string): Value {
+    return new Value(ValueKind.STRING, changetype<usize>(value))
   }
 
-  static fromAddress(s: Address): Value {
-    let value = new Value()
-    value.kind = ValueKind.BYTES
-    value.data = s as u64
-    return value
+  static fromAddress(value: Address): Value {
+    return new Value(ValueKind.BYTES, changetype<usize>(value))
   }
 
-  static fromBigDecimal(n: BigDecimal): Value {
-    let value = new Value()
-    value.kind = ValueKind.BIGDECIMAL
-    value.data = n as u64
-    return value
+  static fromBigDecimal(value: BigDecimal): Value {
+    return new Value(ValueKind.BIGDECIMAL, changetype<usize>(value))
   }
 }
 
@@ -1042,27 +1072,27 @@ export class Entity extends TypedMap<string, Value> {
   }
 
   getString(key: string): string {
-    return this.get(key).toString()
+    return this.get(key)!.toString()
   }
 
   getI32(key: string): i32 {
-    return this.get(key).toI32()
+    return this.get(key)!.toI32()
   }
 
   getBigInt(key: string): BigInt {
-    return this.get(key).toBigInt()
+    return this.get(key)!.toBigInt()
   }
 
   getBytes(key: string): Bytes {
-    return this.get(key).toBytes()
+    return this.get(key)!.toBytes()
   }
 
   getBoolean(key: string): boolean {
-    return this.get(key).toBoolean()
+    return this.get(key)!.toBoolean()
   }
 
   getBigDecimal(key: string): BigDecimal {
-    return this.get(key).toBigDecimal()
+    return this.get(key)!.toBigDecimal()
   }
 }
 

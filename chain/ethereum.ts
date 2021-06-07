@@ -27,18 +27,23 @@ export namespace ethereum {
    *
    * Big enough to fit any pointer or native `this.data`.
    */
-  export type ValuePayload = u64
+  export type ValuePayload = usize
 
   /**
    * A dynamically typed value used when accessing Ethereum data.
    */
   export class Value {
-    kind: ValueKind
-    data: ValuePayload
+    readonly kind: ValueKind
+    readonly data: ValuePayload
+
+    protected constructor(kind: ValueKind, data: ValuePayload) {
+      this.kind = kind
+      this.data = data
+    }
 
     toAddress(): Address {
       assert(this.kind == ValueKind.ADDRESS, 'Ethereum value is not an address')
-      return changetype<Address>(this.data as u32)
+      return changetype<Address>(this.data)
     }
 
     toBoolean(): boolean {
@@ -51,7 +56,7 @@ export namespace ethereum {
         this.kind == ValueKind.FIXED_BYTES || this.kind == ValueKind.BYTES,
         'Ethereum value is not bytes.',
       )
-      return changetype<Bytes>(this.data as u32)
+      return changetype<Bytes>(this.data)
     }
 
     toI32(): i32 {
@@ -59,7 +64,7 @@ export namespace ethereum {
         this.kind == ValueKind.INT || this.kind == ValueKind.UINT,
         'Ethereum value is not an int or uint.',
       )
-      let bigInt = changetype<BigInt>(this.data as u32)
+      let bigInt = changetype<BigInt>(this.data)
       return bigInt.toI32()
     }
 
@@ -68,12 +73,12 @@ export namespace ethereum {
         this.kind == ValueKind.INT || this.kind == ValueKind.UINT,
         'Ethereum value is not an int or uint.',
       )
-      return changetype<BigInt>(this.data as u32)
+      return changetype<BigInt>(this.data)
     }
 
     toString(): string {
       assert(this.kind == ValueKind.STRING, 'Ethereum value is not a string.')
-      return changetype<string>(this.data as u32)
+      return changetype<string>(this.data)
     }
 
     toArray(): Array<Value> {
@@ -81,12 +86,12 @@ export namespace ethereum {
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
         'Ethereum value is not an array.',
       )
-      return changetype<Array<Value>>(this.data as u32)
+      return changetype<Array<Value>>(this.data)
     }
 
     toTuple(): Tuple {
       assert(this.kind == ValueKind.TUPLE, 'Ethereum value is not a tuple.')
-      return changetype<Tuple>(this.data as u32)
+      return changetype<Tuple>(this.data)
     }
 
     toTupleArray<T extends Tuple>(): Array<T> {
@@ -180,83 +185,49 @@ export namespace ethereum {
       return out
     }
 
-    static fromAddress(address: Address): Value {
-      assert(address.length == 20, 'Address must contain exactly 20 bytes')
-
-      let token = new Value()
-      token.kind = ValueKind.ADDRESS
-      token.data = address as u64
-      return token
+    static fromAddress(value: Address): Value {
+      assert(value.byteLength == 20, 'Address must contain exactly 20 bytes')
+      return new Value(ValueKind.ADDRESS, changetype<usize>(value))
     }
 
-    static fromBoolean(b: boolean): Value {
-      let token = new Value()
-      token.kind = ValueKind.BOOL
-      token.data = b ? 1 : 0
-      return token
+    static fromBoolean(value: boolean): Value {
+      return new Value(ValueKind.BOOL, value ? 1 : 0)
     }
 
-    static fromBytes(bytes: Bytes): Value {
-      let token = new Value()
-      token.kind = ValueKind.BYTES
-      token.data = bytes as u64
-      return token
+    static fromBytes(value: Bytes): Value {
+      return new Value(ValueKind.BYTES, changetype<usize>(value))
     }
 
-    static fromFixedBytes(bytes: Bytes): Value {
-      let token = new Value()
-      token.kind = ValueKind.FIXED_BYTES
-      token.data = bytes as u64
-      return token
+    static fromFixedBytes(value: Bytes): Value {
+      return new Value(ValueKind.FIXED_BYTES, changetype<usize>(value))
     }
 
     static fromI32(i: i32): Value {
-      let token = new Value()
-      token.kind = ValueKind.INT
-      token.data = BigInt.fromI32(i) as u64
-      return token
+      return new Value(ValueKind.INT, changetype<usize>(BigInt.fromI32(i)))
     }
 
-    static fromSignedBigInt(i: BigInt): Value {
-      let token = new Value()
-      token.kind = ValueKind.INT
-      token.data = i as u64
-      return token
+    static fromSignedBigInt(value: BigInt): Value {
+      return new Value(ValueKind.INT, changetype<usize>(value))
     }
 
-    static fromUnsignedBigInt(i: BigInt): Value {
-      let token = new Value()
-      token.kind = ValueKind.UINT
-      token.data = i as u64
-      return token
+    static fromUnsignedBigInt(value: BigInt): Value {
+      return new Value(ValueKind.UINT, changetype<usize>(value))
     }
 
-    static fromString(s: string): Value {
-      let token = new Value()
-      token.kind = ValueKind.STRING
-      token.data = s as u64
-      return token
+    static fromString(value: string): Value {
+      return new Value(ValueKind.STRING, changetype<usize>(value))
     }
 
     static fromArray(values: Array<Value>): Value {
-      let token = new Value()
-      token.kind = ValueKind.ARRAY
-      token.data = values as u64
-      return token
+      return new Value(ValueKind.ARRAY, values)
     }
 
     static fromFixedSizedArray(values: Array<Value>): Value {
-      let token = new Value()
-      token.kind = ValueKind.FIXED_ARRAY
-      token.data = values as u64
-      return token
+      return new Value(ValueKind.FIXED_ARRAY, values)
     }
 
     static fromTuple(values: Tuple): Value {
-      let token = new Value()
-      token.kind = ValueKind.TUPLE
-      token.data = values as u64
-      return token
+      return new Value(ValueKind.TUPLE, values)
     }
 
     static fromTupleArray(values: Array<Tuple>): Value {
