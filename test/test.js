@@ -22,12 +22,16 @@ let output_path = 'test/temp_out/test.wasm'
 const env = {
   abort: function (message, fileName, lineNumber, columnNumber) {
     console.log('aborted')
+    console.log('message', message)
+    console.log('fileName', fileName)
+    console.log('lineNumber', lineNumber)
+    console.log('columnNumber', columnNumber)
   },
 }
 
 try {
-  testFile('test/test.ts')
-  testFile('test/testBytes.ts')
+  testFile('test/bigInt.ts')
+  testFile('test/bytes.ts')
   testFile('test/entity.ts')
 
   // Cleanup
@@ -49,7 +53,7 @@ try {
 }
 
 function testFile(path) {
-  if (asc.main([path, '--lib', 'test', '--validate', '-b', output_path]) != 0) {
+  if (asc.main([path, '--lib', 'test', '-b', output_path]) != 0) {
     throw Error('failed to compile')
   }
   let test_wasm = new Uint8Array(fs.readFileSync(output_path))
@@ -60,6 +64,11 @@ function testFile(path) {
       'typeConversion.bytesToHex': function () {},
     },
   }).then((module) => {
-    module.instance.exports.test()
+    for (const [testName, testFn] of Object.entries(module.instance.exports)) {
+      if (typeof testFn === 'function' && testName.startsWith('test')) {
+        console.log(`Running "${testName}"...`)
+        testFn()
+      }
+    }
   })
 }
