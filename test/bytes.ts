@@ -1,7 +1,7 @@
 import { ByteArray, Bytes } from 'temp_lib/index'
 
 // Test some Bytes methods.
-export function test(): void {
+export function testBytes(): void {
     let longArray = new ByteArray(5)
     longArray[0] = 251
     longArray[1] = 255
