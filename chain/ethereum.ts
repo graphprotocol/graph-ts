@@ -97,7 +97,7 @@ export namespace ethereum {
       let valueArray = this.toArray()
       let out = new Array<T>(valueArray.length)
       for (let i: i32 = 0; i < valueArray.length; i++) {
-        out[i] = valueArray[i].toTuple() as T
+        out[i] = changetype<T>(valueArray[i].toTuple())
       }
       return out
     }
@@ -185,7 +185,7 @@ export namespace ethereum {
 
       let token = new Value()
       token.kind = ValueKind.ADDRESS
-      token.data = address as u64
+      token.data = changetype<u32>(address)
       return token
     }
 
@@ -199,63 +199,63 @@ export namespace ethereum {
     static fromBytes(bytes: Bytes): Value {
       let token = new Value()
       token.kind = ValueKind.BYTES
-      token.data = bytes as u64
+      token.data = changetype<u32>(bytes)
       return token
     }
 
     static fromFixedBytes(bytes: Bytes): Value {
       let token = new Value()
       token.kind = ValueKind.FIXED_BYTES
-      token.data = bytes as u64
+      token.data = changetype<u32>(bytes)
       return token
     }
 
     static fromI32(i: i32): Value {
       let token = new Value()
       token.kind = ValueKind.INT
-      token.data = BigInt.fromI32(i) as u64
+      token.data = changetype<u32>(BigInt.fromI32(i))
       return token
     }
 
     static fromSignedBigInt(i: BigInt): Value {
       let token = new Value()
       token.kind = ValueKind.INT
-      token.data = i as u64
+      token.data = changetype<u32>(i)
       return token
     }
 
     static fromUnsignedBigInt(i: BigInt): Value {
       let token = new Value()
       token.kind = ValueKind.UINT
-      token.data = i as u64
+      token.data = changetype<u32>(i)
       return token
     }
 
     static fromString(s: string): Value {
       let token = new Value()
       token.kind = ValueKind.STRING
-      token.data = s as u64
+      token.data = changetype<u32>(s)
       return token
     }
 
     static fromArray(values: Array<Value>): Value {
       let token = new Value()
       token.kind = ValueKind.ARRAY
-      token.data = values as u64
+      token.data = changetype<u32>(values)
       return token
     }
 
     static fromFixedSizedArray(values: Array<Value>): Value {
       let token = new Value()
       token.kind = ValueKind.FIXED_ARRAY
-      token.data = values as u64
+      token.data = changetype<u32>(values)
       return token
     }
 
     static fromTuple(values: Tuple): Value {
       let token = new Value()
       token.kind = ValueKind.TUPLE
-      token.data = values as u64
+      token.data = changetype<u32>(values)
       return token
     }
 
@@ -452,7 +452,7 @@ export namespace ethereum {
           name +
           '` to handle this in the mapping.',
       )
-      return result as Array<Value>
+      return changetype<Array<Value>>(result)
     }
 
     tryCall(
@@ -465,7 +465,7 @@ export namespace ethereum {
       if (result == null) {
         return new CallResult()
       } else {
-        return CallResult.fromValue(result as Array<Value>)
+        return CallResult.fromValue(changetype<Array<Value>>(result))
       }
     }
   }
@@ -494,7 +494,7 @@ export namespace ethereum {
         'accessed value of a reverted call, ' +
           'please check the `reverted` field before accessing the `value` field',
       )
-      return (this._value as Wrapped<T>).inner
+      return changetype<Wrapped<T>>(this._value).inner
     }
   }
 }

@@ -1,6 +1,3 @@
-// For testing isolated compilation.
-import 'allocator/arena'
-
 // Ethereum support
 export * from './chain/ethereum'
 
@@ -212,12 +209,12 @@ export class Result<V, E> {
 
   get value(): V {
     assert(this._value != null, 'Trying to get a value from an error result')
-    return (this._value as Wrapped<V>).inner
+    return changetype<Wrapped<V>>(this._value).inner
   }
 
   get error(): E {
     assert(this._error != null, 'Trying to get an error from a successful result')
-    return (this._error as Wrapped<E>).inner
+    return changetype<Wrapped<E>>(this._error).inner
   }
 }
 
@@ -312,15 +309,10 @@ export class ByteArray extends Uint8Array {
     return output
   }
 
-  static fromUTF8(string: String): ByteArray {
+  static fromUTF8(str: String): ByteArray {
     // AssemblyScript counts a null terminator, we don't want that.
-    let len = string.lengthUTF8 - 1
-    let utf8 = string.toUTF8()
-    let bytes = new ByteArray(len)
-    for (let i: i32 = 0; i < len; i++) {
-      bytes[i] = load<u8>(utf8 + i)
-    }
-    return bytes
+    let utf8 = String.UTF8.encode(str)
+    return changetype<ByteArray>(ByteArray.wrap(utf8))
   }
 
   toHex(): string {
@@ -422,14 +414,16 @@ export class Bytes extends ByteArray {}
 /** An Ethereum address (20 bytes). */
 export class Address extends Bytes {
   static fromString(s: string): Address {
-    return typeConversion.stringToH160(s) as Address
+    return changetype<Address>(typeConversion.stringToH160(s))
   }
 }
 
 /** An arbitrary size integer represented as an array of bytes. */
 export class BigInt extends Uint8Array {
   static fromI32(x: i32): BigInt {
-    return (ByteArray.fromI32(x) as Uint8Array) as BigInt
+    let byteArray = ByteArray.fromI32(x)
+    let uint8Array = changetype<Uint8Array>(byteArray)
+    return changetype<BigInt>(uint8Array)
   }
 
   /**
@@ -437,7 +431,8 @@ export class BigInt extends Uint8Array {
    */
 
   static fromSignedBytes(bytes: Bytes): BigInt {
-    return (bytes as Uint8Array) as BigInt
+    let uint8Array = changetype<Uint8Array>(bytes)
+    return changetype<BigInt>(uint8Array)
   }
 
   /**
@@ -470,7 +465,9 @@ export class BigInt extends Uint8Array {
   }
 
   toI32(): i32 {
-    return ((this as Uint8Array) as ByteArray).toI32()
+    let uint8Array = changetype<Uint8Array>(this)
+    let byteArray = changetype<ByteArray>(uint8Array)
+    return byteArray.toI32()
   }
 
   toBigDecimal(): BigDecimal {
@@ -825,7 +822,7 @@ export class Value {
   toBooleanArray(): Array<boolean> {
     let values = this.toArray()
     let output = new Array<boolean>(values.length)
-    for (let i: i32; i < values.length; i++) {
+    for (let i: i32 = 0; i < values.length; i++) {
       output[i] = values[i].toBoolean()
     }
     return output
@@ -935,14 +932,14 @@ export class Value {
   static fromArray(input: Array<Value>): Value {
     let value = new Value()
     value.kind = ValueKind.ARRAY
-    value.data = input as u64
+    value.data = changetype<u32>(input)
     return value
   }
 
   static fromBigInt(n: BigInt): Value {
     let value = new Value()
     value.kind = ValueKind.BIGINT
-    value.data = n as u64
+    value.data = changetype<u32>(n)
     return value
   }
 
@@ -956,7 +953,7 @@ export class Value {
   static fromBytes(bytes: Bytes): Value {
     let value = new Value()
     value.kind = ValueKind.BYTES
-    value.data = bytes as u64
+    value.data = changetype<u32>(bytes)
     return value
   }
 
@@ -976,21 +973,21 @@ export class Value {
   static fromString(s: string): Value {
     let value = new Value()
     value.kind = ValueKind.STRING
-    value.data = s as u64
+    value.data = changetype<u32>(s)
     return value
   }
 
   static fromAddress(s: Address): Value {
     let value = new Value()
     value.kind = ValueKind.BYTES
-    value.data = s as u64
+    value.data = changetype<u32>(s)
     return value
   }
 
   static fromBigDecimal(n: BigDecimal): Value {
     let value = new Value()
     value.kind = ValueKind.BIGDECIMAL
-    value.data = n as u64
+    value.data = changetype<u32>(n)
     return value
   }
 }
@@ -1042,27 +1039,27 @@ export class Entity extends TypedMap<string, Value> {
   }
 
   getString(key: string): string {
-    return this.get(key).toString()
+    return this.get(key)!.toString()
   }
 
   getI32(key: string): i32 {
-    return this.get(key).toI32()
+    return this.get(key)!.toI32()
   }
 
   getBigInt(key: string): BigInt {
-    return this.get(key).toBigInt()
+    return this.get(key)!.toBigInt()
   }
 
   getBytes(key: string): Bytes {
-    return this.get(key).toBytes()
+    return this.get(key)!.toBytes()
   }
 
   getBoolean(key: string): boolean {
-    return this.get(key).toBoolean()
+    return this.get(key)!.toBoolean()
   }
 
   getBigDecimal(key: string): BigDecimal {
-    return this.get(key).toBigDecimal()
+    return this.get(key)!.toBigDecimal()
   }
 }
 
