@@ -20,6 +20,7 @@ if (!fs.existsSync('test/temp_lib/common')) {
 }
 
 fs.copyFileSync('common/datasource.ts', 'test/temp_lib/common/datasource.ts')
+fs.copyFileSync('common/eager_offset.ts', 'test/temp_lib/common/eager_offset.ts')
 fs.copyFileSync('common/json.ts', 'test/temp_lib/common/json.ts')
 fs.copyFileSync('common/numbers.ts', 'test/temp_lib/common/numbers.ts')
 fs.copyFileSync('common/collections.ts', 'test/temp_lib/common/collections.ts')
@@ -46,6 +47,7 @@ try {
 
   // Cleanup
   fs.unlinkSync('test/temp_lib/index.ts')
+  fs.unlinkSync('test/temp_lib/common/eager_offset.ts')
   fs.unlinkSync('test/temp_lib/common/numbers.ts')
   fs.unlinkSync('test/temp_lib/common/collections.ts')
   fs.unlinkSync('test/temp_lib/common/conversion.ts')
@@ -63,6 +65,7 @@ try {
   process.exitCode = 1
   fs.unlinkSync('test/temp_lib/index.ts')
   fs.unlinkSync('test/temp_lib/common/numbers.ts')
+  fs.unlinkSync('test/temp_lib/common/eager_offset.ts')
   fs.unlinkSync('test/temp_lib/common/collections.ts')
   fs.unlinkSync('test/temp_lib/common/conversion.ts')
   fs.unlinkSync('test/temp_lib/common/value.ts')

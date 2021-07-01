@@ -1,3 +1,4 @@
+import './eager_offset'
 import { Address } from './numbers'
 import { Entity } from './collections'
 
