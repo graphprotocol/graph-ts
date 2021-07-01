@@ -1,3 +1,5 @@
+// Side-effect to evaluate eagerly the offset of stub AS runtime
+import './common/eager_offset'
 // Ethereum support
 export * from './chain/ethereum'
 // Regular re-exports
