@@ -134,7 +134,15 @@ export class ByteArray extends Uint8Array {
 }
 
 /** A dynamically-sized byte array. */
-export class Bytes extends ByteArray {}
+export class Bytes extends ByteArray {
+  static fromByteArray(byteArray: ByteArray): Bytes {
+    return changetype<Bytes>(byteArray)
+  }
+
+  static fromUint8Array(uint8Array: Uint8Array): Bytes {
+    return changetype<Bytes>(uint8Array)
+  }
+}
 
 /**
  * TypedMap entry.

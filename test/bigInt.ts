@@ -6,7 +6,7 @@ export function testBigInt(): void {
     let minusFiveBytes = new ByteArray(2)
     minusFiveBytes[0] = 251
     minusFiveBytes[1] = 255
-    let minusFive = BigInt.fromSignedBytes(changetype<Bytes>(minusFiveBytes))
+    let minusFive = BigInt.fromSignedBytes(Bytes.fromByteArray(minusFiveBytes))
     assert(minusFive == BigInt.fromI32(-5))
     assert(!minusFive.isZero() && minusFive.isI32())
     assert(minusFiveBytes.toU32() == 65531)
@@ -15,19 +15,19 @@ export function testBigInt(): void {
     let fiveBytes = new ByteArray(2)
     fiveBytes[0] = 5
     fiveBytes[1] = 0
-    let five = BigInt.fromSignedBytes(changetype<Bytes>(fiveBytes))
+    let five = BigInt.fromSignedBytes(Bytes.fromByteArray(fiveBytes))
     assert(!five.isZero() && five.isI32())
     assert(five == BigInt.fromI32(5))
     assert(five != minusFive)
-    assert(five == BigInt.fromUnsignedBytes(changetype<Bytes>(fiveBytes.subarray(0, 1))))
+    assert(five == BigInt.fromUnsignedBytes(Bytes.fromUint8Array(fiveBytes.subarray(0, 1))))
     assert(fiveBytes.toU32() == 5)
     assert(fiveBytes.toI32() == 5)
 
     let x = new ByteArray(1)
     x[0] = 255
-    assert(BigInt.fromUnsignedBytes(changetype<Bytes>(x)) == BigInt.fromI32(255))
+    assert(BigInt.fromUnsignedBytes(Bytes.fromByteArray(x)) == BigInt.fromI32(255))
 
-    let zero = BigInt.fromSignedBytes(changetype<Bytes>(new ByteArray(0)))
+    let zero = BigInt.fromSignedBytes(Bytes.fromByteArray(new ByteArray(0)))
     assert(zero.isZero() && zero.isI32())
     assert(zero != five)
     assert(zero != minusFive)
@@ -84,7 +84,7 @@ export function testBigInt(): void {
     blockNumber[0] = 180
     blockNumber[1] = 42
     blockNumber[2] = 123
-    let blockNumberBigInt = changetype<BigInt>(blockNumber)
+    let blockNumberBigInt = BigInt.fromByteArray(blockNumber)
     let latestBlock = BigInt.fromI32(8200001)
     assert(!blockNumberBigInt.gt(latestBlock))
 
