@@ -1,3 +1,4 @@
+import './eager_offset'
 import { Bytes, ByteArray } from './collections'
 import { typeConversion } from './conversion'
 

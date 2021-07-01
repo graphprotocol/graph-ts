@@ -1,3 +1,4 @@
+import './eager_offset'
 import { BigInt } from './numbers'
 import { JSONValue } from './value'
 import { Bytes, Result } from './collections'
