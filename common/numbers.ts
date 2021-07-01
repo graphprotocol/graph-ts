@@ -39,8 +39,7 @@ export class Address extends Bytes {
 export class BigInt extends Uint8Array {
   static fromI32(x: i32): BigInt {
     let byteArray = ByteArray.fromI32(x)
-    let uint8Array = changetype<Uint8Array>(byteArray)
-    return changetype<BigInt>(uint8Array)
+    return BigInt.fromByteArray(byteArray)
   }
 
   /**
@@ -48,8 +47,12 @@ export class BigInt extends Uint8Array {
    */
 
   static fromSignedBytes(bytes: Bytes): BigInt {
-    let uint8Array = changetype<Uint8Array>(bytes)
-    return changetype<BigInt>(uint8Array)
+    let byteArray = <ByteArray>bytes
+    return BigInt.fromByteArray(byteArray)
+  }
+
+  static fromByteArray(byteArray: ByteArray): BigInt {
+    return changetype<BigInt>(byteArray)
   }
 
   /**
