@@ -14,7 +14,7 @@ export function concat(a: ByteArray, b: ByteArray): ByteArray {
   for (let j = 0; j < b.length; j++) {
     out[a.length + j] = b[j]
   }
-  return out as ByteArray
+  return changetype<ByteArray>(out)
 }
 
 /**
@@ -77,5 +77,5 @@ export function addQm(a: ByteArray): ByteArray {
   for (let i = 0; i < 32; i++) {
     out[i + 2] = a[i]
   }
-  return out as ByteArray
+  return changetype<ByteArray>(out)
 }
