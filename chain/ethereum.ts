@@ -370,7 +370,7 @@ export namespace ethereum {
     from: Address
     to: Address | null
     value: BigInt
-    gasUsed: BigInt
+    gasLimit: BigInt
     gasPrice: BigInt
     input: Bytes
   }

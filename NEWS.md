@@ -7,6 +7,9 @@ repo.
 
 ## Unreleased
 
+- `gasUsed` in transactions has been renamed to `gasLimit`. The value has always been the
+  transaction gas limit, `gasUsed` was a misnomer. Exposing the actual gas used is a future feature.
+
 ## 0.19.0
 
 - Fix `Entity` helpers like `getBoolean`.
