@@ -101,15 +101,6 @@ export declare namespace ens {
   function nameByHash(hash: string): string | null
 }
 
-export declare namespace arweave {
-  /** Returns `null` if the transaction is not found. */
-  function transactionData(txId: string): Bytes | null
-}
-export declare namespace box {
-  /** Returns `null` if the profile is not found. */
-  function profile(address: string): TypedMap<string, JSONValue> | null
-}
-
 function format(fmt: string, args: string[]): string {
   let out = ''
   let argIndex = 0
