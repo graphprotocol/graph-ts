@@ -355,6 +355,7 @@ export namespace ethereum {
     number: BigInt
     gasUsed: BigInt
     gasLimit: BigInt
+    baseFeePerGas: BigInt | null
     timestamp: BigInt
     difficulty: BigInt
     totalDifficulty: BigInt
