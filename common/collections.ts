@@ -40,6 +40,10 @@ export class ByteArray extends Uint8Array {
     return changetype<ByteArray>(ByteArray.wrap(utf8))
   }
 
+  static fromBigInt(bigInt: BigInt): ByteArray {
+    return changetype<ByteArray>(bigInt)
+  }
+
   toHex(): string {
     return typeConversion.bytesToHex(this)
   }
