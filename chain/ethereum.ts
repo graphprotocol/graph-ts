@@ -42,13 +42,13 @@ export namespace ethereum {
 
     @operator('<')
     lt(other: Value): boolean {
-      assert(false, "Less than operator isn't supported in Value")
+      abort("Less than operator isn't supported in Value")
       return false
     }
 
     @operator('>')
     gt(other: Value): boolean {
-      assert(false, "Greater than operator isn't supported in Value")
+      abort("Greater than operator isn't supported in Value")
       return false
     }
 
