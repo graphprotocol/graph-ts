@@ -1,12 +1,12 @@
 {
   "name": "@graphprotocol/graph-ts",
   "description": "TypeScript/AssemblyScript library for writing subgraph mappings for The Graph",
-  "version": "0.20.1",
+  "version": "0.21.0",
   "module": "index.ts",
   "types": "index.ts",
   "main": "index.ts",
   "dependencies": {
-    "assemblyscript": "git+https://github.com/AssemblyScript/assemblyscript.git#v0.6"
+    "assemblyscript": "0.19.10"
   },
   "devDependencies": {
     "glob": "^7.1.2"
@@ -14,6 +14,7 @@
   "scripts": {
     "test": "node test/test.js",
     "release:patch": "npm version patch && npm publish && git push origin master && git push --tags",
-    "release:minor": "npm version minor && npm publish && git push origin master && git push --tags"
+    "release:minor": "npm version minor && npm publish && git push origin master && git push --tags",
+    "release:alpha:minor": "npm version preminor --preid alpha && npm publish && git push origin master && git push --tags"
   }
 }
