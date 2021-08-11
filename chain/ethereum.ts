@@ -327,67 +327,77 @@ export namespace ethereum {
    * An Ethereum block.
    */
   export class Block {
-    hash!: Bytes
-    parentHash!: Bytes
-    unclesHash!: Bytes
-    author!: Address
-    stateRoot!: Bytes
-    transactionsRoot!: Bytes
-    receiptsRoot!: Bytes
-    number!: BigInt
-    gasUsed!: BigInt
-    gasLimit!: BigInt
-    timestamp!: BigInt
-    difficulty!: BigInt
-    totalDifficulty!: BigInt
-    size!: BigInt | null
+    constructor(
+      public hash: Bytes,
+      public parentHash: Bytes,
+      public unclesHash: Bytes,
+      public author: Address,
+      public stateRoot: Bytes,
+      public transactionsRoot: Bytes,
+      public receiptsRoot: Bytes,
+      public number: BigInt,
+      public gasUsed: BigInt,
+      public gasLimit: BigInt,
+      public timestamp: BigInt,
+      public difficulty: BigInt,
+      public totalDifficulty: BigInt,
+      public size: BigInt | null
+    ) {}
   }
 
   /**
    * An Ethereum transaction.
    */
   export class Transaction {
-    hash!: Bytes
-    index!: BigInt
-    from!: Address
-    to!: Address | null
-    value!: BigInt
-    gasLimit!: BigInt
-    gasPrice!: BigInt
-    input!: Bytes
+    constructor (
+      public hash: Bytes,
+      public index: BigInt,
+      public from: Address,
+      public to: Address | null,
+      public value: BigInt,
+      public gasLimit: BigInt,
+      public gasPrice: BigInt,
+      public input: Bytes
+    ) {}
   }
 
   /**
    * Common representation for Ethereum smart contract calls.
    */
   export class Call {
-    to!: Address
-    from!: Address
-    block!: Block
-    transaction!: Transaction
-    inputValues!: Array<EventParam>
-    outputValues!: Array<EventParam>
+    constructor (
+      public to: Address,
+      public from: Address,
+      public block: Block,
+      public transaction: Transaction,
+      public inputValues: Array<EventParam>,
+      public outputValues: Array<EventParam>
+    ) {}
   }
 
   /**
    * Common representation for Ethereum smart contract events.
    */
   export class Event {
-    address!: Address
-    logIndex!: BigInt
-    transactionLogIndex!: BigInt
-    logType!: string | null
-    block!: Block
-    transaction!: Transaction
-    parameters!: Array<EventParam>
+    constructor (
+      public address: Address,
+      public logIndex: BigInt,
+      public transactionLogIndex: BigInt,
+      public logType: string | null,
+      public block: Block,
+      public transaction: Transaction,
+      public parameters: Array<EventParam>
+    ) {}
   }
 
   /**
    * A dynamically-typed Ethereum event parameter.
    */
   export class EventParam {
-    name!: string
-    value!: Value
+    constructor (
+      public name: string,
+      public value: Value
+    ) {}
   }
 
   export class SmartContractCall {
