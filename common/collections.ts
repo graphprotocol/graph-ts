@@ -18,6 +18,10 @@ export class ByteArray extends Uint8Array {
     return self
   }
 
+  static empty(): ByteArray {
+    return ByteArray.fromI32(0)
+  }
+
   /**
    * Input length must be even.
    */
@@ -145,6 +149,10 @@ export class Bytes extends ByteArray {
 
   static fromUint8Array(uint8Array: Uint8Array): Bytes {
     return changetype<Bytes>(uint8Array)
+  }
+
+  static empty(): Bytes {
+    return changetype<Bytes>(ByteArray.empty())
   }
 }
 
