@@ -34,6 +34,16 @@ export class Address extends Bytes {
   static fromString(s: string): Address {
     return changetype<Address>(typeConversion.stringToH160(s))
   }
+
+  static zero(): Address {
+    let self = new ByteArray(20)
+
+    for (let i = 0; i < 20; i++) {
+      self[i] = 0
+    }
+
+    return changetype<Address>(self)
+  }
 }
 
 /** An arbitrary size integer represented as an array of bytes. */
@@ -41,6 +51,10 @@ export class BigInt extends Uint8Array {
   static fromI32(x: i32): BigInt {
     let byteArray = ByteArray.fromI32(x)
     return BigInt.fromByteArray(byteArray)
+  }
+
+  static zero(): BigInt {
+    return BigInt.fromI32(0)
   }
 
   /**
@@ -278,6 +292,10 @@ export class BigDecimal {
 
   static fromString(s: string): BigDecimal {
     return bigDecimal.fromString(s)
+  }
+
+  static zero(): BigDecimal {
+    return new BigDecimal(BigInt.zero())
   }
 
   toString(): string {
