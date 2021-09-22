@@ -113,7 +113,7 @@ export namespace ethereum {
       let valueArray = this.toArray()
       let out = new Array<T>(valueArray.length)
       for (let i: i32 = 0; i < valueArray.length; i++) {
-        out[i] = <T>valueArray[i].toTuple()
+        out[i] = changetype<T>(valueArray[i].toTuple())
       }
       return out
     }
