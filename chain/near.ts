@@ -7,15 +7,11 @@ import { BigInt } from '../common/numbers'
 export namespace near {
   export type CryptoHash = Bytes
 
-  export type PublicKey = Bytes
-
   export type AccountId = string
 
   export type BlockHeight = u64
 
   export type Balance = BigInt
-
-  export type StateRoot = CryptoHash
 
   export type Gas = u64
 
@@ -26,6 +22,25 @@ export namespace near {
   export type ProtocolVersion = u32
 
   export type Payload = u64
+
+  export enum CurveKind {
+    ED25519 = 0,
+    SECP256K1 = 1,
+  }
+
+  export class Signature {
+    constructor(
+      public kind: CurveKind,
+      public bytes: Bytes,
+    ) {}
+  }
+
+  export class PublicKey {
+    constructor(
+      public kind: CurveKind,
+      public bytes: Bytes,
+    ) {}
+  }
 
   export enum AccessKeyPermissionKind {
     FUNCTION_CALL = 0,
@@ -117,7 +132,7 @@ export namespace near {
 
   export class StakeAction {
     constructor(
-      public stake: BigInt,
+      public stake: Balance,
       public publicKey: PublicKey,
     ) {}
   }
@@ -306,15 +321,12 @@ export namespace near {
       public outcomeRoot: CryptoHash,
       public chunksIncluded: u64,
       public challengesRoot: CryptoHash,
-      public timestamp: u64,
       public timestampNanosec: u64,
       public randomValue: CryptoHash,
       public validatorProposals: Array<ValidatorStake>,
       public chunkMask: Array<bool>,
       public gasPrice: Balance,
       public blockOrdinal: NumBlocks,// Always zero when version < V3
-      // public rentPaid: Balance,// TODO: uncomment once in sf proto definition
-      public validatorReward: Balance,
       public totalSupply: Balance,
       public challengesResult: Array<SlashedValidator>,
       public lastFinalBlock: CryptoHash,
@@ -328,23 +340,11 @@ export namespace near {
     ) {}
   }
 
-  export enum SignatureKind {
-    ED25519 = 0,
-    SECP256K1 = 1,
-  }
-
-  export class Signature {
-    constructor(
-      public kind: SignatureKind,
-      public bytes: Bytes,
-    ) {}
-  }
-
   export class ValidatorStake {
     constructor(
       public accountId: AccountId,
       public publicKey: PublicKey,
-      public stake: BigInt,
+      public stake: Balance,
     ) {}
   }
 
@@ -353,7 +353,7 @@ export namespace near {
       public chunkHash: CryptoHash,
       public signature: Signature,
       public prevBlockHash: CryptoHash,
-      public prevStateRoot: StateRoot,
+      public prevStateRoot: CryptoHash,
       public encodedMerkleRoot: CryptoHash,
       public encodedLength: u64,
       public heightCreated: BlockHeight,
@@ -361,7 +361,6 @@ export namespace near {
       public shardId: ShardId,
       public gasUsed: Gas,
       public gasLimit: Gas,
-      public validatorReward: Balance,
       public balanceBurnt: Balance,
       public outgoingReceiptsRoot: CryptoHash,
       public txRoot: CryptoHash,
@@ -371,7 +370,7 @@ export namespace near {
 
   export class Block {
     constructor(
-      public author: string,
+      public author: AccountId,
       public header: BlockHeader,
       public chunks: Array<ChunkHeader>,
     ) {}
