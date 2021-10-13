@@ -285,6 +285,20 @@ export namespace near {
     }
   }
 
+  export enum Direction {
+    LEFT = 0,
+    RIGHT = 1,
+  }
+
+  export class MerklePathItem {
+    constructor(
+      public hash: CryptoHash,
+      public direction: Direction,
+    ) {}
+  }
+
+  export class MerklePath extends Array<MerklePathItem> {}
+
   export class ExecutionOutcome {
     constructor(
       public proof: MerklePath,
