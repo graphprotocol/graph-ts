@@ -295,6 +295,22 @@ export namespace near {
       public hash: CryptoHash,
       public direction: Direction,
     ) {}
+
+    @operator('<')
+    lt(other: MerklePathItem): boolean {
+      abort("Less than operator isn't supported in MerklePathItem")
+      return false
+    }
+
+    @operator('>')
+    gt(other: MerklePathItem): boolean {
+      abort("Greater than operator isn't supported in MerklePathItem")
+      return false
+    }
+
+    toString(): string {
+      return `{hash: ${this.hash.toString()}}, direction: ${this.direction.toString()}`
+    }
   }
 
   export class MerklePath extends Array<MerklePathItem> {}
