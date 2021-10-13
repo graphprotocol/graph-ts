@@ -73,12 +73,12 @@ export namespace near {
       return changetype<FullAccessPermission>(this.data as u32)
     }
 
-    static fromFunctionCall(input: FunctionCallPersmission): AccessKeyPermissionValue {
-      return new AccessKeyPermissionValue(ActionKind.FUNCTION_CALL, changetype<u32>(input))
+    static fromFunctionCall(input: FunctionCallPermission): AccessKeyPermissionValue {
+      return new AccessKeyPermissionValue(AccessKeyPermissionKind.FUNCTION_CALL, changetype<u32>(input))
     }
 
-    static fromFullAccess(input: FullAccessPersmission): AccessKeyPermissionValue {
-      return new AccessKeyPermissionValue(ActionKind.FULL_ACCESS, changetype<u32>(input))
+    static fromFullAccess(input: FullAccessPermission): AccessKeyPermissionValue {
+      return new AccessKeyPermissionValue(AccessKeyPermissionKind.FULL_ACCESS, changetype<u32>(input))
     }
   }
 
