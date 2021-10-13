@@ -59,7 +59,7 @@ export namespace near {
 
   export class AccessKeyPermissionValue {
     constructor(
-      public kind: AccessPermissionKind,
+      public kind: AccessKeyPermissionKind,
       public data: Payload,
     ) {}
 
