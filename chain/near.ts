@@ -111,14 +111,14 @@ export namespace near {
 
   export class DeployContractAction {
     constructor(
-      public code: string,
+      public codeHash: Bytes,
     ) {}
   }
 
   export class FunctionCallAction {
     constructor(
       public methodName: string,
-      public args: string,
+      public args: Bytes,
       public gas: u64,
       public deposit: BigInt,
     ) {}
@@ -266,9 +266,9 @@ export namespace near {
       public data: Payload,
     ) {}
 
-    toValue(): string {
+    toValue(): Bytes {
       assert(this.kind == SuccessStatusKind.VALUE, 'SuccessStatus is not a \'Value\'.')
-      return changetype<string>(this.data as u32)
+      return changetype<Bytes>(this.data as u32)
     }
 
     toReceiptId(): CryptoHash {
@@ -276,7 +276,7 @@ export namespace near {
       return changetype<CryptoHash>(this.data as u32)
     }
 
-    static fromValue(input: string): SuccessStatus {
+    static fromValue(input: Bytes): SuccessStatus {
       return new SuccessStatus(SuccessStatusKind.VALUE, changetype<u32>(input))
     }
 
