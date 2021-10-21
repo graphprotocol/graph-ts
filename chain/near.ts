@@ -317,12 +317,12 @@ export namespace near {
 
   export class ExecutionOutcome {
     constructor(
+      public gasBurnt: u64,
       public proof: MerklePath,
       public blockHash: CryptoHash,
       public id: CryptoHash,
       public logs: Array<string>,
       public receiptIds: Array<CryptoHash>,
-      public gasBurnt: u64,
       public tokensBurnt: BigInt,
       public executorId: string,
       public status: SuccessStatus,
@@ -340,23 +340,23 @@ export namespace near {
     constructor(
       public height: BlockHeight,
       public prevHeight: BlockHeight,// Always zero when version < V3
+      public blockOrdinal: NumBlocks,// Always zero when version < V3
       public epochId: CryptoHash,
       public nextEpochId: CryptoHash,
+      public chunksIncluded: u64,
       public hash: CryptoHash,
       public prevHash: CryptoHash,
+      public timestampNanosec: u64,
       public prevStateRoot: CryptoHash,
       public chunkReceiptsRoot: CryptoHash,
       public chunkHeadersRoot: CryptoHash,
       public chunkTxRoot: CryptoHash,
       public outcomeRoot: CryptoHash,
-      public chunksIncluded: u64,
       public challengesRoot: CryptoHash,
-      public timestampNanosec: u64,
       public randomValue: CryptoHash,
       public validatorProposals: Array<ValidatorStake>,
       public chunkMask: Array<bool>,
       public gasPrice: Balance,
-      public blockOrdinal: NumBlocks,// Always zero when version < V3
       public totalSupply: Balance,
       public challengesResult: Array<SlashedValidator>,
       public lastFinalBlock: CryptoHash,
@@ -380,17 +380,17 @@ export namespace near {
 
   export class ChunkHeader {
     constructor(
+      public encodedLength: u64,
+      public gasUsed: Gas,
+      public gasLimit: Gas,
+      public shardId: ShardId,
+      public heightCreated: BlockHeight,
+      public heightIncluded: BlockHeight,
       public chunkHash: CryptoHash,
       public signature: Signature,
       public prevBlockHash: CryptoHash,
       public prevStateRoot: CryptoHash,
       public encodedMerkleRoot: CryptoHash,
-      public encodedLength: u64,
-      public heightCreated: BlockHeight,
-      public heightIncluded: BlockHeight,
-      public shardId: ShardId,
-      public gasUsed: Gas,
-      public gasLimit: Gas,
       public balanceBurnt: Balance,
       public outgoingReceiptsRoot: CryptoHash,
       public txRoot: CryptoHash,
