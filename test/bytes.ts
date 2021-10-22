@@ -25,11 +25,11 @@ export function testBytesWithByteArray(): void {
     assert(ByteArray.fromI32(1) != ByteArray.fromI32(2))
 }
 
-export function testBytesFromString(): void {
+export function testBytesFromUTF8(): void {
     // [123, 32, 34, 104, 101, 108, 108, 111, 34, 58, 32, 34, 119, 111, 114, 108, 100, 34, 32, 125]
     let str = '{ "hello": "world" }';
 
-    let bytes = Bytes.fromString(str)
+    let bytes = Bytes.fromUTF8(str)
 
     for (let i = 0; i < bytes.length; i++) {
         assert(bytes[i] == str.charCodeAt(i))
