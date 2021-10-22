@@ -2,6 +2,7 @@ import { BigDecimal } from '../common/numbers'
 import { TypedMapEntry, Entity, TypedMap, Result, Wrapped } from '../common/collections'
 import { JSONValue, Value } from '../common/value'
 import { ethereum } from '../chain/ethereum'
+import { near } from '../chain/near'
 
 export enum TypeId {
   String = 0,
@@ -56,6 +57,32 @@ export enum TypeId {
   ArrayF32 = 49,
   ArrayF64 = 50,
   ArrayBigDecimal = 51,
+  NearSignature = 52,
+  NearPublicKey = 53,
+  NearFunctionCallPermission = 54,
+  NearFullAccessPermission = 55,
+  NearAccessKeyPermissionValue = 56,
+  NearAccessKey = 57,
+  NearDataReceiver = 58,
+  NearCreateAccountAction = 59,
+  NearDeployContractAction = 60,
+  NearFunctionCallAction = 61,
+  NearTransferAction = 62,
+  NearStakeAction = 63,
+  NearAddKeyAction = 64,
+  NearDeleteKeyAction = 65,
+  NearDeleteAccountAction = 66,
+  NearActionValue = 67,
+  NearActionReceipt = 68,
+  NearSuccessStatus = 69,
+  NearMerklePath = 70,
+  NearExecutionOutcome = 71,
+  NearSlashedValidator = 72,
+  NearBlockHeader = 73,
+  NearValidatorStake = 74,
+  NearChunkHeader = 75,
+  NearBlock = 76,
+  NearReceiptWithOutcome = 77,
 }
 
 export function id_of_type(typeId: TypeId): usize {
@@ -164,6 +191,58 @@ export function id_of_type(typeId: TypeId): usize {
       return idof<Array<f64>>()
     case TypeId.ArrayBigDecimal:
       return idof<Array<BigDecimal>>()
+    case TypeId.NearSignature:
+      return idof<near.Signature>()
+    case TypeId.NearPublicKey:
+      return idof<near.PublicKey>()
+    case TypeId.NearFunctionCallPermission:
+      return idof<near.FunctionCallPermission>()
+    case TypeId.NearFullAccessPermission:
+      return idof<near.FullAccessPermission>()
+    case TypeId.NearAccessKeyPermissionValue:
+      return idof<near.AccessKeyPermissionValue>()
+    case TypeId.NearAccessKey:
+      return idof<near.AccessKey>()
+    case TypeId.NearDataReceiver:
+      return idof<near.DataReceiver>()
+    case TypeId.NearCreateAccountAction:
+      return idof<near.CreateAccountAction>()
+    case TypeId.NearDeployContractAction:
+      return idof<near.DeployContractAction>()
+    case TypeId.NearFunctionCallAction:
+      return idof<near.FunctionCallAction>()
+    case TypeId.NearTransferAction:
+      return idof<near.TransferAction>()
+    case TypeId.NearStakeAction:
+      return idof<near.StakeAction>()
+    case TypeId.NearAddKeyAction:
+      return idof<near.AddKeyAction>()
+    case TypeId.NearDeleteKeyAction:
+      return idof<near.DeleteKeyAction>()
+    case TypeId.NearDeleteAccountAction:
+      return idof<near.DeleteAccountAction>()
+    case TypeId.NearActionValue:
+      return idof<near.ActionValue>()
+    case TypeId.NearActionReceipt:
+      return idof<near.ActionReceipt>()
+    case TypeId.NearSuccessStatus:
+      return idof<near.SuccessStatus>()
+    case TypeId.NearMerklePath:
+      return idof<near.MerklePath>()
+    case TypeId.NearExecutionOutcome:
+      return idof<near.ExecutionOutcome>()
+    case TypeId.NearSlashedValidator:
+      return idof<near.SlashedValidator>()
+    case TypeId.NearBlockHeader:
+      return idof<near.BlockHeader>()
+    case TypeId.NearValidatorStake:
+      return idof<near.ValidatorStake>()
+    case TypeId.NearChunkHeader:
+      return idof<near.ChunkHeader>()
+    case TypeId.NearBlock:
+      return idof<near.Block>()
+    case TypeId.NearReceiptWithOutcome:
+      return idof<near.ReceiptWithOutcome>()
     default:
       return 0
   }
