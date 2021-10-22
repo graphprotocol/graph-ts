@@ -39,7 +39,6 @@ export class ByteArray extends Uint8Array {
   }
 
   static fromUTF8(str: String): ByteArray {
-    // AssemblyScript counts a null terminator, we don't want that.
     let utf8 = String.UTF8.encode(str)
     return changetype<ByteArray>(ByteArray.wrap(utf8))
   }
