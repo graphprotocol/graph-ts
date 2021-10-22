@@ -12,3 +12,17 @@ export declare namespace json {
   function toF64(decimal: string): f64
   function toBigInt(decimal: string): BigInt
 }
+
+export namespace json {
+  function fromString(data: string): JSONValue {
+    let bytes = Bytes.fromString(data)
+
+    return json.fromBytes(bytes)
+  }
+
+  function try_fromString(data: string): Result<JSONValue, boolean> {
+    let bytes = Bytes.fromString(data)
+
+    return json.try_fromBytes(bytes)
+  }
+}

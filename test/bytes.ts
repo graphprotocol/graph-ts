@@ -1,7 +1,7 @@
 import { ByteArray, Bytes } from 'temp_lib/index'
 
 // Test some Bytes methods.
-export function testBytes(): void {
+export function testBytesWithByteArray(): void {
     let longArray = new ByteArray(5)
     longArray[0] = 251
     longArray[1] = 255
@@ -23,4 +23,15 @@ export function testBytes(): void {
 
     assert(ByteArray.fromI32(1) == ByteArray.fromI32(1))
     assert(ByteArray.fromI32(1) != ByteArray.fromI32(2))
+}
+
+export function testBytesFromString(): void {
+    // [123, 32, 34, 104, 101, 108, 108, 111, 34, 58, 32, 34, 119, 111, 114, 108, 100, 34, 32, 125]
+    let str = '{ "hello": "world" }';
+
+    let bytes = Bytes.fromString(str)
+
+    for (let i = 0; i < bytes.length; i++) {
+        assert(bytes[i] == str.charCodeAt(i))
+    }
 }

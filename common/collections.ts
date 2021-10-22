@@ -151,6 +151,14 @@ export class Bytes extends ByteArray {
     return changetype<Bytes>(uint8Array)
   }
 
+  static fromString(str: string): Bytes {
+    let arrayBuffer = String.UTF8.encode(str)
+
+    let uint8Array = Uint8Array.wrap(arrayBuffer)
+
+    return Bytes.fromUint8Array(uint8Array)
+  }
+
   static empty(): Bytes {
     return changetype<Bytes>(ByteArray.empty())
   }
