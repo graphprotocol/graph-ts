@@ -7,7 +7,7 @@ import { BigInt } from '../common/numbers'
 export namespace near {
   export type CryptoHash = Bytes
 
-  export type AccountId = string
+  export type Account = string
 
   export type BlockHeight = u64
 
@@ -152,7 +152,7 @@ export namespace near {
 
   export class DeleteAccountAction {
     constructor(
-      public beneficiaryId: AccountId,
+      public beneficiaryId: Account,
     ) {}
   }
 
@@ -331,7 +331,7 @@ export namespace near {
 
   export class SlashedValidator {
     constructor(
-      public accountId: AccountId,
+      public account: Account,
       public isDoubleSign: bool,
     ) {}
   }
@@ -372,7 +372,7 @@ export namespace near {
 
   export class ValidatorStake {
     constructor(
-      public accountId: AccountId,
+      public account: Account,
       public publicKey: PublicKey,
       public stake: Balance,
     ) {}
@@ -400,7 +400,7 @@ export namespace near {
 
   export class Block {
     constructor(
-      public author: AccountId,
+      public author: Account,
       public header: BlockHeader,
       public chunks: Array<ChunkHeader>,
     ) {}
