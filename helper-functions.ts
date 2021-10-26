@@ -1,4 +1,4 @@
-import { ByteArray, BigInt } from './index'
+import { ByteArray } from './index'
 
 /**
  * Takes 2 ByteArrays and concatenates them
@@ -38,8 +38,8 @@ export function parseCSV(csv: string): Array<string> {
 
   for (let i: i32 = 0; i < csv.length; i++) {
     if (state == CSVState.BETWEEN) {
-      if (csv[i] != ',') {
-        if (csv[i] == '"') {
+      if (csv.charAt(i) != ',') {
+        if (csv.charAt(i) == '"') {
           state = CSVState.QUOTED_VALUE
           valueStart = i + 1
         } else {
@@ -48,12 +48,12 @@ export function parseCSV(csv: string): Array<string> {
         }
       }
     } else if (state == CSVState.UNQUOTED_VALUE) {
-      if (csv[i] == ',') {
+      if (csv.charAt(i) == ',') {
         values.push(csv.substr(valueStart, i - valueStart))
         state = CSVState.BETWEEN
       }
     } else if (state == CSVState.QUOTED_VALUE) {
-      if (csv[i] == '"') {
+      if (csv.charAt(i) == '"') {
         values.push(csv.substr(valueStart, i - valueStart))
         state = CSVState.BETWEEN
       }
