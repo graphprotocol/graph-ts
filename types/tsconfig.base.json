@@ -1,7 +1,3 @@
 {
   "extends": "assemblyscript/std/assembly",
-  "compilerOptions": {
-    "typeRoots": ["@types", "."],
-    "types": ["assembly"]
-  }
 }
