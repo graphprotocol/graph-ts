@@ -28,7 +28,7 @@ export class ByteArray extends Uint8Array {
   static fromHexString(hex: string): ByteArray {
     assert(hex.length % 2 == 0, 'input ' + hex + ' has odd length')
     // Skip possible `0x` prefix.
-    if (hex.length >= 2 && hex[0] == '0' && hex[1] == 'x') {
+    if (hex.length >= 2 && hex.charAt(0) == '0' && hex.charAt(1) == 'x') {
       hex = hex.substr(2)
     }
     let output = new Bytes(hex.length / 2)
@@ -38,7 +38,7 @@ export class ByteArray extends Uint8Array {
     return output
   }
 
-  static fromUTF8(str: String): ByteArray {
+  static fromUTF8(str: string): ByteArray {
     let utf8 = String.UTF8.encode(str)
     return changetype<ByteArray>(ByteArray.wrap(utf8))
   }

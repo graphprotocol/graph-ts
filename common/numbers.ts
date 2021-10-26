@@ -118,11 +118,11 @@ export class BigInt extends Uint8Array {
   }
 
   abs(): BigInt {
-    return this < BigInt.fromI32(0) ? -this : this
+    return this < BigInt.fromI32(0) ? this.neg() : this
   }
 
   sqrt(): BigInt {
-    let x = this
+    let x: BigInt = this
     let z = x.plus(BigInt.fromI32(1)).div(BigInt.fromI32(2))
     let y = x
     while (z < y) {
@@ -201,7 +201,7 @@ export class BigInt extends Uint8Array {
 
   @operator.prefix('-')
   neg(): BigInt {
-    return BigInt.fromI32(0) - this
+    return BigInt.fromI32(0).minus(this)
   }
 
   @operator('|')
@@ -379,14 +379,14 @@ export class BigDecimal {
   @operator.prefix('-')
   neg(): BigDecimal {
     assert(this !== null, "Failed to negate BigDecimal because the value of it is 'null'");
-    return new BigDecimal(new BigInt(0)) - this
+    return new BigDecimal(new BigInt(0)).minus(this)
   }
 
   /**
    * Returns −1 if a < b, 1 if a > b, and 0 if A == B
    */
   static compare(a: BigDecimal, b: BigDecimal): i32 {
-    let diff = a - b
+    let diff = a.minus(b)
     if (diff.digits.isZero()) {
       return 0
     }

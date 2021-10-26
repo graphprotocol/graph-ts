@@ -196,7 +196,7 @@ export class Value {
     return new Value(ValueKind.BIGINT, changetype<u32>(n))
   }
 
-  static fromBoolean(b: boolean): Value {
+  static fromBoolean(b: bool): Value {
     return new Value(ValueKind.BOOL, b ? 1 : 0)
   }
 
