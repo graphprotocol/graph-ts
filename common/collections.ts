@@ -1,5 +1,5 @@
 import { BigInt, BigDecimal } from './numbers'
-import { JSONValue, Value } from './value'
+import { Value } from './value'
 import { typeConversion } from './conversion'
 
 /**

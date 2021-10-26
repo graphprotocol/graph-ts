@@ -13,18 +13,11 @@ export * from './common/json'
 export * from './common/datasource'
 
 import {
-  Address,
-  BigInt,
-  BigDecimal,
-} from './common/numbers'
-import {
   Bytes,
   ByteArray,
-  Result,
-  TypedMap,
   Entity,
 } from './common/collections'
-import { JSONValue, Value } from './common/value'
+import { Value } from './common/value'
 
 /**
  * Host store interface.
@@ -71,13 +64,13 @@ function format(fmt: string, args: string[]): string {
       fmt.charCodeAt(i + 1) == 0x7d /* '}' */
     ) {
       if (argIndex >= args.length) {
-        throw Error('Too few arguments for format string: ' + fmt)
+        throw new Error('Too few arguments for format string: ' + fmt)
       } else {
         out += args[argIndex++]
         i++
       }
     } else {
-      out += fmt[i]
+      out += fmt.charAt(i)
     }
   }
   return out
