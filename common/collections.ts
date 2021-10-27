@@ -165,7 +165,6 @@ export class ByteArray extends Uint8Array {
     return x
   }
 
-
   /**
    * Interprets the byte array as a little-endian I64.
    * Throws in case of overflow.

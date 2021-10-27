@@ -29,17 +29,11 @@ export namespace near {
   }
 
   export class Signature {
-    constructor(
-      public kind: CurveKind,
-      public bytes: Bytes,
-    ) {}
+    constructor(public kind: CurveKind, public bytes: Bytes) {}
   }
 
   export class PublicKey {
-    constructor(
-      public kind: CurveKind,
-      public bytes: Bytes,
-    ) {}
+    constructor(public kind: CurveKind, public bytes: Bytes) {}
   }
 
   export enum AccessKeyPermissionKind {
@@ -58,42 +52,45 @@ export namespace near {
   export class FullAccessPermission {}
 
   export class AccessKeyPermissionValue {
-    constructor(
-      public kind: AccessKeyPermissionKind,
-      public data: Payload,
-    ) {}
+    constructor(public kind: AccessKeyPermissionKind, public data: Payload) {}
 
     toFunctionCall(): FunctionCallPermission {
-      assert(this.kind == AccessKeyPermissionKind.FUNCTION_CALL, 'AccessKeyPermissionValue is not a \'FunctionCall\'.')
+      assert(
+        this.kind == AccessKeyPermissionKind.FUNCTION_CALL,
+        "AccessKeyPermissionValue is not a 'FunctionCall'.",
+      )
       return changetype<FunctionCallPermission>(this.data as u32)
     }
 
     toFullAccess(): FullAccessPermission {
-      assert(this.kind == AccessKeyPermissionKind.FULL_ACCESS, 'AccessKeyPermissionValue is not a \'FullAccess\'.')
+      assert(
+        this.kind == AccessKeyPermissionKind.FULL_ACCESS,
+        "AccessKeyPermissionValue is not a 'FullAccess'.",
+      )
       return changetype<FullAccessPermission>(this.data as u32)
     }
 
     static fromFunctionCall(input: FunctionCallPermission): AccessKeyPermissionValue {
-      return new AccessKeyPermissionValue(AccessKeyPermissionKind.FUNCTION_CALL, changetype<u32>(input))
+      return new AccessKeyPermissionValue(
+        AccessKeyPermissionKind.FUNCTION_CALL,
+        changetype<u32>(input),
+      )
     }
 
     static fromFullAccess(input: FullAccessPermission): AccessKeyPermissionValue {
-      return new AccessKeyPermissionValue(AccessKeyPermissionKind.FULL_ACCESS, changetype<u32>(input))
+      return new AccessKeyPermissionValue(
+        AccessKeyPermissionKind.FULL_ACCESS,
+        changetype<u32>(input),
+      )
     }
   }
 
   export class AccessKey {
-    constructor(
-      public nonce: u64,
-      public permission: AccessKeyPermissionValue,
-    ) {}
+    constructor(public nonce: u64, public permission: AccessKeyPermissionValue) {}
   }
 
   export class DataReceiver {
-    constructor(
-      public dataId: CryptoHash,
-      public receiverId: string,
-    ) {}
+    constructor(public dataId: CryptoHash, public receiverId: string) {}
   }
 
   export enum ActionKind {
@@ -110,9 +107,7 @@ export namespace near {
   export class CreateAccountAction {}
 
   export class DeployContractAction {
-    constructor(
-      public codeHash: Bytes,
-    ) {}
+    constructor(public codeHash: Bytes) {}
   }
 
   export class FunctionCallAction {
@@ -125,80 +120,77 @@ export namespace near {
   }
 
   export class TransferAction {
-    constructor(
-      public deposit: BigInt,
-    ) {}
+    constructor(public deposit: BigInt) {}
   }
 
   export class StakeAction {
-    constructor(
-      public stake: Balance,
-      public publicKey: PublicKey,
-    ) {}
+    constructor(public stake: Balance, public publicKey: PublicKey) {}
   }
 
   export class AddKeyAction {
-    constructor(
-      public publicKey: PublicKey,
-      public accessKey: AccessKey,
-    ) {}
+    constructor(public publicKey: PublicKey, public accessKey: AccessKey) {}
   }
 
   export class DeleteKeyAction {
-    constructor(
-      public publicKey: PublicKey,
-    ) {}
+    constructor(public publicKey: PublicKey) {}
   }
 
   export class DeleteAccountAction {
-    constructor(
-      public beneficiaryId: Account,
-    ) {}
+    constructor(public beneficiaryId: Account) {}
   }
 
   export class ActionValue {
-    constructor(
-      public kind: ActionKind,
-      public data: Payload,
-    ) {}
+    constructor(public kind: ActionKind, public data: Payload) {}
 
     toCreateAccount(): CreateAccountAction {
-      assert(this.kind == ActionKind.CREATE_ACCOUNT, 'ActionValue is not a \'CreateAccount\'.')
+      assert(
+        this.kind == ActionKind.CREATE_ACCOUNT,
+        "ActionValue is not a 'CreateAccount'.",
+      )
       return changetype<CreateAccountAction>(this.data as u32)
     }
 
     toDeployContract(): DeployContractAction {
-      assert(this.kind == ActionKind.DEPLOY_CONTRACT, 'ActionValue is not a \'DeployContract\'.')
+      assert(
+        this.kind == ActionKind.DEPLOY_CONTRACT,
+        "ActionValue is not a 'DeployContract'.",
+      )
       return changetype<DeployContractAction>(this.data as u32)
     }
 
     toFunctionCall(): FunctionCallAction {
-      assert(this.kind == ActionKind.FUNCTION_CALL, 'ActionValue is not a \'FunctionCall\'.')
+      assert(
+        this.kind == ActionKind.FUNCTION_CALL,
+        "ActionValue is not a 'FunctionCall'.",
+      )
       return changetype<FunctionCallAction>(this.data as u32)
     }
 
     toTransfer(): TransferAction {
-      assert(this.kind == ActionKind.TRANSFER, 'ActionValue is not a \'Transfer\'.')
+      assert(this.kind == ActionKind.TRANSFER, "ActionValue is not a 'Transfer'.")
       return changetype<TransferAction>(this.data as u32)
     }
 
     toStake(): StakeAction {
-      assert(this.kind == ActionKind.STAKE, 'ActionValue is not a \'Stake\'.')
+      assert(this.kind == ActionKind.STAKE, "ActionValue is not a 'Stake'.")
       return changetype<StakeAction>(this.data as u32)
     }
 
     toAddKey(): AddKeyAction {
-      assert(this.kind == ActionKind.ADD_KEY, 'ActionValue is not a \'AddKey\'.')
+      assert(this.kind == ActionKind.ADD_KEY, "ActionValue is not a 'AddKey'.")
       return changetype<AddKeyAction>(this.data as u32)
     }
 
     toDeleteKey(): DeleteKeyAction {
-      assert(this.kind == ActionKind.DELETE_KEY, 'ActionValue is not a \'DeleteKey\'.')
+      assert(this.kind == ActionKind.DELETE_KEY, "ActionValue is not a 'DeleteKey'.")
       return changetype<DeleteKeyAction>(this.data as u32)
     }
 
     toDeleteAccount(): DeleteAccountAction {
-      assert(this.kind == ActionKind.DELETE_ACCOUNT, 'ActionValue is not a \'DeleteAccount\'.')
+      assert(
+        this.kind == ActionKind.DELETE_ACCOUNT,
+        "ActionValue is not a 'DeleteAccount'.",
+      )
       return changetype<DeleteAccountAction>(this.data as u32)
     }
 
@@ -261,18 +253,18 @@ export namespace near {
   // Doesn't have Value suffix because it has
   // VALUE variant/kind, that would be confusing.
   export class SuccessStatus {
-    constructor(
-      public kind: SuccessStatusKind,
-      public data: Payload,
-    ) {}
+    constructor(public kind: SuccessStatusKind, public data: Payload) {}
 
     toValue(): Bytes {
-      assert(this.kind == SuccessStatusKind.VALUE, 'SuccessStatus is not a \'Value\'.')
+      assert(this.kind == SuccessStatusKind.VALUE, "SuccessStatus is not a 'Value'.")
       return changetype<Bytes>(this.data as u32)
     }
 
     toReceiptId(): CryptoHash {
-      assert(this.kind == SuccessStatusKind.RECEIPT_ID, 'SuccessStatus is not a \'ReceiptId\'.')
+      assert(
+        this.kind == SuccessStatusKind.RECEIPT_ID,
+        "SuccessStatus is not a 'ReceiptId'.",
+      )
       return changetype<CryptoHash>(this.data as u32)
     }
 
@@ -291,10 +283,7 @@ export namespace near {
   }
 
   export class MerklePathItem {
-    constructor(
-      public hash: CryptoHash,
-      public direction: Direction,
-    ) {}
+    constructor(public hash: CryptoHash, public direction: Direction) {}
 
     @operator('<')
     lt(other: MerklePathItem): boolean {
@@ -330,17 +319,14 @@ export namespace near {
   }
 
   export class SlashedValidator {
-    constructor(
-      public account: Account,
-      public isDoubleSign: bool,
-    ) {}
+    constructor(public account: Account, public isDoubleSign: bool) {}
   }
 
   export class BlockHeader {
     constructor(
       public height: BlockHeight,
-      public prevHeight: BlockHeight,// Always zero when version < V3
-      public blockOrdinal: NumBlocks,// Always zero when version < V3
+      public prevHeight: BlockHeight, // Always zero when version < V3
+      public blockOrdinal: NumBlocks, // Always zero when version < V3
       public epochId: CryptoHash,
       public nextEpochId: CryptoHash,
       public chunksIncluded: u64,
@@ -363,8 +349,8 @@ export namespace near {
       public lastDsFinalBlock: CryptoHash,
       public nextBpHash: CryptoHash,
       public blockMerkleRoot: CryptoHash,
-      public epochSyncDataHash: CryptoHash,// Always empty when version < V3
-      public approvals: Array<Signature>,// Array<Option<Signature>>
+      public epochSyncDataHash: CryptoHash, // Always empty when version < V3
+      public approvals: Array<Signature>, // Array<Option<Signature>>
       public signature: Signature,
       public latestProtocolVersion: ProtocolVersion,
     ) {}

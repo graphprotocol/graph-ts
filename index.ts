@@ -12,11 +12,7 @@ export * from './common/conversion'
 export * from './common/json'
 export * from './common/datasource'
 
-import {
-  Bytes,
-  ByteArray,
-  Entity,
-} from './common/collections'
+import { Bytes, ByteArray, Entity } from './common/collections'
 import { Value } from './common/value'
 
 /**
