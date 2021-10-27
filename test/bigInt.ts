@@ -79,6 +79,33 @@ export function testBigInt(): void {
     assert(a.toI32() == -2147483648)
     assert(b.toI32() == 2147483647)
 
+    a = BigInt.fromU32(U32.MIN_VALUE)
+    b = BigInt.fromU32(U32.MAX_VALUE)
+    let c = BigInt.fromU32(0)
+    assert(a < b && a <= b, `a: ${a.toU32()}, b: ${b.toU32()}`)
+    assert(b > a && b >= a, `a: ${a.toU32()}, b: ${b.toU32()}`)
+    assert(a.toU32() == 0, `Actual value ${a.toU32()}`)
+    assert(b.toU32() == 4294967295, `Actual value ${b.toU32()}`)
+    assert(c.toU32() == 0, `Actual value ${c.toU32()}`)
+
+    a = BigInt.fromI64(I64.MIN_VALUE)
+    b = BigInt.fromI64(I64.MAX_VALUE)
+    c = BigInt.fromI64(0)
+    assert(a < b && a <= b, `a: ${a.toU64()}, b: ${b.toU64()}`)
+    assert(b > a && b >= a, `a: ${a.toU64()}, b: ${b.toU64()}`)
+    assert(a.toI64() == -9223372036854775808, `Actual value ${a.toI64()}`)
+    assert(b.toI64() == 9223372036854775807, `Actual value ${b.toI64()}`)
+    assert(c.toI64() == 0, `Actual value ${c.toI64()}`)
+
+    a = BigInt.fromU64(U64.MIN_VALUE)
+    b = BigInt.fromU64(U64.MAX_VALUE)
+    c = BigInt.fromU64(0)
+    assert(a < b && a <= b, `a: ${a.toU64()}, b: ${b.toU64()}`)
+    assert(b > a && b >= a, `a: ${a.toU64()}, b: ${b.toU64()}`)
+    assert(a.toU64() == 0, `Actual value ${a.toU64()}`)
+    assert(b.toU64() == 18446744073709551615, `Actual value ${b.toU64()}`)
+    assert(c.toU64() == 0, `Actual value ${c.toU64()}`)
+
     // This is 8071860 in binary.
     let blockNumber = new ByteArray(3)
     blockNumber[0] = 180

@@ -53,6 +53,21 @@ export class BigInt extends Uint8Array {
     return BigInt.fromByteArray(byteArray)
   }
 
+  static fromU32(x: u32): BigInt {
+    let byteArray = ByteArray.fromU32(x)
+    return BigInt.fromUnsignedBytes(byteArray)
+  }
+
+  static fromI64(x: i64): BigInt {
+    let byteArray = ByteArray.fromI64(x)
+    return BigInt.fromByteArray(byteArray)
+  }
+
+  static fromU64(x: u64): BigInt {
+    let byteArray = ByteArray.fromU64(x)
+    return BigInt.fromUnsignedBytes(byteArray)
+  }
+
   static zero(): BigInt {
     return BigInt.fromI32(0)
   }
@@ -74,7 +89,7 @@ export class BigInt extends Uint8Array {
    * `bytes` assumed to be little-endian. If your input is big-endian, call `.reverse()` first.
    */
 
-  static fromUnsignedBytes(bytes: Bytes): BigInt {
+  static fromUnsignedBytes(bytes: ByteArray): BigInt {
     let signedBytes = new BigInt(bytes.length + 1)
     for (let i = 0; i < bytes.length; i++) {
       signedBytes[i] = bytes[i]
@@ -103,6 +118,24 @@ export class BigInt extends Uint8Array {
     let uint8Array = changetype<Uint8Array>(this)
     let byteArray = changetype<ByteArray>(uint8Array)
     return byteArray.toI32()
+  }
+
+  toU32(): u32 {
+    let uint8Array = changetype<Uint8Array>(this)
+    let byteArray = changetype<ByteArray>(uint8Array)
+    return byteArray.toU32()
+  }
+
+  toI64(): i64 {
+    let uint8Array = changetype<Uint8Array>(this)
+    let byteArray = changetype<ByteArray>(uint8Array)
+    return byteArray.toI64()
+  }
+
+  toU64(): u64 {
+    let uint8Array = changetype<Uint8Array>(this)
+    let byteArray = changetype<ByteArray>(uint8Array)
+    return byteArray.toU64()
   }
 
   toBigDecimal(): BigDecimal {
