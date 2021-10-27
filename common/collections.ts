@@ -21,7 +21,7 @@ export class ByteArray extends Uint8Array {
   /**
    * Returns bytes in little-endian order.
    */
-   static fromU32(x: u32): ByteArray {
+  static fromU32(x: u32): ByteArray {
     let self = new ByteArray(4)
     self[0] = x as u8
     self[1] = (x >> 8) as u8
@@ -49,7 +49,7 @@ export class ByteArray extends Uint8Array {
   /**
    * Returns bytes in little-endian order.
    */
-   static fromU64(x: u64): ByteArray {
+  static fromU64(x: u64): ByteArray {
     let self = new ByteArray(8)
     self[0] = x as u8
     self[1] = (x >> 8) as u8
