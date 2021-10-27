@@ -60,14 +60,14 @@ export enum TypeId {
   NearArrayDataReceiver = 52,
   NearArrayCryptoHash = 53,
   NearArrayActionValue = 54,
-  NearMerklePath = 55,// or NearArrayMerklePathItem
+  NearMerklePath = 55, // or NearArrayMerklePathItem
   NearArrayValidatorStake = 56,
   NearArraySlashedValidator = 57,
   NearArraySignature = 58,
   NearArrayChunkHeader = 59,
   NearAccessKeyPermissionValue = 60,
   NearActionValue = 61,
-  NearDirection = 62,// not used in graph-node, could be removed
+  NearDirection = 62, // not used in graph-node, could be removed
   NearPublicKey = 63,
   NearSignature = 64,
   NearFunctionCallPermission = 65,
