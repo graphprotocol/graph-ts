@@ -9,7 +9,6 @@
     "assemblyscript": "0.19.10"
   },
   "devDependencies": {
-    "glob": "^7.1.2",
     "prettier": "^2.4.1"
   },
   "scripts": {
