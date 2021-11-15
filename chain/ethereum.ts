@@ -339,6 +339,7 @@ export namespace ethereum {
       public difficulty: BigInt,
       public totalDifficulty: BigInt,
       public size: BigInt | null,
+      public baseFeePerGas: BigInt | null,
     ) {}
   }
 
@@ -355,6 +356,7 @@ export namespace ethereum {
       public gasLimit: BigInt,
       public gasPrice: BigInt,
       public input: Bytes,
+      public nonce: Bytes,
     ) {}
   }
 
