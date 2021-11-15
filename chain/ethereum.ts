@@ -339,6 +339,7 @@ export namespace ethereum {
       public difficulty: BigInt,
       public totalDifficulty: BigInt,
       public size: BigInt | null,
+      public baseFeePerGas: BigInt | null,
     ) {}
   }
 
