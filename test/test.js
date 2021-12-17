@@ -28,6 +28,7 @@ fs.copyFileSync('common/conversion.ts', 'test/temp_lib/common/conversion.ts')
 fs.copyFileSync('common/value.ts', 'test/temp_lib/common/value.ts')
 fs.copyFileSync('chain/ethereum.ts', 'test/temp_lib/chain/ethereum.ts')
 fs.copyFileSync('chain/near.ts', 'test/temp_lib/chain/near.ts')
+fs.copyFileSync('chain/tendermint.ts', 'test/temp_lib/chain/tendermint.ts')
 fs.copyFileSync('index.ts', 'test/temp_lib/index.ts')
 let output_path = 'test/temp_out/test.wasm'
 
@@ -58,6 +59,7 @@ try {
   fs.rmdirSync('test/temp_lib/common')
   fs.unlinkSync('test/temp_lib/chain/ethereum.ts')
   fs.unlinkSync('test/temp_lib/chain/near.ts')
+  fs.unlinkSync('test/temp_lib/chain/tendermint.ts')
   fs.rmdirSync('test/temp_lib/chain')
   fs.rmdirSync('test/temp_lib')
   fs.unlinkSync('test/temp_out/test.wasm')
@@ -76,6 +78,7 @@ try {
   fs.rmdirSync('test/temp_lib/common')
   fs.unlinkSync('test/temp_lib/chain/ethereum.ts')
   fs.unlinkSync('test/temp_lib/chain/near.ts')
+  fs.unlinkSync('test/temp_lib/chain/tendermint.ts')
   fs.rmdirSync('test/temp_lib/chain')
   fs.rmdirSync('test/temp_lib')
   fs.unlinkSync('test/temp_out/test.wasm')

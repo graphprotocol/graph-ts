@@ -1,8 +1,9 @@
 import { BigDecimal } from '../common/numbers'
-import { TypedMapEntry, Entity, TypedMap, Result, Wrapped } from '../common/collections'
+import { Bytes, TypedMapEntry, Entity, TypedMap, Result, Wrapped } from '../common/collections'
 import { JSONValue, Value } from '../common/value'
 import { ethereum } from '../chain/ethereum'
 import { near } from '../chain/near'
+import { tendermint } from '../chain/tendermint'
 
 export enum TypeId {
   String = 0,
@@ -92,6 +93,50 @@ export enum TypeId {
   NearChunkHeader = 84,
   NearBlock = 85,
   NearReceiptWithOutcome = 86,
+  TendermintArrayEventTx = 87,
+TendermintArrayEvent = 88,
+TendermintArrayValidator = 89,
+TendermintArrayCommitSig = 90,
+TendermintArrayBytes = 91,
+TendermintArrayEvidence = 92,
+TendermintArrayEventAttribute = 93,
+TendermintBlockIDFlagEnum = 94,
+TendermintSignedMsgTypeEnum = 95,
+TendermintEventList = 96,
+TendermintEventBlock = 97,
+TendermintResponseBeginBlock = 98,
+TendermintResponseEndBlock = 99,
+TendermintConsensusParams = 100,
+TendermintVersion = 101,
+TendermintBlock = 102,
+TendermintCommit = 103,
+TendermintCommitSig = 104,
+TendermintEventBlockHeader = 105,
+TendermintHeader = 106,
+TendermintConsensus = 107,
+TendermintBlockID = 108,
+TendermintPartSetHeader = 109,
+TendermintData = 110,
+TendermintEvidence = 111,
+TendermintDuplicateVoteEvidence = 112,
+TendermintEventTx = 113,
+TendermintEventVote = 114,
+TendermintLightClientAttackEvidence = 115,
+TendermintLightBlock = 116,
+TendermintValidatorSet = 117,
+TendermintSignedHeader = 118,
+TendermintEvidenceList = 119,
+TendermintValidator = 120,
+TendermintPublicKey = 121,
+TendermintTxResult = 122,
+TendermintResponseDeliverTx = 123,
+TendermintEvent = 124,
+TendermintEventAttribute = 125,
+TendermintAddress = 126,
+TendermintEventValidatorSetUpdates = 127,
+TendermintTimestamp = 128,
+Tendermintfig = 129,
+TendermintEventData = 130,
 }
 
 export function id_of_type(typeId: TypeId): usize {
@@ -271,6 +316,92 @@ export function id_of_type(typeId: TypeId): usize {
       return idof<near.Block>()
     case TypeId.NearReceiptWithOutcome:
       return idof<near.ReceiptWithOutcome>()
+    case TypeId.TendermintArrayEventTx:
+      return idof<Array<tendermint.EventTx>>()
+    case TypeId.TendermintArrayEvent:
+      return idof<Array<tendermint.Event>>()
+    case TypeId.TendermintArrayValidator:
+      return idof<Array<tendermint.Validator>>()
+    case TypeId.TendermintArrayCommitSig:
+      return idof<Array<tendermint.CommitSig>>()
+    case TypeId.TendermintArrayBytes:
+      return idof<Array<Bytes>>()
+    case TypeId.TendermintArrayEvidence:
+      return idof<Array<tendermint.Evidence>>()
+    case TypeId.TendermintArrayEventAttribute:
+      return idof<Array<tendermint.EventAttribute>>()
+    case TypeId.TendermintBlockIDFlagEnum:
+      return idof<Array<tendermint.BlockIDFlag>>()
+    case TypeId.TendermintSignedMsgTypeEnum:
+      return idof<Array<tendermint.SignedMsgType>>()
+    case TypeId.TendermintEventList:
+      return idof<Array<tendermint.EventList>>()
+    case TypeId.TendermintEventBlock:
+      return idof<Array<tendermint.EventBlock>>()
+    case TypeId.TendermintResponseBeginBlock:
+      return idof<tendermint.ResponseBeginBlock>()
+    case TypeId.TendermintResponseEndBlock:
+      return idof<tendermint.ResponseEndBlock>()
+    case TypeId.TendermintConsensusParams :
+      return idof<tendermint.ConsensusParams>()
+    case TypeId.TendermintVersion :
+      return idof<tendermint.Version>()
+    case TypeId.TendermintBlock :
+      return idof<tendermint.Block>()
+    case TypeId.TendermintCommit :
+      return idof<tendermint.Commit>()
+    case TypeId.TendermintCommitSig :
+      return idof<tendermint.CommitSig>()
+    case TypeId.TendermintEventBlockHeader :
+      return idof<tendermint.EventBlockHeader>()
+    case TypeId.TendermintHeader :
+      return idof<tendermint.Header>()
+    case TypeId.TendermintConsensus :
+      return idof<tendermint.Consensus>()
+    case TypeId.TendermintBlockID :
+      return idof<tendermint.BlockID>()
+    case TypeId.TendermintPartSetHeader :
+      return idof<tendermint.PartSetHeader>()
+    case TypeId.TendermintData :
+      return idof<tendermint.Data>()
+    case TypeId.TendermintEvidence :
+      return idof<tendermint.Evidence>()
+    case TypeId.TendermintDuplicateVoteEvidence :
+      return idof<tendermint.DuplicateVoteEvidence>()
+    case TypeId.TendermintEventTx :
+      return idof<tendermint.EventTx>()
+    case TypeId.TendermintEventVote :
+      return idof<tendermint.EventVote>()
+    case TypeId.TendermintLightClientAttackEvidence :
+      return idof<tendermint.LightClientAttackEvidence>()
+    case TypeId.TendermintLightBlock :
+      return idof<tendermint.LightBlock>()
+    case TypeId.TendermintValidatorSet :
+      return idof<tendermint.ValidatorSet>()
+    case TypeId.TendermintSignedHeader :
+      return idof<tendermint.SignedHeader>()
+    case TypeId.TendermintEvidenceList :
+      return idof<tendermint.EvidenceList>()
+    case TypeId.TendermintValidator :
+      return idof<tendermint.Validator>()
+    case TypeId.TendermintPublicKey :
+      return idof<tendermint.PublicKey>()
+    case TypeId.TendermintTxResult :
+      return idof<tendermint.TxResult>()
+    case TypeId.TendermintResponseDeliverTx :
+      return idof<tendermint.ResponseDeliverTx>()
+    case TypeId.TendermintEvent :
+      return idof<tendermint.Event>()
+    case TypeId.TendermintEventAttribute:
+      return idof<tendermint.EventAttribute>()
+    case TypeId.TendermintEventValidatorSetUpdates:
+      return idof<tendermint.EventValidatorSetUpdates>()
+    case TypeId.TendermintTimestamp:
+      return idof<tendermint.Timestamp>()
+    case TypeId.Tendermintfig:
+      return idof<tendermint.fig>()
+    case TypeId.TendermintEventData:
+      return idof<tendermint.EventData>()
     default:
       return 0
   }
