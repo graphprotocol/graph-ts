@@ -299,11 +299,13 @@ export namespace near {
     @operator('<')
     lt(other: MerklePathItem): boolean {
       abort("Less than operator isn't supported in MerklePathItem")
+      return false
     }
 
     @operator('>')
     gt(other: MerklePathItem): boolean {
       abort("Greater than operator isn't supported in MerklePathItem")
+      return false
     }
 
     toString(): string {

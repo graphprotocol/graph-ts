@@ -505,14 +505,6 @@ export namespace tendermint {
 	  }
 	}
   
-	// export class Address {
-	//   public address: Bytes;
-  
-	//   constructor(address: Bytes) {
-	// 	this.address = address;
-	//   }
-	// }
-  
 	export class EventValidatorSetUpdates {
 	  public validator_updates: Array<Validator>;
   

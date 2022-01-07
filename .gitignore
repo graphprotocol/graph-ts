@@ -59,6 +59,3 @@ typings/
 
 # next.js build output
 .next
-
-index.wasm 
-package-lock.json
