@@ -14,13 +14,13 @@ export declare namespace json {
 }
 
 export namespace json {
-  function fromString(data: string): JSONValue {
+  export function fromString(data: string): JSONValue {
     let bytes = Bytes.fromUTF8(data)
 
     return json.fromBytes(bytes)
   }
 
-  function try_fromString(data: string): Result<JSONValue, boolean> {
+  export function try_fromString(data: string): Result<JSONValue, boolean> {
     let bytes = Bytes.fromUTF8(data)
 
     return json.try_fromBytes(bytes)

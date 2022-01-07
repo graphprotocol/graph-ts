@@ -53,6 +53,21 @@ export class BigInt extends Uint8Array {
     return BigInt.fromByteArray(byteArray)
   }
 
+  static fromU32(x: u32): BigInt {
+    let byteArray = ByteArray.fromU32(x)
+    return BigInt.fromUnsignedBytes(byteArray)
+  }
+
+  static fromI64(x: i64): BigInt {
+    let byteArray = ByteArray.fromI64(x)
+    return BigInt.fromByteArray(byteArray)
+  }
+
+  static fromU64(x: u64): BigInt {
+    let byteArray = ByteArray.fromU64(x)
+    return BigInt.fromUnsignedBytes(byteArray)
+  }
+
   static zero(): BigInt {
     return BigInt.fromI32(0)
   }
@@ -74,7 +89,7 @@ export class BigInt extends Uint8Array {
    * `bytes` assumed to be little-endian. If your input is big-endian, call `.reverse()` first.
    */
 
-  static fromUnsignedBytes(bytes: Bytes): BigInt {
+  static fromUnsignedBytes(bytes: ByteArray): BigInt {
     let signedBytes = new BigInt(bytes.length + 1)
     for (let i = 0; i < bytes.length; i++) {
       signedBytes[i] = bytes[i]
@@ -103,6 +118,24 @@ export class BigInt extends Uint8Array {
     let uint8Array = changetype<Uint8Array>(this)
     let byteArray = changetype<ByteArray>(uint8Array)
     return byteArray.toI32()
+  }
+
+  toU32(): u32 {
+    let uint8Array = changetype<Uint8Array>(this)
+    let byteArray = changetype<ByteArray>(uint8Array)
+    return byteArray.toU32()
+  }
+
+  toI64(): i64 {
+    let uint8Array = changetype<Uint8Array>(this)
+    let byteArray = changetype<ByteArray>(uint8Array)
+    return byteArray.toI64()
+  }
+
+  toU64(): u64 {
+    let uint8Array = changetype<Uint8Array>(this)
+    let byteArray = changetype<ByteArray>(uint8Array)
+    return byteArray.toU64()
   }
 
   toBigDecimal(): BigDecimal {
@@ -137,25 +170,25 @@ export class BigInt extends Uint8Array {
 
   @operator('+')
   plus(other: BigInt): BigInt {
-    assert(this !== null, "Failed to sum BigInts because left hand side is 'null'");
+    assert(this !== null, "Failed to sum BigInts because left hand side is 'null'")
     return bigInt.plus(this, other)
   }
 
   @operator('-')
   minus(other: BigInt): BigInt {
-    assert(this !== null, "Failed to subtract BigInts because left hand side is 'null'");
+    assert(this !== null, "Failed to subtract BigInts because left hand side is 'null'")
     return bigInt.minus(this, other)
   }
 
   @operator('*')
   times(other: BigInt): BigInt {
-    assert(this !== null, "Failed to multiply BigInts because left hand side is 'null'");
+    assert(this !== null, "Failed to multiply BigInts because left hand side is 'null'")
     return bigInt.times(this, other)
   }
 
   @operator('/')
   div(other: BigInt): BigInt {
-    assert(this !== null, "Failed to divide BigInts because left hand side is 'null'");
+    assert(this !== null, "Failed to divide BigInts because left hand side is 'null'")
     return bigInt.dividedBy(this, other)
   }
 
@@ -165,7 +198,10 @@ export class BigInt extends Uint8Array {
 
   @operator('%')
   mod(other: BigInt): BigInt {
-    assert(this !== null, "Failed to apply module to BigInt because left hand side is 'null'");
+    assert(
+      this !== null,
+      "Failed to apply module to BigInt because left hand side is 'null'",
+    )
     return bigInt.mod(this, other)
   }
 
@@ -324,25 +360,31 @@ export class BigDecimal {
 
   @operator('+')
   plus(other: BigDecimal): BigDecimal {
-    assert(this !== null, "Failed to sum BigDecimals because left hand side is 'null'");
+    assert(this !== null, "Failed to sum BigDecimals because left hand side is 'null'")
     return bigDecimal.plus(this, other)
   }
 
   @operator('-')
   minus(other: BigDecimal): BigDecimal {
-    assert(this !== null, "Failed to subtract BigDecimals because left hand side is 'null'");
+    assert(
+      this !== null,
+      "Failed to subtract BigDecimals because left hand side is 'null'",
+    )
     return bigDecimal.minus(this, other)
   }
 
   @operator('*')
   times(other: BigDecimal): BigDecimal {
-    assert(this !== null, "Failed to multiply BigDecimals because left hand side is 'null'");
+    assert(
+      this !== null,
+      "Failed to multiply BigDecimals because left hand side is 'null'",
+    )
     return bigDecimal.times(this, other)
   }
 
   @operator('/')
   div(other: BigDecimal): BigDecimal {
-    assert(this !== null, "Failed to divide BigDecimals because left hand side is 'null'");
+    assert(this !== null, "Failed to divide BigDecimals because left hand side is 'null'")
     return bigDecimal.dividedBy(this, other)
   }
 
@@ -378,7 +420,7 @@ export class BigDecimal {
 
   @operator.prefix('-')
   neg(): BigDecimal {
-    assert(this !== null, "Failed to negate BigDecimal because the value of it is 'null'");
+    assert(this !== null, "Failed to negate BigDecimal because the value of it is 'null'")
     return new BigDecimal(new BigInt(0)).minus(this)
   }
 

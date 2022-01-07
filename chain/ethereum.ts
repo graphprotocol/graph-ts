@@ -35,10 +35,7 @@ export namespace ethereum {
    * A dynamically typed value used when accessing Ethereum data.
    */
   export class Value {
-    constructor(
-      public kind: ValueKind,
-      public data: ValuePayload,
-    ) {}
+    constructor(public kind: ValueKind, public data: ValuePayload) {}
 
     @operator('<')
     lt(other: Value): boolean {
@@ -341,7 +338,8 @@ export namespace ethereum {
       public timestamp: BigInt,
       public difficulty: BigInt,
       public totalDifficulty: BigInt,
-      public size: BigInt | null
+      public size: BigInt | null,
+      public baseFeePerGas: BigInt | null,
     ) {}
   }
 
@@ -349,7 +347,7 @@ export namespace ethereum {
    * An Ethereum transaction.
    */
   export class Transaction {
-    constructor (
+    constructor(
       public hash: Bytes,
       public index: BigInt,
       public from: Address,
@@ -357,7 +355,8 @@ export namespace ethereum {
       public value: BigInt,
       public gasLimit: BigInt,
       public gasPrice: BigInt,
-      public input: Bytes
+      public input: Bytes,
+      public nonce: BigInt,
     ) {}
   }
 
@@ -365,13 +364,13 @@ export namespace ethereum {
    * Common representation for Ethereum smart contract calls.
    */
   export class Call {
-    constructor (
+    constructor(
       public to: Address,
       public from: Address,
       public block: Block,
       public transaction: Transaction,
       public inputValues: Array<EventParam>,
-      public outputValues: Array<EventParam>
+      public outputValues: Array<EventParam>,
     ) {}
   }
 
@@ -379,14 +378,14 @@ export namespace ethereum {
    * Common representation for Ethereum smart contract events.
    */
   export class Event {
-    constructor (
+    constructor(
       public address: Address,
       public logIndex: BigInt,
       public transactionLogIndex: BigInt,
       public logType: string | null,
       public block: Block,
       public transaction: Transaction,
-      public parameters: Array<EventParam>
+      public parameters: Array<EventParam>,
     ) {}
   }
 
@@ -394,10 +393,7 @@ export namespace ethereum {
    * A dynamically-typed Ethereum event parameter.
    */
   export class EventParam {
-    constructor (
-      public name: string,
-      public value: Value
-    ) {}
+    constructor(public name: string, public value: Value) {}
   }
 
   export class SmartContractCall {
