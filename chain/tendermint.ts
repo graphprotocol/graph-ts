@@ -2,8 +2,6 @@ import '../common/eager_offset'
 import { Bytes } from "../common/collections"
 
 export namespace tendermint {
-	export type Hash = Bytes
-
 	export enum SignedMsgType { 
 		SIGNED_MSG_TYPE_UNKNOWN= 0,
 		SIGNED_MSG_TYPE_PREVOTE= 1,
@@ -179,26 +177,26 @@ export namespace tendermint {
 	}
 
 	export class Event { 
-		public type: string
+		public event_type: string
  		public attributes: Array<EventAttribute>
  
 		constructor(
-			type: string,
+			event_type: string,
 			attributes: Array<EventAttribute>,
 		) {
-			this.type = type;
+			this.event_type = event_type;
 			this.attributes = attributes;
 		}
 	}
 
 	export class EventAttribute { 
-		public key: Bytes
- 		public value: Bytes
+		public key: string
+ 		public value: string
  		public index: bool
  
 		constructor(
-			key: Bytes,
-			value: Bytes,
+			key: string,
+			value: string,
 			index: bool,
 		) {
 			this.key = key;
@@ -345,27 +343,20 @@ export namespace tendermint {
 		}
 	}
 
-	export class fig { 
-
-		constructor(
-		) {
-		}
-	}
-
 	export class Header { 
 		public version: Consensus
  		public chain_id: string
  		public height: u64
  		public time: Timestamp
  		public last_block_id: BlockID
- 		public last_commit_hash: Hash
- 		public data_hash: Hash
- 		public validators_hash: Hash
- 		public next_validators_hash: Hash
- 		public consensus_hash: Hash
- 		public app_hash: Hash
- 		public last_results_hash: Hash
- 		public eidence_hash: Hash
+ 		public last_commit_hash: Bytes
+ 		public data_hash: Bytes
+ 		public validators_hash: Bytes
+ 		public next_validators_hash: Bytes
+ 		public consensus_hash: Bytes
+ 		public app_hash: Bytes
+ 		public last_results_hash: Bytes
+ 		public evidence_hash: Bytes
  		public proposer_address: Bytes
  
 		constructor(
@@ -374,14 +365,14 @@ export namespace tendermint {
 			height: u64,
 			time: Timestamp,
 			last_block_id: BlockID,
-			last_commit_hash: Hash,
-			data_hash: Hash,
-			validators_hash: Hash,
-			next_validators_hash: Hash,
-			consensus_hash: Hash,
-			app_hash: Hash,
-			last_results_hash: Hash,
-			eidence_hash: Hash,
+			last_commit_hash: Bytes,
+			data_hash: Bytes,
+			validators_hash: Bytes,
+			next_validators_hash: Bytes,
+			consensus_hash: Bytes,
+			app_hash: Bytes,
+			last_results_hash: Bytes,
+			evidence_hash: Bytes,
 			proposer_address: Bytes,
 		) {
 			this.version = version;
@@ -396,7 +387,7 @@ export namespace tendermint {
 			this.consensus_hash = consensus_hash;
 			this.app_hash = app_hash;
 			this.last_results_hash = last_results_hash;
-			this.eidence_hash = eidence_hash;
+			this.evidence_hash = evidence_hash;
 			this.proposer_address = proposer_address;
 		}
 	}
@@ -451,11 +442,11 @@ export namespace tendermint {
 
 	export class PartSetHeader { 
 		public total: u32
- 		public hash: Hash
+ 		public hash: Bytes
  
 		constructor(
 			total: u32,
-			hash: Hash,
+			hash: Bytes,
 		) {
 			this.total = total;
 			this.hash = hash;
@@ -558,6 +549,25 @@ export namespace tendermint {
 		}
 	}
 
+	export class TxResult { 
+		public height: u64
+ 		public index: u32
+ 		public tx: Bytes
+ 		public result: ResponseDeliverTx
+ 
+		constructor(
+			height: u64,
+			index: u32,
+			tx: Bytes,
+			result: ResponseDeliverTx,
+		) {
+			this.height = height;
+			this.index = index;
+			this.tx = tx;
+			this.result = result;
+		}
+	}
+
 	export class Validator { 
 		public address: Bytes
  		public pub_key: PublicKey
@@ -577,19 +587,6 @@ export namespace tendermint {
 		}
 	}
 
-	export class ValidatorUpdate { 
-		public pub_key: PublicKey
- 		public power: i64
- 
-		constructor(
-			pub_key: PublicKey,
-			power: i64,
-		) {
-			this.pub_key = pub_key;
-			this.power = power;
-		}
-	}
-
 	export class ValidatorParams { 
 		public pub_key_types: Array<string>
  
@@ -597,16 +594,6 @@ export namespace tendermint {
 			pub_key_types: Array<string>,
 		) {
 			this.pub_key_types = pub_key_types;
-		}
-	}
-
-	export class VersionParams { 
-		public app_version: u64
- 
-		constructor(
-			app_version: u64,
-		) {
-			this.app_version = app_version;
 		}
 	}
 
@@ -626,22 +613,26 @@ export namespace tendermint {
 		}
 	}
 
-	export class TxResult { 
-		public height: u64
- 		public index: u32
- 		public tx: Bytes
- 		public result: ResponseDeliverTx
+	export class ValidatorUpdate { 
+		public pub_key: PublicKey
+ 		public power: i64
  
 		constructor(
-			height: u64,
-			index: u32,
-			tx: Bytes,
-			result: ResponseDeliverTx,
+			pub_key: PublicKey,
+			power: i64,
 		) {
-			this.height = height;
-			this.index = index;
-			this.tx = tx;
-			this.result = result;
+			this.pub_key = pub_key;
+			this.power = power;
+		}
+	}
+
+	export class VersionParams { 
+		public app_version: u64
+ 
+		constructor(
+			app_version: u64,
+		) {
+			this.app_version = app_version;
 		}
 	}
 }
