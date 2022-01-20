@@ -16,6 +16,42 @@ export namespace tendermint {
     BLOCK_ID_FLAG_NIL = 3,
   }
 
+  export class EventData {
+    public event: Event
+    public block: EventList
+
+    constructor(event: Event, block: EventList) {
+      this.event = event
+      this.block = block
+    }
+  }
+
+  export class EventList {
+    public new_block: EventBlock
+    public transaction: Array<EventTx>
+    public validator_set_updates: EventValidatorSetUpdates
+
+    constructor(
+      new_block: EventBlock,
+      transaction: Array<EventTx>,
+      validator_set_updates: EventValidatorSetUpdates,
+    ) {
+      this.new_block = new_block
+      this.transaction = transaction
+      this.validator_set_updates = validator_set_updates
+    }
+  }
+
+  export class Reward {
+    public amount: string
+    public validator: string
+
+    constructor(amount: string, validator: string) {
+      this.amount = amount
+      this.validator = validator
+    }
+  }
+
   export class Block {
     public header: Header
     public data: Data
@@ -195,32 +231,6 @@ export namespace tendermint {
       this.block_id = block_id
       this.result_begin_block = result_begin_block
       this.result_end_block = result_end_block
-    }
-  }
-
-  export class EventData {
-    public event: Event
-    public block: EventList
-
-    constructor(event: Event, block: EventList) {
-      this.event = event
-      this.block = block
-    }
-  }
-
-  export class EventList {
-    public new_block: EventBlock
-    public transaction: Array<EventTx>
-    public validator_set_updates: EventValidatorSetUpdates
-
-    constructor(
-      new_block: EventBlock,
-      transaction: Array<EventTx>,
-      validator_set_updates: EventValidatorSetUpdates,
-    ) {
-      this.new_block = new_block
-      this.transaction = transaction
-      this.validator_set_updates = validator_set_updates
     }
   }
 
@@ -457,16 +467,6 @@ export namespace tendermint {
       this.gas_used = gas_used
       this.events = events
       this.codespace = codespace
-    }
-  }
-
-  export class Reward {
-    public amount: string
-    public validator: string
-
-    constructor(amount: string, validator: string) {
-      this.amount = amount
-      this.validator = validator
     }
   }
 
