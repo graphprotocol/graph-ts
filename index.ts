@@ -4,6 +4,8 @@ import './common/eager_offset'
 export * from './chain/ethereum'
 // NEAR support
 export * from './chain/near'
+// Solana support
+export * from './chain/solana'
 // Regular re-exports
 export * from './common/numbers'
 export * from './common/collections'
