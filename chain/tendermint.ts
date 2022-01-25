@@ -2,6 +2,7 @@ import '../common/eager_offset'
 import { Bytes } from '../common/collections'
 
 export namespace tendermint {
+
   export enum SignedMsgType {
     SIGNED_MSG_TYPE_UNKNOWN = 0,
     SIGNED_MSG_TYPE_PREVOTE = 1,
@@ -18,27 +19,30 @@ export namespace tendermint {
 
   export class EventData {
     public event: Event
-    public block: EventList
+    public blockHeader: Header
 
-    constructor(event: Event, block: EventList) {
-      this.event = event
-      this.block = block
+    constructor(
+      event: Event,
+      blockHeader: Header,
+    ) {
+      this.event = event;
+      this.blockHeader = blockHeader;
     }
   }
 
   export class EventList {
-    public new_block: EventBlock
+    public newBlock: EventBlock
     public transaction: Array<EventTx>
-    public validator_set_updates: EventValidatorSetUpdates
+    public validatorSetUpdates: EventValidatorSetUpdates
 
     constructor(
-      new_block: EventBlock,
+      newBlock: EventBlock,
       transaction: Array<EventTx>,
-      validator_set_updates: EventValidatorSetUpdates,
+      validatorSetUpdates: EventValidatorSetUpdates,
     ) {
-      this.new_block = new_block
-      this.transaction = transaction
-      this.validator_set_updates = validator_set_updates
+      this.newBlock = newBlock;
+      this.transaction = transaction;
+      this.validatorSetUpdates = validatorSetUpdates;
     }
   }
 
@@ -46,9 +50,12 @@ export namespace tendermint {
     public amount: string
     public validator: string
 
-    constructor(amount: string, validator: string) {
-      this.amount = amount
-      this.validator = validator
+    constructor(
+      amount: string,
+      validator: string,
+    ) {
+      this.amount = amount;
+      this.validator = validator;
     }
   }
 
@@ -56,71 +63,82 @@ export namespace tendermint {
     public header: Header
     public data: Data
     public evidence: EvidenceList
-    public last_commit: Commit
+    public lastCommit: Commit
 
-    constructor(header: Header, data: Data, evidence: EvidenceList, last_commit: Commit) {
-      this.header = header
-      this.data = data
-      this.evidence = evidence
-      this.last_commit = last_commit
+    constructor(
+      header: Header,
+      data: Data,
+      evidence: EvidenceList,
+      lastCommit: Commit,
+    ) {
+      this.header = header;
+      this.data = data;
+      this.evidence = evidence;
+      this.lastCommit = lastCommit;
     }
   }
 
   export class BlockID {
     public hash: Bytes
-    public part_set_header: PartSetHeader
+    public partSetHeader: PartSetHeader
 
-    constructor(hash: Bytes, part_set_header: PartSetHeader) {
-      this.hash = hash
-      this.part_set_header = part_set_header
+    constructor(
+      hash: Bytes,
+      partSetHeader: PartSetHeader,
+    ) {
+      this.hash = hash;
+      this.partSetHeader = partSetHeader;
     }
   }
 
   export class BlockParams {
-    public max_bytes: i64
-    public max_gas: i64
+    public maxBytes: i64
+    public maxGas: i64
 
-    constructor(max_bytes: i64, max_gas: i64) {
-      this.max_bytes = max_bytes
-      this.max_gas = max_gas
+    constructor(
+      maxBytes: i64,
+      maxGas: i64,
+    ) {
+      this.maxBytes = maxBytes;
+      this.maxGas = maxGas;
     }
   }
 
   export class Commit {
     public height: i64
     public round: i32
-    public block_id: BlockID
+    public blockId: BlockID
     public signatures: Array<CommitSig>
 
     constructor(
       height: i64,
       round: i32,
-      block_id: BlockID,
+      blockId: BlockID,
       signatures: Array<CommitSig>,
     ) {
-      this.height = height
-      this.round = round
-      this.block_id = block_id
-      this.signatures = signatures
+      this.height = height;
+      this.round = round;
+      this.blockId = blockId;
+      this.signatures = signatures;
     }
   }
 
   export class CommitSig {
-    public block_id_flag: BlockIDFlag
-    public validator_address: Bytes
+    public blockIdFlag: BlockIDFlag
+    public validatorAddress: Bytes
     public timestamp: Timestamp
     public signature: Bytes
 
     constructor(
-      block_id_flag: BlockIDFlag,
-      validator_address: Bytes,
+      blockIdFlag: BlockIDFlag,
+      validatorAddress: Bytes,
       timestamp: Timestamp,
       signature: Bytes,
     ) {
-      this.block_id_flag = block_id_flag
-      this.validator_address = validator_address
-      this.timestamp = timestamp
-      this.signature = signature
+      this.blockIdFlag = blockIdFlag;
+      this.validatorAddress = validatorAddress;
+      this.timestamp = timestamp;
+      this.signature = signature;
     }
   }
 
@@ -128,9 +146,12 @@ export namespace tendermint {
     public block: u64
     public app: u64
 
-    constructor(block: u64, app: u64) {
-      this.block = block
-      this.app = app
+    constructor(
+      block: u64,
+      app: u64,
+    ) {
+      this.block = block;
+      this.app = app;
     }
   }
 
@@ -146,18 +167,20 @@ export namespace tendermint {
       validator: ValidatorParams,
       version: VersionParams,
     ) {
-      this.block = block
-      this.evidence = evidence
-      this.validator = validator
-      this.version = version
+      this.block = block;
+      this.evidence = evidence;
+      this.validator = validator;
+      this.version = version;
     }
   }
 
   export class Data {
     public txs: Array<Bytes>
 
-    constructor(txs: Array<Bytes>) {
-      this.txs = txs
+    constructor(
+      txs: Array<Bytes>,
+    ) {
+      this.txs = txs;
     }
   }
 
@@ -165,41 +188,47 @@ export namespace tendermint {
     public seconds: i64
     public nanos: i32
 
-    constructor(seconds: i64, nanos: i32) {
-      this.seconds = seconds
-      this.nanos = nanos
+    constructor(
+      seconds: i64,
+      nanos: i32,
+    ) {
+      this.seconds = seconds;
+      this.nanos = nanos;
     }
   }
 
   export class DuplicateVoteEvidence {
-    public vote_a: EventVote
-    public vote_b: EventVote
-    public total_voting_power: i64
-    public validator_power: i64
+    public voteA: EventVote
+    public voteB: EventVote
+    public totalVotingPower: i64
+    public validatorPower: i64
     public timestamp: Timestamp
 
     constructor(
-      vote_a: EventVote,
-      vote_b: EventVote,
-      total_voting_power: i64,
-      validator_power: i64,
+      voteA: EventVote,
+      voteB: EventVote,
+      totalVotingPower: i64,
+      validatorPower: i64,
       timestamp: Timestamp,
     ) {
-      this.vote_a = vote_a
-      this.vote_b = vote_b
-      this.total_voting_power = total_voting_power
-      this.validator_power = validator_power
-      this.timestamp = timestamp
+      this.voteA = voteA;
+      this.voteB = voteB;
+      this.totalVotingPower = totalVotingPower;
+      this.validatorPower = validatorPower;
+      this.timestamp = timestamp;
     }
   }
 
   export class Event {
-    public event_type: string
+    public eventType: string
     public attributes: Array<EventAttribute>
 
-    constructor(event_type: string, attributes: Array<EventAttribute>) {
-      this.event_type = event_type
-      this.attributes = attributes
+    constructor(
+      eventType: string,
+      attributes: Array<EventAttribute>,
+    ) {
+      this.eventType = eventType;
+      this.attributes = attributes;
     }
   }
 
@@ -208,190 +237,207 @@ export namespace tendermint {
     public value: string
     public index: bool
 
-    constructor(key: string, value: string, index: bool) {
-      this.key = key
-      this.value = value
-      this.index = index
+    constructor(
+      key: string,
+      value: string,
+      index: bool,
+    ) {
+      this.key = key;
+      this.value = value;
+      this.index = index;
     }
   }
 
   export class EventBlock {
     public block: Block
-    public block_id: BlockID
-    public result_begin_block: ResponseBeginBlock
-    public result_end_block: ResponseEndBlock
+    public blockId: BlockID
+    public resultBeginBlock: ResponseBeginBlock
+    public resultEndBlock: ResponseEndBlock
 
     constructor(
       block: Block,
-      block_id: BlockID,
-      result_begin_block: ResponseBeginBlock,
-      result_end_block: ResponseEndBlock,
+      blockId: BlockID,
+      resultBeginBlock: ResponseBeginBlock,
+      resultEndBlock: ResponseEndBlock,
     ) {
-      this.block = block
-      this.block_id = block_id
-      this.result_begin_block = result_begin_block
-      this.result_end_block = result_end_block
+      this.block = block;
+      this.blockId = blockId;
+      this.resultBeginBlock = resultBeginBlock;
+      this.resultEndBlock = resultEndBlock;
     }
   }
 
   export class EventTx {
-    public tx_result: TxResult
+    public txResult: TxResult
 
-    constructor(tx_result: TxResult) {
-      this.tx_result = tx_result
+    constructor(
+      txResult: TxResult,
+    ) {
+      this.txResult = txResult;
     }
   }
 
   export class EventValidatorSetUpdates {
-    public validator_updates: Array<Validator>
+    public validatorUpdates: Array<Validator>
 
-    constructor(validator_updates: Array<Validator>) {
-      this.validator_updates = validator_updates
+    constructor(
+      validatorUpdates: Array<Validator>,
+    ) {
+      this.validatorUpdates = validatorUpdates;
     }
   }
 
   export class EventVote {
-    public event_vote_type: SignedMsgType
+    public eventVoteType: SignedMsgType
     public height: u64
     public round: i32
-    public block_id: BlockID
+    public blockId: BlockID
     public timestamp: Timestamp
-    public validator_address: Bytes
-    public validator_index: i32
+    public validatorAddress: Bytes
+    public validatorIndex: i32
     public signature: Bytes
 
     constructor(
-      event_vote_type: SignedMsgType,
+      eventVoteType: SignedMsgType,
       height: u64,
       round: i32,
-      block_id: BlockID,
+      blockId: BlockID,
       timestamp: Timestamp,
-      validator_address: Bytes,
-      validator_index: i32,
+      validatorAddress: Bytes,
+      validatorIndex: i32,
       signature: Bytes,
     ) {
-      this.event_vote_type = event_vote_type
-      this.height = height
-      this.round = round
-      this.block_id = block_id
-      this.timestamp = timestamp
-      this.validator_address = validator_address
-      this.validator_index = validator_index
-      this.signature = signature
+      this.eventVoteType = eventVoteType;
+      this.height = height;
+      this.round = round;
+      this.blockId = blockId;
+      this.timestamp = timestamp;
+      this.validatorAddress = validatorAddress;
+      this.validatorIndex = validatorIndex;
+      this.signature = signature;
     }
   }
 
   export class Evidence {
-    public duplicate_vote_evidence: DuplicateVoteEvidence
-    public light_client_attack_evidence: LightClientAttackEvidence
+    public duplicateVoteEvidence: DuplicateVoteEvidence
+    public lightClientAttackEvidence: LightClientAttackEvidence
 
     constructor(
-      duplicate_vote_evidence: DuplicateVoteEvidence,
-      light_client_attack_evidence: LightClientAttackEvidence,
+      duplicateVoteEvidence: DuplicateVoteEvidence,
+      lightClientAttackEvidence: LightClientAttackEvidence,
     ) {
-      this.duplicate_vote_evidence = duplicate_vote_evidence
-      this.light_client_attack_evidence = light_client_attack_evidence
+      this.duplicateVoteEvidence = duplicateVoteEvidence;
+      this.lightClientAttackEvidence = lightClientAttackEvidence;
     }
   }
 
   export class EvidenceList {
     public evidence: Array<Evidence>
 
-    constructor(evidence: Array<Evidence>) {
-      this.evidence = evidence
+    constructor(
+      evidence: Array<Evidence>,
+    ) {
+      this.evidence = evidence;
     }
   }
 
   export class EvidenceParams {
-    public max_age_num_blocks: i64
-    public max_age_duration: Duration
-    public max_bytes: i64
+    public maxAgeNumBlocks: i64
+    public maxAgeDuration: Duration
+    public maxBytes: i64
 
-    constructor(max_age_num_blocks: i64, max_age_duration: Duration, max_bytes: i64) {
-      this.max_age_num_blocks = max_age_num_blocks
-      this.max_age_duration = max_age_duration
-      this.max_bytes = max_bytes
+    constructor(
+      maxAgeNumBlocks: i64,
+      maxAgeDuration: Duration,
+      maxBytes: i64,
+    ) {
+      this.maxAgeNumBlocks = maxAgeNumBlocks;
+      this.maxAgeDuration = maxAgeDuration;
+      this.maxBytes = maxBytes;
     }
   }
 
   export class Header {
     public version: Consensus
-    public chain_id: string
+    public chainId: string
     public height: u64
     public time: Timestamp
-    public last_block_id: BlockID
-    public last_commit_hash: Bytes
-    public data_hash: Bytes
-    public validators_hash: Bytes
-    public next_validators_hash: Bytes
-    public consensus_hash: Bytes
-    public app_hash: Bytes
-    public last_results_hash: Bytes
-    public evidence_hash: Bytes
-    public proposer_address: Bytes
+    public lastBlockId: BlockID
+    public lastCommitHash: Bytes
+    public dataHash: Bytes
+    public validatorsHash: Bytes
+    public nextValidatorsHash: Bytes
+    public consensusHash: Bytes
+    public appHash: Bytes
+    public lastResultsHash: Bytes
+    public evidenceHash: Bytes
+    public proposerAddress: Bytes
 
     constructor(
       version: Consensus,
-      chain_id: string,
+      chainId: string,
       height: u64,
       time: Timestamp,
-      last_block_id: BlockID,
-      last_commit_hash: Bytes,
-      data_hash: Bytes,
-      validators_hash: Bytes,
-      next_validators_hash: Bytes,
-      consensus_hash: Bytes,
-      app_hash: Bytes,
-      last_results_hash: Bytes,
-      evidence_hash: Bytes,
-      proposer_address: Bytes,
+      lastBlockId: BlockID,
+      lastCommitHash: Bytes,
+      dataHash: Bytes,
+      validatorsHash: Bytes,
+      nextValidatorsHash: Bytes,
+      consensusHash: Bytes,
+      appHash: Bytes,
+      lastResultsHash: Bytes,
+      evidenceHash: Bytes,
+      proposerAddress: Bytes,
     ) {
-      this.version = version
-      this.chain_id = chain_id
-      this.height = height
-      this.time = time
-      this.last_block_id = last_block_id
-      this.last_commit_hash = last_commit_hash
-      this.data_hash = data_hash
-      this.validators_hash = validators_hash
-      this.next_validators_hash = next_validators_hash
-      this.consensus_hash = consensus_hash
-      this.app_hash = app_hash
-      this.last_results_hash = last_results_hash
-      this.evidence_hash = evidence_hash
-      this.proposer_address = proposer_address
+      this.version = version;
+      this.chainId = chainId;
+      this.height = height;
+      this.time = time;
+      this.lastBlockId = lastBlockId;
+      this.lastCommitHash = lastCommitHash;
+      this.dataHash = dataHash;
+      this.validatorsHash = validatorsHash;
+      this.nextValidatorsHash = nextValidatorsHash;
+      this.consensusHash = consensusHash;
+      this.appHash = appHash;
+      this.lastResultsHash = lastResultsHash;
+      this.evidenceHash = evidenceHash;
+      this.proposerAddress = proposerAddress;
     }
   }
 
   export class LightBlock {
-    public signed_header: SignedHeader
-    public validator_set: ValidatorSet
+    public signedHeader: SignedHeader
+    public validatorSet: ValidatorSet
 
-    constructor(signed_header: SignedHeader, validator_set: ValidatorSet) {
-      this.signed_header = signed_header
-      this.validator_set = validator_set
+    constructor(
+      signedHeader: SignedHeader,
+      validatorSet: ValidatorSet,
+    ) {
+      this.signedHeader = signedHeader;
+      this.validatorSet = validatorSet;
     }
   }
 
   export class LightClientAttackEvidence {
-    public conflicting_block: LightBlock
-    public common_height: i64
-    public byzantine_validators: Array<Validator>
-    public total_voting_power: i64
+    public conflictingBlock: LightBlock
+    public commonHeight: i64
+    public byzantineValidators: Array<Validator>
+    public totalVotingPower: i64
     public timestamp: Timestamp
 
     constructor(
-      conflicting_block: LightBlock,
-      common_height: i64,
-      byzantine_validators: Array<Validator>,
-      total_voting_power: i64,
+      conflictingBlock: LightBlock,
+      commonHeight: i64,
+      byzantineValidators: Array<Validator>,
+      totalVotingPower: i64,
       timestamp: Timestamp,
     ) {
-      this.conflicting_block = conflicting_block
-      this.common_height = common_height
-      this.byzantine_validators = byzantine_validators
-      this.total_voting_power = total_voting_power
-      this.timestamp = timestamp
+      this.conflictingBlock = conflictingBlock;
+      this.commonHeight = commonHeight;
+      this.byzantineValidators = byzantineValidators;
+      this.totalVotingPower = totalVotingPower;
+      this.timestamp = timestamp;
     }
   }
 
@@ -399,9 +445,12 @@ export namespace tendermint {
     public ed25519: Bytes
     public secp256k1: Bytes
 
-    constructor(ed25519: Bytes, secp256k1: Bytes) {
-      this.ed25519 = ed25519
-      this.secp256k1 = secp256k1
+    constructor(
+      ed25519: Bytes,
+      secp256k1: Bytes,
+    ) {
+      this.ed25519 = ed25519;
+      this.secp256k1 = secp256k1;
     }
   }
 
@@ -409,33 +458,38 @@ export namespace tendermint {
     public total: u32
     public hash: Bytes
 
-    constructor(total: u32, hash: Bytes) {
-      this.total = total
-      this.hash = hash
+    constructor(
+      total: u32,
+      hash: Bytes,
+    ) {
+      this.total = total;
+      this.hash = hash;
     }
   }
 
   export class ResponseBeginBlock {
     public events: Array<Event>
 
-    constructor(events: Array<Event>) {
-      this.events = events
+    constructor(
+      events: Array<Event>,
+    ) {
+      this.events = events;
     }
   }
 
   export class ResponseEndBlock {
-    public validator_updates: Array<ValidatorUpdate>
-    public consensus_param_updates: ConsensusParams
+    public validatorUpdates: Array<ValidatorUpdate>
+    public consensusParamUpdates: ConsensusParams
     public events: Array<Event>
 
     constructor(
-      validator_updates: Array<ValidatorUpdate>,
-      consensus_param_updates: ConsensusParams,
+      validatorUpdates: Array<ValidatorUpdate>,
+      consensusParamUpdates: ConsensusParams,
       events: Array<Event>,
     ) {
-      this.validator_updates = validator_updates
-      this.consensus_param_updates = consensus_param_updates
-      this.events = events
+      this.validatorUpdates = validatorUpdates;
+      this.consensusParamUpdates = consensusParamUpdates;
+      this.events = events;
     }
   }
 
@@ -444,8 +498,8 @@ export namespace tendermint {
     public data: Bytes
     public log: string
     public info: string
-    public gas_wanted: i64
-    public gas_used: i64
+    public gasWanted: i64
+    public gasUsed: i64
     public events: Array<Event>
     public codespace: string
 
@@ -454,19 +508,19 @@ export namespace tendermint {
       data: Bytes,
       log: string,
       info: string,
-      gas_wanted: i64,
-      gas_used: i64,
+      gasWanted: i64,
+      gasUsed: i64,
       events: Array<Event>,
       codespace: string,
     ) {
-      this.code = code
-      this.data = data
-      this.log = log
-      this.info = info
-      this.gas_wanted = gas_wanted
-      this.gas_used = gas_used
-      this.events = events
-      this.codespace = codespace
+      this.code = code;
+      this.data = data;
+      this.log = log;
+      this.info = info;
+      this.gasWanted = gasWanted;
+      this.gasUsed = gasUsed;
+      this.events = events;
+      this.codespace = codespace;
     }
   }
 
@@ -474,9 +528,12 @@ export namespace tendermint {
     public header: Header
     public commit: Commit
 
-    constructor(header: Header, commit: Commit) {
-      this.header = header
-      this.commit = commit
+    constructor(
+      header: Header,
+      commit: Commit,
+    ) {
+      this.header = header;
+      this.commit = commit;
     }
   }
 
@@ -484,9 +541,12 @@ export namespace tendermint {
     public seconds: i64
     public nanos: i32
 
-    constructor(seconds: i64, nanos: i32) {
-      this.seconds = seconds
-      this.nanos = nanos
+    constructor(
+      seconds: i64,
+      nanos: i32,
+    ) {
+      this.seconds = seconds;
+      this.nanos = nanos;
     }
   }
 
@@ -496,74 +556,88 @@ export namespace tendermint {
     public tx: Bytes
     public result: ResponseDeliverTx
 
-    constructor(height: u64, index: u32, tx: Bytes, result: ResponseDeliverTx) {
-      this.height = height
-      this.index = index
-      this.tx = tx
-      this.result = result
+    constructor(
+      height: u64,
+      index: u32,
+      tx: Bytes,
+      result: ResponseDeliverTx,
+    ) {
+      this.height = height;
+      this.index = index;
+      this.tx = tx;
+      this.result = result;
     }
   }
 
   export class Validator {
     public address: Bytes
-    public pub_key: PublicKey
-    public voting_power: i64
-    public proposer_priority: i64
+    public pubKey: PublicKey
+    public votingPower: i64
+    public proposerPriority: i64
 
     constructor(
       address: Bytes,
-      pub_key: PublicKey,
-      voting_power: i64,
-      proposer_priority: i64,
+      pubKey: PublicKey,
+      votingPower: i64,
+      proposerPriority: i64,
     ) {
-      this.address = address
-      this.pub_key = pub_key
-      this.voting_power = voting_power
-      this.proposer_priority = proposer_priority
+      this.address = address;
+      this.pubKey = pubKey;
+      this.votingPower = votingPower;
+      this.proposerPriority = proposerPriority;
     }
   }
 
   export class ValidatorParams {
-    public pub_key_types: Array<string>
+    public pubKeyTypes: Array<string>
 
-    constructor(pub_key_types: Array<string>) {
-      this.pub_key_types = pub_key_types
+    constructor(
+      pubKeyTypes: Array<string>,
+    ) {
+      this.pubKeyTypes = pubKeyTypes;
     }
   }
 
   export class ValidatorSet {
     public validators: Array<Validator>
     public proposer: Validator
-    public total_voting_power: i64
+    public totalVotingPower: i64
 
     constructor(
       validators: Array<Validator>,
       proposer: Validator,
-      total_voting_power: i64,
+      totalVotingPower: i64,
     ) {
-      this.validators = validators
-      this.proposer = proposer
-      this.total_voting_power = total_voting_power
+      this.validators = validators;
+      this.proposer = proposer;
+      this.totalVotingPower = totalVotingPower;
     }
   }
 
   export class ValidatorUpdate {
     public address: Bytes
-    public pub_key: PublicKey
+    public pubKey: PublicKey
     public power: i64
 
-    constructor(address: Bytes, pub_key: PublicKey, power: i64) {
-      this.address = address
-      this.pub_key = pub_key
-      this.power = power
+    constructor(
+      address: Bytes,
+      pubKey: PublicKey,
+      power: i64,
+    ) {
+      this.address = address;
+      this.pubKey = pubKey;
+      this.power = power;
     }
   }
 
   export class VersionParams {
-    public app_version: u64
+    public appVersion: u64
 
-    constructor(app_version: u64) {
-      this.app_version = app_version
+    constructor(
+      appVersion: u64,
+    ) {
+      this.appVersion = appVersion;
     }
   }
+
 }
