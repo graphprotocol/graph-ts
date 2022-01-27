@@ -1,3 +1,7 @@
 {
-  "extends": "assemblyscript/std/assembly"
+  "extends": "assemblyscript/std/assembly",
+  "compilerOptions": {
+    "typeRoots": ["../node_modules/assemblyscript/std/types", "."],
+    "types": ["assembly", "override"]
+  }
 }
