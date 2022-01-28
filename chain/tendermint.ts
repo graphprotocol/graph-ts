@@ -17,19 +17,6 @@ export namespace tendermint {
     BLOCK_ID_FLAG_NIL = 3,
   }
 
-  export class EventData {
-    public event: Event
-    public blockHeader: Header
-
-    constructor(
-      event: Event,
-      blockHeader: Header,
-    ) {
-      this.event = event;
-      this.blockHeader = blockHeader;
-    }
-  }
-
   export class EventList {
     public newBlock: EventBlock
     public transaction: Array<EventTx>
@@ -46,16 +33,16 @@ export namespace tendermint {
     }
   }
 
-  export class Reward {
-    public amount: string
-    public validator: string
+  export class EventData {
+    public event: Event
+    public block: EventBlock
 
     constructor(
-      amount: string,
-      validator: string,
+      event: Event,
+      block: EventBlock,
     ) {
-      this.amount = amount;
-      this.validator = validator;
+      this.event = event;
+      this.block = block;
     }
   }
 
