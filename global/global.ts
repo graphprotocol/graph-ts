@@ -1,5 +1,12 @@
 import { BigDecimal } from '../common/numbers'
-import { Bytes, TypedMapEntry, Entity, TypedMap, Result, Wrapped } from '../common/collections'
+import {
+  Bytes,
+  TypedMapEntry,
+  Entity,
+  TypedMap,
+  Result,
+  Wrapped,
+} from '../common/collections'
 import { JSONValue, Value } from '../common/value'
 import { ethereum } from '../chain/ethereum'
 import { near } from '../chain/near'
