@@ -2,7 +2,6 @@ import '../common/eager_offset'
 import { Bytes } from '../common/collections'
 
 export namespace tendermint {
-
   export enum SignedMsgType {
     SIGNED_MSG_TYPE_UNKNOWN = 0,
     SIGNED_MSG_TYPE_PREVOTE = 1,
@@ -27,9 +26,9 @@ export namespace tendermint {
       transaction: Array<EventTx>,
       validatorSetUpdates: EventValidatorSetUpdates,
     ) {
-      this.newBlock = newBlock;
-      this.transaction = transaction;
-      this.validatorSetUpdates = validatorSetUpdates;
+      this.newBlock = newBlock
+      this.transaction = transaction
+      this.validatorSetUpdates = validatorSetUpdates
     }
   }
 
@@ -37,12 +36,9 @@ export namespace tendermint {
     public event: Event
     public block: EventBlock
 
-    constructor(
-      event: Event,
-      block: EventBlock,
-    ) {
-      this.event = event;
-      this.block = block;
+    constructor(event: Event, block: EventBlock) {
+      this.event = event
+      this.block = block
     }
   }
 
@@ -52,16 +48,11 @@ export namespace tendermint {
     public evidence: EvidenceList
     public lastCommit: Commit
 
-    constructor(
-      header: Header,
-      data: Data,
-      evidence: EvidenceList,
-      lastCommit: Commit,
-    ) {
-      this.header = header;
-      this.data = data;
-      this.evidence = evidence;
-      this.lastCommit = lastCommit;
+    constructor(header: Header, data: Data, evidence: EvidenceList, lastCommit: Commit) {
+      this.header = header
+      this.data = data
+      this.evidence = evidence
+      this.lastCommit = lastCommit
     }
   }
 
@@ -69,12 +60,9 @@ export namespace tendermint {
     public hash: Bytes
     public partSetHeader: PartSetHeader
 
-    constructor(
-      hash: Bytes,
-      partSetHeader: PartSetHeader,
-    ) {
-      this.hash = hash;
-      this.partSetHeader = partSetHeader;
+    constructor(hash: Bytes, partSetHeader: PartSetHeader) {
+      this.hash = hash
+      this.partSetHeader = partSetHeader
     }
   }
 
@@ -82,12 +70,9 @@ export namespace tendermint {
     public maxBytes: i64
     public maxGas: i64
 
-    constructor(
-      maxBytes: i64,
-      maxGas: i64,
-    ) {
-      this.maxBytes = maxBytes;
-      this.maxGas = maxGas;
+    constructor(maxBytes: i64, maxGas: i64) {
+      this.maxBytes = maxBytes
+      this.maxGas = maxGas
     }
   }
 
@@ -97,16 +82,11 @@ export namespace tendermint {
     public blockId: BlockID
     public signatures: Array<CommitSig>
 
-    constructor(
-      height: i64,
-      round: i32,
-      blockId: BlockID,
-      signatures: Array<CommitSig>,
-    ) {
-      this.height = height;
-      this.round = round;
-      this.blockId = blockId;
-      this.signatures = signatures;
+    constructor(height: i64, round: i32, blockId: BlockID, signatures: Array<CommitSig>) {
+      this.height = height
+      this.round = round
+      this.blockId = blockId
+      this.signatures = signatures
     }
   }
 
@@ -122,10 +102,10 @@ export namespace tendermint {
       timestamp: Timestamp,
       signature: Bytes,
     ) {
-      this.blockIdFlag = blockIdFlag;
-      this.validatorAddress = validatorAddress;
-      this.timestamp = timestamp;
-      this.signature = signature;
+      this.blockIdFlag = blockIdFlag
+      this.validatorAddress = validatorAddress
+      this.timestamp = timestamp
+      this.signature = signature
     }
   }
 
@@ -133,12 +113,9 @@ export namespace tendermint {
     public block: u64
     public app: u64
 
-    constructor(
-      block: u64,
-      app: u64,
-    ) {
-      this.block = block;
-      this.app = app;
+    constructor(block: u64, app: u64) {
+      this.block = block
+      this.app = app
     }
   }
 
@@ -154,20 +131,18 @@ export namespace tendermint {
       validator: ValidatorParams,
       version: VersionParams,
     ) {
-      this.block = block;
-      this.evidence = evidence;
-      this.validator = validator;
-      this.version = version;
+      this.block = block
+      this.evidence = evidence
+      this.validator = validator
+      this.version = version
     }
   }
 
   export class Data {
     public txs: Array<Bytes>
 
-    constructor(
-      txs: Array<Bytes>,
-    ) {
-      this.txs = txs;
+    constructor(txs: Array<Bytes>) {
+      this.txs = txs
     }
   }
 
@@ -175,12 +150,9 @@ export namespace tendermint {
     public seconds: i64
     public nanos: i32
 
-    constructor(
-      seconds: i64,
-      nanos: i32,
-    ) {
-      this.seconds = seconds;
-      this.nanos = nanos;
+    constructor(seconds: i64, nanos: i32) {
+      this.seconds = seconds
+      this.nanos = nanos
     }
   }
 
@@ -198,11 +170,11 @@ export namespace tendermint {
       validatorPower: i64,
       timestamp: Timestamp,
     ) {
-      this.voteA = voteA;
-      this.voteB = voteB;
-      this.totalVotingPower = totalVotingPower;
-      this.validatorPower = validatorPower;
-      this.timestamp = timestamp;
+      this.voteA = voteA
+      this.voteB = voteB
+      this.totalVotingPower = totalVotingPower
+      this.validatorPower = validatorPower
+      this.timestamp = timestamp
     }
   }
 
@@ -210,12 +182,9 @@ export namespace tendermint {
     public eventType: string
     public attributes: Array<EventAttribute>
 
-    constructor(
-      eventType: string,
-      attributes: Array<EventAttribute>,
-    ) {
-      this.eventType = eventType;
-      this.attributes = attributes;
+    constructor(eventType: string, attributes: Array<EventAttribute>) {
+      this.eventType = eventType
+      this.attributes = attributes
     }
   }
 
@@ -224,14 +193,10 @@ export namespace tendermint {
     public value: string
     public index: bool
 
-    constructor(
-      key: string,
-      value: string,
-      index: bool,
-    ) {
-      this.key = key;
-      this.value = value;
-      this.index = index;
+    constructor(key: string, value: string, index: bool) {
+      this.key = key
+      this.value = value
+      this.index = index
     }
   }
 
@@ -247,30 +212,26 @@ export namespace tendermint {
       resultBeginBlock: ResponseBeginBlock,
       resultEndBlock: ResponseEndBlock,
     ) {
-      this.block = block;
-      this.blockId = blockId;
-      this.resultBeginBlock = resultBeginBlock;
-      this.resultEndBlock = resultEndBlock;
+      this.block = block
+      this.blockId = blockId
+      this.resultBeginBlock = resultBeginBlock
+      this.resultEndBlock = resultEndBlock
     }
   }
 
   export class EventTx {
     public txResult: TxResult
 
-    constructor(
-      txResult: TxResult,
-    ) {
-      this.txResult = txResult;
+    constructor(txResult: TxResult) {
+      this.txResult = txResult
     }
   }
 
   export class EventValidatorSetUpdates {
     public validatorUpdates: Array<Validator>
 
-    constructor(
-      validatorUpdates: Array<Validator>,
-    ) {
-      this.validatorUpdates = validatorUpdates;
+    constructor(validatorUpdates: Array<Validator>) {
+      this.validatorUpdates = validatorUpdates
     }
   }
 
@@ -294,14 +255,14 @@ export namespace tendermint {
       validatorIndex: i32,
       signature: Bytes,
     ) {
-      this.eventVoteType = eventVoteType;
-      this.height = height;
-      this.round = round;
-      this.blockId = blockId;
-      this.timestamp = timestamp;
-      this.validatorAddress = validatorAddress;
-      this.validatorIndex = validatorIndex;
-      this.signature = signature;
+      this.eventVoteType = eventVoteType
+      this.height = height
+      this.round = round
+      this.blockId = blockId
+      this.timestamp = timestamp
+      this.validatorAddress = validatorAddress
+      this.validatorIndex = validatorIndex
+      this.signature = signature
     }
   }
 
@@ -313,18 +274,16 @@ export namespace tendermint {
       duplicateVoteEvidence: DuplicateVoteEvidence,
       lightClientAttackEvidence: LightClientAttackEvidence,
     ) {
-      this.duplicateVoteEvidence = duplicateVoteEvidence;
-      this.lightClientAttackEvidence = lightClientAttackEvidence;
+      this.duplicateVoteEvidence = duplicateVoteEvidence
+      this.lightClientAttackEvidence = lightClientAttackEvidence
     }
   }
 
   export class EvidenceList {
     public evidence: Array<Evidence>
 
-    constructor(
-      evidence: Array<Evidence>,
-    ) {
-      this.evidence = evidence;
+    constructor(evidence: Array<Evidence>) {
+      this.evidence = evidence
     }
   }
 
@@ -333,14 +292,10 @@ export namespace tendermint {
     public maxAgeDuration: Duration
     public maxBytes: i64
 
-    constructor(
-      maxAgeNumBlocks: i64,
-      maxAgeDuration: Duration,
-      maxBytes: i64,
-    ) {
-      this.maxAgeNumBlocks = maxAgeNumBlocks;
-      this.maxAgeDuration = maxAgeDuration;
-      this.maxBytes = maxBytes;
+    constructor(maxAgeNumBlocks: i64, maxAgeDuration: Duration, maxBytes: i64) {
+      this.maxAgeNumBlocks = maxAgeNumBlocks
+      this.maxAgeDuration = maxAgeDuration
+      this.maxBytes = maxBytes
     }
   }
 
@@ -376,20 +331,20 @@ export namespace tendermint {
       evidenceHash: Bytes,
       proposerAddress: Bytes,
     ) {
-      this.version = version;
-      this.chainId = chainId;
-      this.height = height;
-      this.time = time;
-      this.lastBlockId = lastBlockId;
-      this.lastCommitHash = lastCommitHash;
-      this.dataHash = dataHash;
-      this.validatorsHash = validatorsHash;
-      this.nextValidatorsHash = nextValidatorsHash;
-      this.consensusHash = consensusHash;
-      this.appHash = appHash;
-      this.lastResultsHash = lastResultsHash;
-      this.evidenceHash = evidenceHash;
-      this.proposerAddress = proposerAddress;
+      this.version = version
+      this.chainId = chainId
+      this.height = height
+      this.time = time
+      this.lastBlockId = lastBlockId
+      this.lastCommitHash = lastCommitHash
+      this.dataHash = dataHash
+      this.validatorsHash = validatorsHash
+      this.nextValidatorsHash = nextValidatorsHash
+      this.consensusHash = consensusHash
+      this.appHash = appHash
+      this.lastResultsHash = lastResultsHash
+      this.evidenceHash = evidenceHash
+      this.proposerAddress = proposerAddress
     }
   }
 
@@ -397,12 +352,9 @@ export namespace tendermint {
     public signedHeader: SignedHeader
     public validatorSet: ValidatorSet
 
-    constructor(
-      signedHeader: SignedHeader,
-      validatorSet: ValidatorSet,
-    ) {
-      this.signedHeader = signedHeader;
-      this.validatorSet = validatorSet;
+    constructor(signedHeader: SignedHeader, validatorSet: ValidatorSet) {
+      this.signedHeader = signedHeader
+      this.validatorSet = validatorSet
     }
   }
 
@@ -420,11 +372,11 @@ export namespace tendermint {
       totalVotingPower: i64,
       timestamp: Timestamp,
     ) {
-      this.conflictingBlock = conflictingBlock;
-      this.commonHeight = commonHeight;
-      this.byzantineValidators = byzantineValidators;
-      this.totalVotingPower = totalVotingPower;
-      this.timestamp = timestamp;
+      this.conflictingBlock = conflictingBlock
+      this.commonHeight = commonHeight
+      this.byzantineValidators = byzantineValidators
+      this.totalVotingPower = totalVotingPower
+      this.timestamp = timestamp
     }
   }
 
@@ -432,12 +384,9 @@ export namespace tendermint {
     public ed25519: Bytes
     public secp256k1: Bytes
 
-    constructor(
-      ed25519: Bytes,
-      secp256k1: Bytes,
-    ) {
-      this.ed25519 = ed25519;
-      this.secp256k1 = secp256k1;
+    constructor(ed25519: Bytes, secp256k1: Bytes) {
+      this.ed25519 = ed25519
+      this.secp256k1 = secp256k1
     }
   }
 
@@ -445,22 +394,17 @@ export namespace tendermint {
     public total: u32
     public hash: Bytes
 
-    constructor(
-      total: u32,
-      hash: Bytes,
-    ) {
-      this.total = total;
-      this.hash = hash;
+    constructor(total: u32, hash: Bytes) {
+      this.total = total
+      this.hash = hash
     }
   }
 
   export class ResponseBeginBlock {
     public events: Array<Event>
 
-    constructor(
-      events: Array<Event>,
-    ) {
-      this.events = events;
+    constructor(events: Array<Event>) {
+      this.events = events
     }
   }
 
@@ -474,9 +418,9 @@ export namespace tendermint {
       consensusParamUpdates: ConsensusParams,
       events: Array<Event>,
     ) {
-      this.validatorUpdates = validatorUpdates;
-      this.consensusParamUpdates = consensusParamUpdates;
-      this.events = events;
+      this.validatorUpdates = validatorUpdates
+      this.consensusParamUpdates = consensusParamUpdates
+      this.events = events
     }
   }
 
@@ -500,14 +444,14 @@ export namespace tendermint {
       events: Array<Event>,
       codespace: string,
     ) {
-      this.code = code;
-      this.data = data;
-      this.log = log;
-      this.info = info;
-      this.gasWanted = gasWanted;
-      this.gasUsed = gasUsed;
-      this.events = events;
-      this.codespace = codespace;
+      this.code = code
+      this.data = data
+      this.log = log
+      this.info = info
+      this.gasWanted = gasWanted
+      this.gasUsed = gasUsed
+      this.events = events
+      this.codespace = codespace
     }
   }
 
@@ -515,12 +459,9 @@ export namespace tendermint {
     public header: Header
     public commit: Commit
 
-    constructor(
-      header: Header,
-      commit: Commit,
-    ) {
-      this.header = header;
-      this.commit = commit;
+    constructor(header: Header, commit: Commit) {
+      this.header = header
+      this.commit = commit
     }
   }
 
@@ -528,12 +469,9 @@ export namespace tendermint {
     public seconds: i64
     public nanos: i32
 
-    constructor(
-      seconds: i64,
-      nanos: i32,
-    ) {
-      this.seconds = seconds;
-      this.nanos = nanos;
+    constructor(seconds: i64, nanos: i32) {
+      this.seconds = seconds
+      this.nanos = nanos
     }
   }
 
@@ -543,16 +481,11 @@ export namespace tendermint {
     public tx: Bytes
     public result: ResponseDeliverTx
 
-    constructor(
-      height: u64,
-      index: u32,
-      tx: Bytes,
-      result: ResponseDeliverTx,
-    ) {
-      this.height = height;
-      this.index = index;
-      this.tx = tx;
-      this.result = result;
+    constructor(height: u64, index: u32, tx: Bytes, result: ResponseDeliverTx) {
+      this.height = height
+      this.index = index
+      this.tx = tx
+      this.result = result
     }
   }
 
@@ -568,20 +501,18 @@ export namespace tendermint {
       votingPower: i64,
       proposerPriority: i64,
     ) {
-      this.address = address;
-      this.pubKey = pubKey;
-      this.votingPower = votingPower;
-      this.proposerPriority = proposerPriority;
+      this.address = address
+      this.pubKey = pubKey
+      this.votingPower = votingPower
+      this.proposerPriority = proposerPriority
     }
   }
 
   export class ValidatorParams {
     public pubKeyTypes: Array<string>
 
-    constructor(
-      pubKeyTypes: Array<string>,
-    ) {
-      this.pubKeyTypes = pubKeyTypes;
+    constructor(pubKeyTypes: Array<string>) {
+      this.pubKeyTypes = pubKeyTypes
     }
   }
 
@@ -595,9 +526,9 @@ export namespace tendermint {
       proposer: Validator,
       totalVotingPower: i64,
     ) {
-      this.validators = validators;
-      this.proposer = proposer;
-      this.totalVotingPower = totalVotingPower;
+      this.validators = validators
+      this.proposer = proposer
+      this.totalVotingPower = totalVotingPower
     }
   }
 
@@ -606,25 +537,18 @@ export namespace tendermint {
     public pubKey: PublicKey
     public power: i64
 
-    constructor(
-      address: Bytes,
-      pubKey: PublicKey,
-      power: i64,
-    ) {
-      this.address = address;
-      this.pubKey = pubKey;
-      this.power = power;
+    constructor(address: Bytes, pubKey: PublicKey, power: i64) {
+      this.address = address
+      this.pubKey = pubKey
+      this.power = power
     }
   }
 
   export class VersionParams {
     public appVersion: u64
 
-    constructor(
-      appVersion: u64,
-    ) {
-      this.appVersion = appVersion;
+    constructor(appVersion: u64) {
+      this.appVersion = appVersion
     }
   }
-
 }
