@@ -320,7 +320,7 @@ export class TypedMap<K, V> {
 
   mustGetEntry(key: K): TypedMapEntry<K, V> {
     const entry = this.getEntry(key)
-    assert(entry != null, `Entry for key ${key} doest not exist in TypedMap`)
+    assert(entry != null, `Entry for key ${key} does not exist in TypedMap`)
     return entry!
   }
 
@@ -335,7 +335,7 @@ export class TypedMap<K, V> {
 
   mustGet(key: K): V {
     const value = this.get(key)
-    assert(value != null, `Value for key ${key} doest not exist in TypedMap`)
+    assert(value != null, `Value for key ${key} does not exist in TypedMap`)
     return value!
   }
 
