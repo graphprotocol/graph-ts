@@ -318,6 +318,12 @@ export class TypedMap<K, V> {
     return null
   }
 
+  mustGetEntry(key: K): TypedMapEntry<K, V> {
+    const entry = this.getEntry(key)
+    assert(entry != null, `Entry for key ${key} does not exist in TypedMap`)
+    return entry!
+  }
+
   get(key: K): V | null {
     for (let i: i32 = 0; i < this.entries.length; i++) {
       if (this.entries[i].key == key) {
@@ -325,6 +331,12 @@ export class TypedMap<K, V> {
       }
     }
     return null
+  }
+
+  mustGet(key: K): V {
+    const value = this.get(key)
+    assert(value != null, `Value for key ${key} does not exist in TypedMap`)
+    return value!
   }
 
   isSet(key: K): bool {
