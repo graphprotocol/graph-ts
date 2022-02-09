@@ -67,6 +67,7 @@ export namespace solana {
             public data: CryptoHash,
             public balance_changes: BalanceChange[],
             public account_changes: AccountChange[],
+            public log_messages: String[],
             public error: InstructionError,
             public failed: bool,
         ) {
