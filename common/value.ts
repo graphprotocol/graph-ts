@@ -16,6 +16,17 @@ export enum ValueKind {
   BIGINT = 7,
 }
 
+const VALUE_KIND_NAMES = [
+  'String',
+  'Int',
+  'BigDecimal',
+  'Bool',
+  'Array',
+  'Null',
+  'Bytes',
+  'BigInt',
+]
+
 /**
  * Pointer type for Value data.
  *
@@ -127,6 +138,42 @@ export class Value {
       output[i] = values[i].toBigDecimal()
     }
     return output
+  }
+
+  /** Return a string that indicates the kind of value `this` contains for
+   * logging and error messages */
+  displayKind(): string {
+    if (this.kind >= VALUE_KIND_NAMES.length) {
+      return `Unknown (${this.kind})`
+    } else {
+      return VALUE_KIND_NAMES[this.kind]
+    }
+  }
+
+  /** Return a string representation of the value of `this` for logging and
+   * error messages */
+  displayData(): string {
+    switch (this.kind) {
+      case ValueKind.STRING:
+        return this.toString()
+      case ValueKind.INT:
+        return this.toI32().toString()
+      case ValueKind.BIGDECIMAL:
+        return this.toBigDecimal().toString()
+      case ValueKind.BOOL:
+        return this.toBoolean().toString()
+      case ValueKind.ARRAY:
+        let arr = this.toArray()
+        return '[' + arr.map<string>((elt) => elt.displayData()).join(', ') + ']'
+      case ValueKind.NULL:
+        return 'null'
+      case ValueKind.BYTES:
+        return this.toBytes().toHexString()
+      case ValueKind.BIGINT:
+        return this.toBigInt().toString()
+      default:
+        return `Unknwon data (kind = ${this.kind})`
+    }
   }
 
   static fromBooleanArray(input: Array<boolean>): Value {
