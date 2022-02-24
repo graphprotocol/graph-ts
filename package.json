@@ -13,6 +13,7 @@
   },
   "scripts": {
     "lint": "prettier -c **/*.{js,ts}",
+    "format": "prettier --write -c **/*.{js,ts}",
     "build": "asc --explicitStart --exportRuntime --runtime stub index.ts helper-functions.ts --lib graph-ts -b index.wasm",
     "test": "node test/test.js"
   }
