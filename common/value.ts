@@ -20,9 +20,9 @@ const VALUE_KIND_NAMES = [
   'String',
   'Int',
   'BigDecimal',
-  'Bool',
+  'bool',
   'Array',
-  'Null',
+  'null',
   'Bytes',
   'BigInt',
 ]
@@ -172,7 +172,7 @@ export class Value {
       case ValueKind.BIGINT:
         return this.toBigInt().toString()
       default:
-        return `Unknwon data (kind = ${this.kind})`
+        return `Unknown data (kind = ${this.kind})`
     }
   }
 
