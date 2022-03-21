@@ -361,6 +361,44 @@ export namespace ethereum {
   }
 
   /**
+   * An Ethereum transaction receipt.
+   */
+  export class TransactionReceipt {
+    constructor(
+      public transactionHash: Bytes,
+      public transactionIndex: BigInt,
+      public blockHash: Bytes,
+      public blockNumber: BigInt,
+      public cumulativeGasUsed: BigInt,
+      public gasUsed: BigInt,
+      public contractAddress: Address,
+      public logs: Array<Log>,
+      public status: BigInt,
+      public root: Bytes,
+      public logsBloom: Bytes,
+    ) {}
+  }
+
+  /**
+   * An Ethereum event log.
+   */
+  export class Log {
+    constructor(
+      public address: Address,
+      public topics: Array<Bytes>,
+      public data: Bytes,
+      public blockHash: Bytes,
+      public blockNumber: Bytes,
+      public transactionHash: Bytes,
+      public transactionIndex: BigInt,
+      public logIndex: BigInt,
+      public transactionLogIndex: BigInt,
+      public logType: string,
+      public removed: boolean,
+    ) {}
+  }
+
+  /**
    * Common representation for Ethereum smart contract calls.
    */
   export class Call {
@@ -386,6 +424,7 @@ export namespace ethereum {
       public block: Block,
       public transaction: Transaction,
       public parameters: Array<EventParam>,
+      public receipt: TransactionReceipt | null,
     ) {}
   }
 
