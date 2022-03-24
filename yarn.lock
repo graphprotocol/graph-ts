@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+as-proto@^v0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/as-proto/-/as-proto-0.2.0.tgz#bef36378b373106238d2d03d26dd31e72f423ffd"
+  integrity sha512-uxOCozku/ZcWrqNDyBI4mkkHGcFe522Ev1ZeUFBOxXvkto85saKE0K034eR18ioG6NqNWB7IaXfbfZQmhKpTWg==
+
 assemblyscript@0.19.10:
   version "0.19.10"
   resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.19.10.tgz#7ede6d99c797a219beb4fa4614c3eab9e6343c8e"
@@ -18,6 +23,7 @@ binaryen@101.0.0-nightly.20210723:
 long@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
+  integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
 
 prettier@^2.4.1:
   version "2.4.1"
