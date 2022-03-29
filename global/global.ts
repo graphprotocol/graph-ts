@@ -65,6 +65,7 @@ export enum TypeId {
   ArrayF32 = 49,
   ArrayF64 = 50,
   ArrayBigDecimal = 51,
+  // Near types
   NearArrayDataReceiver = 52,
   NearArrayCryptoHash = 53,
   NearArrayActionValue = 54,
@@ -100,6 +101,7 @@ export enum TypeId {
   NearChunkHeader = 84,
   NearBlock = 85,
   NearReceiptWithOutcome = 86,
+  // Tendermint types
   TendermintArrayEventTx = 87,
   TendermintArrayEvent = 88,
   TendermintArrayCommitSig = 89,
@@ -147,6 +149,11 @@ export enum TypeId {
   TendermintDuration = 131,
   TendermintTimestamp = 132,
   TendermintEventData = 133,
+  // More ethereum types
+  TransactionReceipt = 134,
+  Log = 135,
+  ArrayH256 = 136,
+  ArrayLog = 137,
 }
 
 export function id_of_type(typeId: TypeId): usize {
@@ -420,6 +427,14 @@ export function id_of_type(typeId: TypeId): usize {
       return idof<tendermint.Timestamp>()
     case TypeId.TendermintEventData:
       return idof<tendermint.EventData>()
+    case TypeId.TransactionReceipt:
+      return idof<ethereum.TransactionReceipt>()
+    case TypeId.Log:
+      return idof<ethereum.Log>()
+    case TypeId.ArrayH256:
+      return idof<Array<Uint8Array>>()
+    case TypeId.ArrayLog:
+      return idof<Array<ethereum.Log>>()
     default:
       return 0
   }
