@@ -394,7 +394,7 @@ export namespace ethereum {
       public logIndex: BigInt,
       public transactionLogIndex: BigInt,
       public logType: string,
-      public removed: boolean,
+      public removed: Wrapped<bool> | null,
     ) {}
   }
 
