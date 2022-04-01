@@ -1,0 +1,21 @@
+{
+    "name": "proto-to-typescript",
+    "version": "0.0.1",
+    "license": "apache",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "tendermint": "protoc --plugin=protoc-gen-as=./node_modules/as-proto/packages/bin/as-proto-gen --proto_path=./src --as_out=../ ./src/t.v1.proto && mv ../t.v1.ts ../t.ts && FILE_PATH=../t.ts node index.js",
+        "cosmos": "protoc --plugin=protoc-gen-as=./node_modules/.bin/as-proto-gen --proto_path=./src --as_out=../ ./src/cosmos.v1.proto && mv ../cosmos.v1.ts ../cosmos.ts && FILE_PATH=../cosmos.ts node index.js",
+        "liquidity": "protoc --plugin=protoc-gen-as=./node_modules/.bin/as-proto-gen --proto_path=./src --as_out=../ ./src/liquidity.v1.proto && mv ../liquidity.v1.ts ../liquidity.ts && FILE_PATH=../liquidity.ts node index.js"
+    },
+    "dependencies": {
+        "as-proto": "https://github.com/figment-networks/as-proto.git",
+        "dotenv": "^16.0.0",
+        "express": "^4.17.3",
+        "fs": "^0.0.1-security",
+        "proto-parser": "^0.0.7",
+        "typescript": "^4.4.4",
+        "yargs": "^17.2.1"
+    }
+}

@@ -1,5 +1,5 @@
 import { Writer, Reader, Protobuf } from 'as-proto'
-import { t } from './tendermint'
+import { t } from './t'
 
 export namespace cosmos {
   export namespace v1 {

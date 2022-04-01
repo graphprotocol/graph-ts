@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package t.v1;
+
+option go_package = "github.com/figment-networks/tendermint-protobuf-def/codec";
+
+import "gogo.proto";
+import "google/protobuf/descriptor.proto";
+
+// BlockIdFlag indicates which BlockID the signature is for
+enum BlockIDFlag {
+  option(gogoproto.goproto_enum_stringer) = true; option(gogoproto.goproto_enum_prefix) = false;
+
+  BLOCK_ID_FLAG_UNKNOWN = 0 [(gogoproto.enumvalue_customname) = "BlockIDFlagUnknown"];
+  BLOCK_ID_FLAG_ABSENT  = 1 [(gogoproto.enumvalue_customname) = "BlockIDFlagAbsent"];
+  BLOCK_ID_FLAG_COMMIT  = 2 [(gogoproto.enumvalue_customname) = "BlockIDFlagCommit"];
+  BLOCK_ID_FLAG_NIL     = 3 [(gogoproto.enumvalue_customname) = "BlockIDFlagNil"];
+}
+
+message BlockID {
+  bytes         hash            = 1;
+  PartSetHeader part_set_header = 2 [(gogoproto.nullable) = false];
+}
+
+message Commit {
+  int64              height     = 1; // must be > 0
+  int32              round      = 2; // must be > 0
+  BlockID            block_id   = 3 [(gogoproto.nullable) = false, (gogoproto.customname) = "BlockID"];
+  repeated CommitSig signatures = 4 [(gogoproto.nullable) = false];
+}
+
+message CommitSig {
+  BlockIDFlag block_id_flag     = 1; // must match those in the enum above
+  bytes       validator_address = 2; // hash 256 20 bytes - this is the first 20 characters of a 32-byte key -
+                                     // SHA256(pubkey)[:20]
+  Timestamp timestamp = 3 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+  bytes     signature = 4; // length should be > 0 and < 64
+}
+
+message Consensus {
+  option(gogoproto.equal) = true;
+
+  uint64 block = 1;
+  uint64 app   = 2;
+}
+
+message Header {
+  Consensus version              = 1 [(gogoproto.nullable) = false];
+  string    chain_id             = 2 [(gogoproto.customname) = "ChainID"];
+  uint64    height               = 3;
+  Timestamp time                 = 4 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+  BlockID   last_block_id        = 5 [(gogoproto.nullable) = false];
+  bytes     last_commit_hash     = 6;  // hash 256 32 bytes
+  bytes     data_hash            = 7;  // hash 256 32 bytes
+  bytes     validators_hash      = 8;  // hash 256 32 bytes
+  bytes     next_validators_hash = 9;  // hash 256 32 bytes
+  bytes     consensus_hash       = 10; // hash 256 32 bytes
+  bytes     app_hash             = 11; // determined by application, not a fixed length
+  bytes     last_results_hash    = 12; // hash 256 32 bytes - first block will be results of an empty hash
+  bytes     evidence_hash        = 13; // hash sha256 32 bytes
+  bytes     proposer_address     = 14; // hash 256 20 bytes - this is the first 20 characters of a 32-byte key -
+                                       // SHA256(pubkey)[:20]
+}
+
+message PublicKey {
+  option(gogoproto.compare) = true;
+  option(gogoproto.equal)   = true;
+
+  oneof sum {
+    bytes ed25519   = 1;
+    bytes secp256k1 = 2;
+  }
+}
+
+message PartSetHeader {
+  uint32 total = 1;
+  bytes  hash  = 2; // hash 256 32 bytes
+}
+
+message SignedHeader {
+  Header header = 1;
+  Commit commit = 2;
+}
+
+message Timestamp {
+  int64 seconds = 1;
+  int32 nanos   = 2;
+}
+
+message Validator {
+  bytes     address           = 1;
+  PublicKey pub_key           = 2 [(gogoproto.nullable) = false]; // must be > 0
+  int64     voting_power      = 3;
+  int64     proposer_priority = 4;
+}
+
+message ValidatorSet {
+  repeated Validator validators         = 1; // cannot be empty or nil
+  Validator          proposer           = 2; // cannot be nil
+  int64              total_voting_power = 3;
+}
