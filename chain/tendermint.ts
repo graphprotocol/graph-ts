@@ -42,12 +42,12 @@ export namespace tendermint {
     }
   }
 
-  export class TxData {
-    public tx: ResponseDeliverTx
+  export class TransactionData {
+    public tx: TxResult
     public block: EventBlock
 
     constructor(
-      tx: ResponseDeliverTx,
+      tx: TxResult,
       block: EventBlock,
     ) {
       this.tx = tx;
