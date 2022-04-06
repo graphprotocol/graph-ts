@@ -1,6 +1,3 @@
-import '../common/eager_offset'
-import { Bytes } from '../common/collections'
-
 export namespace tendermint {
   export enum SignedMsgType {
     SIGNED_MSG_TYPE_UNKNOWN = 0,
@@ -39,19 +36,6 @@ export namespace tendermint {
     constructor(event: Event, block: EventBlock) {
       this.event = event
       this.block = block
-    }
-  }
-
-  export class TransactionData {
-    public tx: TxResult
-    public block: EventBlock
-
-    constructor(
-      tx: TxResult,
-      block: EventBlock,
-    ) {
-      this.tx = tx;
-      this.block = block;
     }
   }
 
@@ -489,12 +473,20 @@ export namespace tendermint {
   }
 
   export class TxResult {
+    public hash: Bytes
     public height: u64
     public index: u32
     public tx: Bytes
     public result: ResponseDeliverTx
 
-    constructor(height: u64, index: u32, tx: Bytes, result: ResponseDeliverTx) {
+    constructor(
+      hash: Bytes,
+      height: u64,
+      index: u32,
+      tx: Bytes,
+      result: ResponseDeliverTx,
+    ) {
+      this.hash = hash
       this.height = height
       this.index = index
       this.tx = tx
