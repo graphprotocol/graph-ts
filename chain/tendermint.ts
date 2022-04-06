@@ -42,6 +42,19 @@ export namespace tendermint {
     }
   }
 
+  export class TransactionData {
+    public tx: TxResult
+    public block: EventBlock
+
+    constructor(
+      tx: TxResult,
+      block: EventBlock,
+    ) {
+      this.tx = tx;
+      this.block = block;
+    }
+  }
+
   export class Block {
     public header: Header
     public data: Data
