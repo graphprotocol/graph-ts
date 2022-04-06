@@ -1,4 +1,4 @@
-import { BigInt, BigDecimal } from './numbers'
+import { BigInt, BigDecimal, Address } from './numbers'
 import { Value } from './value'
 import { typeConversion } from './conversion'
 
@@ -67,7 +67,9 @@ export class ByteArray extends Uint8Array {
   }
 
   /**
-   * Input length must be even.
+   * Convert the string `hex` which must consist of an even number of
+   * hexadecimal digits to a `ByteArray`. The string `hex` can optionally
+   * start with '0x'
    */
   static fromHexString(hex: string): ByteArray {
     assert(hex.length % 2 == 0, 'input ' + hex + ' has odd length')
@@ -163,6 +165,21 @@ export class ByteArray extends Uint8Array {
     x = (x | paddedBytes[1]) << 8
     x = x | paddedBytes[0]
     return x
+  }
+
+  /** Create a new `ByteArray` that consist of `this` directly followed by
+   * the bytes from `other` */
+  concat(other: ByteArray): ByteArray {
+    let newArray = new ByteArray(this.length + other.length)
+    newArray.set(this, 0)
+    newArray.set(other, this.length)
+    return newArray
+  }
+
+  /** Create a new `ByteArray` that consists of `this` directly followed by
+   * the representation of `other` as bytes */
+  concatI32(other: i32): ByteArray {
+    return this.concat(ByteArray.fromI32(other))
   }
 
   /**
@@ -268,12 +285,33 @@ export class Bytes extends ByteArray {
     return changetype<Bytes>(uint8Array)
   }
 
+  /**
+   * Convert the string `hex` which must consist of an even number of
+   * hexadecimal digits to a `ByteArray`. The string `hex` can optionally
+   * start with '0x'
+   */
+  static fromHexString(str: string): Bytes {
+    return changetype<Bytes>(ByteArray.fromHexString(str))
+  }
+
   static fromUTF8(str: string): Bytes {
     return Bytes.fromByteArray(ByteArray.fromUTF8(str))
   }
 
+  static fromI32(i: i32): Bytes {
+    return changetype<Bytes>(ByteArray.fromI32(i))
+  }
+
   static empty(): Bytes {
     return changetype<Bytes>(ByteArray.empty())
+  }
+
+  concat(other: Bytes): Bytes {
+    return changetype<Bytes>(super.concat(other))
+  }
+
+  concatI32(other: i32): Bytes {
+    return changetype<Bytes>(super.concat(ByteArray.fromI32(other)))
   }
 }
 
@@ -318,6 +356,12 @@ export class TypedMap<K, V> {
     return null
   }
 
+  mustGetEntry(key: K): TypedMapEntry<K, V> {
+    const entry = this.getEntry(key)
+    assert(entry != null, `Entry for key ${key} does not exist in TypedMap`)
+    return entry!
+  }
+
   get(key: K): V | null {
     for (let i: i32 = 0; i < this.entries.length; i++) {
       if (this.entries[i].key == key) {
@@ -325,6 +369,12 @@ export class TypedMap<K, V> {
       }
     }
     return null
+  }
+
+  mustGet(key: K): V {
+    const value = this.get(key)
+    assert(value != null, `Value for key ${key} does not exist in TypedMap`)
+    return value!
   }
 
   isSet(key: K): bool {
