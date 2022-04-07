@@ -378,8 +378,6 @@ export function id_of_type(typeId: TypeId): usize {
       return idof<tendermint.BlockID>()
     case TypeId.TendermintPartSetHeader:
       return idof<tendermint.PartSetHeader>()
-    case TypeId.TendermintData:
-      return idof<tendermint.Data>()
     case TypeId.TendermintEvidence:
       return idof<tendermint.Evidence>()
     case TypeId.TendermintDuplicateVoteEvidence:
