@@ -10,7 +10,7 @@
         "liquidity": "protoc --plugin=protoc-gen-as=./node_modules/.bin/as-proto-gen --proto_path=./src --as_out=../ ./src/liquidity.v1.proto && mv ../liquidity.v1.ts ../liquidity.ts && FILE_PATH=../liquidity.ts node index.js"
     },
     "dependencies": {
-        "as-proto": "file:../../../../as-proto/packages/as-proto-gen",
+        "as-proto": "file:../../../../as-proto/packages/as-proto-gen", // fork of github.com/figment-networks/as-proto
         "dotenv": "^16.0.0",
         "express": "^4.17.3",
         "fs": "^0.0.1-security",
