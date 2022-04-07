@@ -54,6 +54,7 @@ export namespace t {
         this.part_set_header = part_set_header
       }
     }
+
     export class Commit {
       static encode(message: Commit, writer: Writer): void {
         writer.uint32(8)
@@ -247,6 +248,7 @@ export namespace t {
         this.app = app
       }
     }
+
     export class Header {
       static encode(message: Header, writer: Writer): void {
         const version = message.version
@@ -647,6 +649,7 @@ export namespace t {
         this.nanos = nanos
       }
     }
+
     export class Validator {
       static encode(message: Validator, writer: Writer): void {
         const address = message.address

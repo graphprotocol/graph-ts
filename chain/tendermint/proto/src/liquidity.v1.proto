@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package liquidity.v1;
+
+option go_package = "github.com/figment-networks/tendermint-protobuf-def/cosmos";
+
+import "gogo.proto";
+import "google/protobuf/descriptor.proto";
+import "cosmos.v1.proto";
+import "annotations.proto"; // protoc-gen-openapiv2/options/annotations.proto
+
+message MsgSwapWithinBatch {
+  string swap_requester_address =
+      1 [(gogoproto.moretags) = "yaml:\"swap_requester_address\"", (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        description : "account address of the origin of this message",
+        example : "\"cosmos1e35y69rhrt7y4yce5l5u73sjnxu0l33wvznyun\"",
+        format : "sdk.AccAddress"
+      }];
+  uint64         pool_id      = 2 [(gogoproto.moretags) = "yaml:\"pool_id\"", (gogoproto.jsontag) = "pool_id",
+                      (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example : "\"1\"", format : "uint64"}];
+  uint32         swap_type_id = 3 [(gogoproto.moretags)                                        = "yaml:\"swap_type_id\"",
+                           (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example : "\"1\"", format : "uint32"}];
+  cosmos.v1.Coin offer_coin   = 4 [(gogoproto.nullable) = false, (gogoproto.moretags) = "yaml:\"offer_coin\"",
+                                 (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) =
+                                     {example : "{\"denom\": \"denomX\", \"amount\": \"1000000\"}", format : "sdk.Coin"}];
+  string         demand_coin_denom =
+      5 [(gogoproto.moretags) = "yaml:\"demand_coin_denom\"", (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        example : "\"denomB\"",
+      }];
+  cosmos.v1.Coin offer_coin_fee = 6 [(gogoproto.nullable) = false, (gogoproto.moretags) = "yaml:\"offer_coin_fee\"",
+                                     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) =
+                                         {example : "{\"denom\": \"denomX\", \"amount\": \"5000\"}", format : "sdk.Coin"}];
+  string         order_price =
+      7 [(gogoproto.moretags) = "yaml:\"order_price\"", (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+         (gogoproto.nullable)                                        = false,
+         (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {example : "\"1.1\"", format : "sdk.Dec"}];
+}

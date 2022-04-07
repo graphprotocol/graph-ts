@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package grpc.gateway.protoc_gen_openapiv2.options;
+
+option go_package = "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options";
+
+import "google/protobuf/struct.proto";
+
+message JSONSchema {
+  reserved 1;
+  reserved 2;
+  string ref = 3;
+  reserved 4;
+  string title = 5;
+  string description = 6;
+  string default = 7;
+  bool read_only = 8;
+  string example = 9;
+  double multiple_of = 10;
+  double maximum = 11;
+  bool exclusive_maximum = 12;
+  double minimum = 13;
+  bool exclusive_minimum = 14;
+  uint64 max_length = 15;
+  uint64 min_length = 16;
+  string pattern = 17;
+  reserved 18;
+  reserved 19;
+  uint64 max_items = 20;
+  uint64 min_items = 21;
+  bool unique_items = 22;
+  reserved 23;
+  uint64 max_properties = 24;
+  uint64 min_properties = 25;
+  repeated string required = 26;
+  reserved 27;
+  reserved 28;
+  reserved 29;
+  reserved 30 to 33;
+  repeated string array = 34;
+
+  enum JSONSchemaSimpleTypes {
+    UNKNOWN = 0;
+    ARRAY = 1;
+    BOOLEAN = 2;
+    INTEGER = 3;
+    NULL = 4;
+    NUMBER = 5;
+    OBJECT = 6;
+    STRING = 7;
+  }
+
+  repeated JSONSchemaSimpleTypes type = 35;
+  string format = 36;
+  reserved 37 to 41;
+  reserved 42;
+  reserved 43 to 45;
+  repeated string enum = 46;
+
+  FieldConfiguration field_configuration = 1001;
+
+  message FieldConfiguration {
+    string path_param_name = 47;
+  }
+}
