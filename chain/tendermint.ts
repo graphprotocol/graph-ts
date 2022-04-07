@@ -46,24 +46,19 @@ export namespace tendermint {
     public tx: TxResult
     public block: EventBlock
 
-    constructor(
-      tx: TxResult,
-      block: EventBlock,
-    ) {
-      this.tx = tx;
-      this.block = block;
+    constructor(tx: TxResult, block: EventBlock) {
+      this.tx = tx
+      this.block = block
     }
   }
 
   export class Block {
     public header: Header
-    public data: Data
     public evidence: EvidenceList
     public lastCommit: Commit
 
-    constructor(header: Header, data: Data, evidence: EvidenceList, lastCommit: Commit) {
+    constructor(header: Header, evidence: EvidenceList, lastCommit: Commit) {
       this.header = header
-      this.data = data
       this.evidence = evidence
       this.lastCommit = lastCommit
     }
@@ -148,14 +143,6 @@ export namespace tendermint {
       this.evidence = evidence
       this.validator = validator
       this.version = version
-    }
-  }
-
-  export class Data {
-    public txs: Array<Bytes>
-
-    constructor(txs: Array<Bytes>) {
-      this.txs = txs
     }
   }
 
@@ -493,12 +480,20 @@ export namespace tendermint {
     public index: u32
     public tx: Bytes
     public result: ResponseDeliverTx
+    public hash: Bytes
 
-    constructor(height: u64, index: u32, tx: Bytes, result: ResponseDeliverTx) {
+    constructor(
+      height: u64,
+      index: u32,
+      tx: Bytes,
+      result: ResponseDeliverTx,
+      hash: Bytes,
+    ) {
       this.height = height
       this.index = index
       this.tx = tx
       this.result = result
+      this.hash = hash
     }
   }
 
