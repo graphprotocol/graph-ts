@@ -1,7 +1,7 @@
 import '../common/eager_offset'
 import { Bytes } from '../common/collections'
 
-export namespace t {
+export namespace tendermint {
   export enum SignedMsgType {
     SIGNED_MSG_TYPE_UNKNOWN = 0,
     SIGNED_MSG_TYPE_PREVOTE = 1,
