@@ -29,6 +29,7 @@ export declare namespace store {
 /** Host IPFS interface */
 export declare namespace ipfs {
   function cat(hash: string): Bytes | null
+  function getBlock(hash: string): Bytes | null
   function map(hash: string, callback: string, userData: Value, flags: string[]): void
 }
 
