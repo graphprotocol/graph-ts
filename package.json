@@ -5,6 +5,7 @@
   "module": "index.ts",
   "types": "index.ts",
   "main": "index.ts",
+  "ascMain": "index.ts",
   "dependencies": {
     "assemblyscript": "0.19.10"
   },
