@@ -1,5 +1,5 @@
 import '../common/eager_offset'
-import { Bytes } from '../common/collections'
+import { Bytes, BigInt } from '..'
 
 // Most types from this namespace are direct mappings or adaptations from:
 // https://github.com/ChainSafe/firehose-arweave/blob/master/proto/sf/arweave/type/v1/type.proto
@@ -25,23 +25,23 @@ export namespace arweave {
    */
   export class Block {
     constructor(
+      public timestamp: u64,
+      public lastRetarget: u64,
+      public height: u64,
       public indepHash: Bytes,
       public nonce: Bytes,
       public previousBlock: Bytes,
-      public timestamp: u64,
-      public lastRetarget: u64,
-      public diff: string,
-      public height: u64,
+      public diff: Bytes,
       public hash: Bytes,
       public txRoot: Bytes,
+      public txs: Transaction[],
       public walletList: Bytes,
       public rewardAddr: Bytes,
       public tags: Tag[],
-      public rewardPool: string,
-      public weaveSize: string,
-      public blockSize: string,
-      public cumulativeDiff: string,
-      public hashList: Bytes,
+      public rewardPool: BigInt,
+      public weaveSize: BigInt,
+      public blockSize: BigInt,
+      public cumulativeDiff: BigInt,
       public hashListMerkle: Bytes,
       public poa: ProofOfAccess,
     ) {}
@@ -53,17 +53,17 @@ export namespace arweave {
   export class Transaction {
     constructor(
       public format: u32,
-      public id: string,
+      public id: Bytes,
       public lastTx: Bytes,
       public owner: Bytes,
       public tags: Tag[],
       public target: Bytes,
-      public quantity: string,
+      public quantity: Bytes,
       public data: Bytes,
-      public dataSize: string,
-      public dataRoot: string,
+      public dataSize: Bytes,
+      public dataRoot: Bytes,
       public signature: Bytes,
-      public reward: string,
+      public reward: Bytes,
     ) {}
   }
 }

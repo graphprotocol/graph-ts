@@ -154,6 +154,14 @@ export enum TypeId {
   Log = 135,
   ArrayH256 = 136,
   ArrayLog = 137,
+
+  // Arweave types
+  ArweaveBlock = 2500,
+  ArweaveProofOfAccess = 2501,
+  ArweaveTransaction = 2502,
+  ArweaveTransactionArray = 2503,
+  ArweaveTag = 2504,
+  ArweaveTagArray = 2505,
 }
 
 export function id_of_type(typeId: TypeId): usize {

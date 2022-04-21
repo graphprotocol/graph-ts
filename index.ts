@@ -1,5 +1,7 @@
 // Side-effect to evaluate eagerly the offset of stub AS runtime
 import './common/eager_offset'
+// Arweave support
+export * from './chain/arweave'
 // Ethereum support
 export * from './chain/ethereum'
 // NEAR support
