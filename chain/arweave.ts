@@ -1,5 +1,5 @@
 import '../common/eager_offset'
-import { Bytes, BigInt } from '..'
+import { Bytes } from '..'
 
 // Most types from this namespace are direct mappings or adaptations from:
 // https://github.com/ChainSafe/firehose-arweave/blob/master/proto/sf/arweave/type/v1/type.proto
@@ -38,10 +38,10 @@ export namespace arweave {
       public walletList: Bytes,
       public rewardAddr: Bytes,
       public tags: Tag[],
-      public rewardPool: BigInt,
-      public weaveSize: BigInt,
-      public blockSize: BigInt,
-      public cumulativeDiff: BigInt,
+      public rewardPool: Bytes,
+      public weaveSize: Bytes,
+      public blockSize: Bytes,
+      public cumulativeDiff: Bytes,
       public hashListMerkle: Bytes,
       public poa: ProofOfAccess,
     ) {}
