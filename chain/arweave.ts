@@ -34,7 +34,7 @@ export namespace arweave {
       public diff: Bytes,
       public hash: Bytes,
       public txRoot: Bytes,
-      public txs: Transaction[],
+      public txs: string[],
       public walletList: Bytes,
       public rewardAddr: Bytes,
       public tags: Tag[],
