@@ -1,8 +1,748 @@
 import { Writer, Reader, Protobuf } from 'as-proto'
-import { t } from './t'
 
 export namespace cosmos {
   export namespace v1 {
+    export class BlockID {
+      static encode(message: BlockID, writer: Writer): void {
+        writer.uint32(10)
+        writer.bytes(message.hash)
+
+        const part_set_header = message.part_set_header
+        if (part_set_header !== null) {
+          writer.uint32(18)
+          writer.fork()
+          cosmos.v1.PartSetHeader.encode(part_set_header, writer)
+          writer.ldelim()
+        }
+      }
+
+      static decode(reader: Reader, length: i32): BlockID {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length
+        const message = new BlockID()
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32()
+          switch (tag >>> 3) {
+            case 1:
+              message.hash = reader.bytes()
+              break
+
+            case 2:
+              message.part_set_header = cosmos.v1.PartSetHeader.decode(
+                reader,
+                reader.uint32(),
+              )
+              break
+
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+
+        return message
+      }
+
+      hash: Uint8Array
+      part_set_header: cosmos.v1.PartSetHeader | null
+
+      constructor(
+        hash: Uint8Array = new Uint8Array(0),
+        part_set_header: cosmos.v1.PartSetHeader | null = null,
+      ) {
+        this.hash = hash
+        this.part_set_header = part_set_header
+      }
+    }
+
+    export class Commit {
+      static encode(message: Commit, writer: Writer): void {
+        writer.uint32(8)
+        writer.int64(message.height)
+
+        writer.uint32(16)
+        writer.int32(message.round)
+
+        const block_id = message.block_id
+        if (block_id !== null) {
+          writer.uint32(26)
+          writer.fork()
+          cosmos.v1.BlockID.encode(block_id, writer)
+          writer.ldelim()
+        }
+
+        const signatures = message.signatures
+        for (let i = 0; i < signatures.length; ++i) {
+          writer.uint32(34)
+          writer.fork()
+          cosmos.v1.CommitSig.encode(signatures[i], writer)
+          writer.ldelim()
+        }
+      }
+
+      static decode(reader: Reader, length: i32): Commit {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length
+        const message = new Commit()
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32()
+          switch (tag >>> 3) {
+            case 1:
+              message.height = reader.int64()
+              break
+
+            case 2:
+              message.round = reader.int32()
+              break
+
+            case 3:
+              message.block_id = cosmos.v1.BlockID.decode(reader, reader.uint32())
+              break
+
+            case 4:
+              message.signatures.push(cosmos.v1.CommitSig.decode(reader, reader.uint32()))
+              break
+
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+
+        return message
+      }
+
+      height: i64
+      round: i32
+      block_id: cosmos.v1.BlockID | null
+      signatures: Array<cosmos.v1.CommitSig>
+
+      constructor(
+        height: i64 = 0,
+        round: i32 = 0,
+        block_id: cosmos.v1.BlockID | null = null,
+        signatures: Array<cosmos.v1.CommitSig> = [],
+      ) {
+        this.height = height
+        this.round = round
+        this.block_id = block_id
+        this.signatures = signatures
+      }
+    }
+
+    export class CommitSig {
+      static encode(message: CommitSig, writer: Writer): void {
+        writer.uint32(8)
+        writer.int32(message.block_id_flag)
+
+        writer.uint32(18)
+        writer.bytes(message.validator_address)
+
+        const timestamp = message.timestamp
+        if (timestamp !== null) {
+          writer.uint32(26)
+          writer.fork()
+          cosmos.v1.Timestamp.encode(timestamp, writer)
+          writer.ldelim()
+        }
+
+        writer.uint32(34)
+        writer.bytes(message.signature)
+      }
+
+      static decode(reader: Reader, length: i32): CommitSig {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length
+        const message = new CommitSig()
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32()
+          switch (tag >>> 3) {
+            case 1:
+              message.block_id_flag = reader.int32()
+              break
+
+            case 2:
+              message.validator_address = reader.bytes()
+              break
+
+            case 3:
+              message.timestamp = cosmos.v1.Timestamp.decode(reader, reader.uint32())
+              break
+
+            case 4:
+              message.signature = reader.bytes()
+              break
+
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+
+        return message
+      }
+
+      block_id_flag: cosmos.v1.BlockIDFlag
+      validator_address: Uint8Array
+      timestamp: cosmos.v1.Timestamp | null
+      signature: Uint8Array
+
+      constructor(
+        block_id_flag: cosmos.v1.BlockIDFlag = 0,
+        validator_address: Uint8Array = new Uint8Array(0),
+        timestamp: cosmos.v1.Timestamp | null = null,
+        signature: Uint8Array = new Uint8Array(0),
+      ) {
+        this.block_id_flag = block_id_flag
+        this.validator_address = validator_address
+        this.timestamp = timestamp
+        this.signature = signature
+      }
+    }
+
+    @unmanaged
+    export class Consensus {
+      static encode(message: Consensus, writer: Writer): void {
+        writer.uint32(8)
+        writer.uint64(message.block)
+
+        writer.uint32(16)
+        writer.uint64(message.app)
+      }
+
+      static decode(reader: Reader, length: i32): Consensus {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length
+        const message = new Consensus()
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32()
+          switch (tag >>> 3) {
+            case 1:
+              message.block = reader.uint64()
+              break
+
+            case 2:
+              message.app = reader.uint64()
+              break
+
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+
+        return message
+      }
+
+      block: u64
+      app: u64
+
+      constructor(block: u64 = 0, app: u64 = 0) {
+        this.block = block
+        this.app = app
+      }
+    }
+
+    export class Header {
+      static encode(message: Header, writer: Writer): void {
+        const version = message.version
+        if (version !== null) {
+          writer.uint32(10)
+          writer.fork()
+          cosmos.v1.Consensus.encode(version, writer)
+          writer.ldelim()
+        }
+
+        writer.uint32(18)
+        writer.string(message.chain_id)
+
+        writer.uint32(24)
+        writer.uint64(message.height)
+
+        const time = message.time
+        if (time !== null) {
+          writer.uint32(34)
+          writer.fork()
+          cosmos.v1.Timestamp.encode(time, writer)
+          writer.ldelim()
+        }
+
+        const last_block_id = message.last_block_id
+        if (last_block_id !== null) {
+          writer.uint32(42)
+          writer.fork()
+          cosmos.v1.BlockID.encode(last_block_id, writer)
+          writer.ldelim()
+        }
+
+        writer.uint32(50)
+        writer.bytes(message.last_commit_hash)
+
+        writer.uint32(58)
+        writer.bytes(message.data_hash)
+
+        writer.uint32(66)
+        writer.bytes(message.validators_hash)
+
+        writer.uint32(74)
+        writer.bytes(message.next_validators_hash)
+
+        writer.uint32(82)
+        writer.bytes(message.consensus_hash)
+
+        writer.uint32(90)
+        writer.bytes(message.app_hash)
+
+        writer.uint32(98)
+        writer.bytes(message.last_results_hash)
+
+        writer.uint32(106)
+        writer.bytes(message.evidence_hash)
+
+        writer.uint32(114)
+        writer.bytes(message.proposer_address)
+      }
+
+      static decode(reader: Reader, length: i32): Header {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length
+        const message = new Header()
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32()
+          switch (tag >>> 3) {
+            case 1:
+              message.version = cosmos.v1.Consensus.decode(reader, reader.uint32())
+              break
+
+            case 2:
+              message.chain_id = reader.string()
+              break
+
+            case 3:
+              message.height = reader.uint64()
+              break
+
+            case 4:
+              message.time = cosmos.v1.Timestamp.decode(reader, reader.uint32())
+              break
+
+            case 5:
+              message.last_block_id = cosmos.v1.BlockID.decode(reader, reader.uint32())
+              break
+
+            case 6:
+              message.last_commit_hash = reader.bytes()
+              break
+
+            case 7:
+              message.data_hash = reader.bytes()
+              break
+
+            case 8:
+              message.validators_hash = reader.bytes()
+              break
+
+            case 9:
+              message.next_validators_hash = reader.bytes()
+              break
+
+            case 10:
+              message.consensus_hash = reader.bytes()
+              break
+
+            case 11:
+              message.app_hash = reader.bytes()
+              break
+
+            case 12:
+              message.last_results_hash = reader.bytes()
+              break
+
+            case 13:
+              message.evidence_hash = reader.bytes()
+              break
+
+            case 14:
+              message.proposer_address = reader.bytes()
+              break
+
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+
+        return message
+      }
+
+      version: cosmos.v1.Consensus | null
+      chain_id: string
+      height: u64
+      time: cosmos.v1.Timestamp | null
+      last_block_id: cosmos.v1.BlockID | null
+      last_commit_hash: Uint8Array
+      data_hash: Uint8Array
+      validators_hash: Uint8Array
+      next_validators_hash: Uint8Array
+      consensus_hash: Uint8Array
+      app_hash: Uint8Array
+      last_results_hash: Uint8Array
+      evidence_hash: Uint8Array
+      proposer_address: Uint8Array
+
+      constructor(
+        version: cosmos.v1.Consensus | null = null,
+        chain_id: string = '',
+        height: u64 = 0,
+        time: cosmos.v1.Timestamp | null = null,
+        last_block_id: cosmos.v1.BlockID | null = null,
+        last_commit_hash: Uint8Array = new Uint8Array(0),
+        data_hash: Uint8Array = new Uint8Array(0),
+        validators_hash: Uint8Array = new Uint8Array(0),
+        next_validators_hash: Uint8Array = new Uint8Array(0),
+        consensus_hash: Uint8Array = new Uint8Array(0),
+        app_hash: Uint8Array = new Uint8Array(0),
+        last_results_hash: Uint8Array = new Uint8Array(0),
+        evidence_hash: Uint8Array = new Uint8Array(0),
+        proposer_address: Uint8Array = new Uint8Array(0),
+      ) {
+        this.version = version
+        this.chain_id = chain_id
+        this.height = height
+        this.time = time
+        this.last_block_id = last_block_id
+        this.last_commit_hash = last_commit_hash
+        this.data_hash = data_hash
+        this.validators_hash = validators_hash
+        this.next_validators_hash = next_validators_hash
+        this.consensus_hash = consensus_hash
+        this.app_hash = app_hash
+        this.last_results_hash = last_results_hash
+        this.evidence_hash = evidence_hash
+        this.proposer_address = proposer_address
+      }
+    }
+
+    export class PublicKey {
+      static encode(message: PublicKey, writer: Writer): void {
+        writer.uint32(10)
+        writer.bytes(message.ed25519)
+
+        writer.uint32(18)
+        writer.bytes(message.secp256k1)
+      }
+
+      static decode(reader: Reader, length: i32): PublicKey {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length
+        const message = new PublicKey()
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32()
+          switch (tag >>> 3) {
+            case 1:
+              message.ed25519 = reader.bytes()
+              break
+
+            case 2:
+              message.secp256k1 = reader.bytes()
+              break
+
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+
+        return message
+      }
+
+      ed25519: Uint8Array
+      secp256k1: Uint8Array
+
+      constructor(
+        ed25519: Uint8Array = new Uint8Array(0),
+        secp256k1: Uint8Array = new Uint8Array(0),
+      ) {
+        this.ed25519 = ed25519
+        this.secp256k1 = secp256k1
+      }
+    }
+
+    export class PartSetHeader {
+      static encode(message: PartSetHeader, writer: Writer): void {
+        writer.uint32(8)
+        writer.uint32(message.total)
+
+        writer.uint32(18)
+        writer.bytes(message.hash)
+      }
+
+      static decode(reader: Reader, length: i32): PartSetHeader {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length
+        const message = new PartSetHeader()
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32()
+          switch (tag >>> 3) {
+            case 1:
+              message.total = reader.uint32()
+              break
+
+            case 2:
+              message.hash = reader.bytes()
+              break
+
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+
+        return message
+      }
+
+      total: u32
+      hash: Uint8Array
+
+      constructor(total: u32 = 0, hash: Uint8Array = new Uint8Array(0)) {
+        this.total = total
+        this.hash = hash
+      }
+    }
+
+    export class SignedHeader {
+      static encode(message: SignedHeader, writer: Writer): void {
+        const header = message.header
+        if (header !== null) {
+          writer.uint32(10)
+          writer.fork()
+          cosmos.v1.Header.encode(header, writer)
+          writer.ldelim()
+        }
+
+        const commit = message.commit
+        if (commit !== null) {
+          writer.uint32(18)
+          writer.fork()
+          cosmos.v1.Commit.encode(commit, writer)
+          writer.ldelim()
+        }
+      }
+
+      static decode(reader: Reader, length: i32): SignedHeader {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length
+        const message = new SignedHeader()
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32()
+          switch (tag >>> 3) {
+            case 1:
+              message.header = cosmos.v1.Header.decode(reader, reader.uint32())
+              break
+
+            case 2:
+              message.commit = cosmos.v1.Commit.decode(reader, reader.uint32())
+              break
+
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+
+        return message
+      }
+
+      header: cosmos.v1.Header | null
+      commit: cosmos.v1.Commit | null
+
+      constructor(
+        header: cosmos.v1.Header | null = null,
+        commit: cosmos.v1.Commit | null = null,
+      ) {
+        this.header = header
+        this.commit = commit
+      }
+    }
+
+    @unmanaged
+    export class Timestamp {
+      static encode(message: Timestamp, writer: Writer): void {
+        writer.uint32(8)
+        writer.int64(message.seconds)
+
+        writer.uint32(16)
+        writer.int32(message.nanos)
+      }
+
+      static decode(reader: Reader, length: i32): Timestamp {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length
+        const message = new Timestamp()
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32()
+          switch (tag >>> 3) {
+            case 1:
+              message.seconds = reader.int64()
+              break
+
+            case 2:
+              message.nanos = reader.int32()
+              break
+
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+
+        return message
+      }
+
+      seconds: i64
+      nanos: i32
+
+      constructor(seconds: i64 = 0, nanos: i32 = 0) {
+        this.seconds = seconds
+        this.nanos = nanos
+      }
+    }
+
+    export class Validator {
+      static encode(message: Validator, writer: Writer): void {
+        writer.uint32(10)
+        writer.bytes(message.address)
+
+        const pub_key = message.pub_key
+        if (pub_key !== null) {
+          writer.uint32(18)
+          writer.fork()
+          cosmos.v1.PublicKey.encode(pub_key, writer)
+          writer.ldelim()
+        }
+
+        writer.uint32(24)
+        writer.int64(message.voting_power)
+
+        writer.uint32(32)
+        writer.int64(message.proposer_priority)
+      }
+
+      static decode(reader: Reader, length: i32): Validator {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length
+        const message = new Validator()
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32()
+          switch (tag >>> 3) {
+            case 1:
+              message.address = reader.bytes()
+              break
+
+            case 2:
+              message.pub_key = cosmos.v1.PublicKey.decode(reader, reader.uint32())
+              break
+
+            case 3:
+              message.voting_power = reader.int64()
+              break
+
+            case 4:
+              message.proposer_priority = reader.int64()
+              break
+
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+
+        return message
+      }
+
+      address: Uint8Array
+      pub_key: cosmos.v1.PublicKey | null
+      voting_power: i64
+      proposer_priority: i64
+
+      constructor(
+        address: Uint8Array = new Uint8Array(0),
+        pub_key: cosmos.v1.PublicKey | null = null,
+        voting_power: i64 = 0,
+        proposer_priority: i64 = 0,
+      ) {
+        this.address = address
+        this.pub_key = pub_key
+        this.voting_power = voting_power
+        this.proposer_priority = proposer_priority
+      }
+    }
+
+    export class ValidatorSet {
+      static encode(message: ValidatorSet, writer: Writer): void {
+        const validators = message.validators
+        for (let i = 0; i < validators.length; ++i) {
+          writer.uint32(10)
+          writer.fork()
+          cosmos.v1.Validator.encode(validators[i], writer)
+          writer.ldelim()
+        }
+
+        const proposer = message.proposer
+        if (proposer !== null) {
+          writer.uint32(18)
+          writer.fork()
+          cosmos.v1.Validator.encode(proposer, writer)
+          writer.ldelim()
+        }
+
+        writer.uint32(24)
+        writer.int64(message.total_voting_power)
+      }
+
+      static decode(reader: Reader, length: i32): ValidatorSet {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length
+        const message = new ValidatorSet()
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32()
+          switch (tag >>> 3) {
+            case 1:
+              message.validators.push(cosmos.v1.Validator.decode(reader, reader.uint32()))
+              break
+
+            case 2:
+              message.proposer = cosmos.v1.Validator.decode(reader, reader.uint32())
+              break
+
+            case 3:
+              message.total_voting_power = reader.int64()
+              break
+
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+
+        return message
+      }
+
+      validators: Array<cosmos.v1.Validator>
+      proposer: cosmos.v1.Validator | null
+      total_voting_power: i64
+
+      constructor(
+        validators: Array<cosmos.v1.Validator> = [],
+        proposer: cosmos.v1.Validator | null = null,
+        total_voting_power: i64 = 0,
+      ) {
+        this.validators = validators
+        this.proposer = proposer
+        this.total_voting_power = total_voting_power
+      }
+    }
+
     export class Tx {
       static encode(message: Tx, writer: Writer): void {
         const body = message.body
@@ -23,12 +763,10 @@ export namespace cosmos {
 
         const signatures = message.signatures
         if (signatures.length !== 0) {
-          writer.uint32(26)
-          writer.fork()
           for (let i = 0; i < signatures.length; ++i) {
+            writer.uint32(26)
             writer.bytes(signatures[i])
           }
-          writer.ldelim()
         }
       }
 
@@ -48,14 +786,7 @@ export namespace cosmos {
               break
 
             case 3:
-              if ((tag & 7) === 2 && tag !== 26) {
-                const repeatedEnd: usize = reader.ptr + reader.uint32()
-                while (reader.ptr < repeatedEnd) {
-                  message.signatures.push(reader.bytes())
-                }
-              } else {
-                message.signatures.push(reader.bytes())
-              }
+              message.signatures.push(reader.bytes())
               break
 
             default:
@@ -92,11 +823,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const memo = message.memo
-        if (memo !== null) {
-          writer.uint32(18)
-          writer.string(memo)
-        }
+        writer.uint32(18)
+        writer.string(message.memo)
 
         writer.uint32(24)
         writer.uint64(message.timeout_height)
@@ -159,14 +887,14 @@ export namespace cosmos {
       }
 
       messages: Array<cosmos.v1.Any>
-      memo: string | null
+      memo: string
       timeout_height: u64
       extension_options: Array<cosmos.v1.Any>
       non_critical_extension_options: Array<cosmos.v1.Any>
 
       constructor(
         messages: Array<cosmos.v1.Any> = [],
-        memo: string | null = null,
+        memo: string = '',
         timeout_height: u64 = 0,
         extension_options: Array<cosmos.v1.Any> = [],
         non_critical_extension_options: Array<cosmos.v1.Any> = [],
@@ -465,11 +1193,8 @@ export namespace cosmos {
         writer.uint32(8)
         writer.uint32(message.extra_bits_stored)
 
-        const elems = message.elems
-        if (elems !== null) {
-          writer.uint32(18)
-          writer.bytes(elems)
-        }
+        writer.uint32(18)
+        writer.bytes(message.elems)
       }
 
       static decode(reader: Reader, length: i32): CompactBitArray {
@@ -497,9 +1222,9 @@ export namespace cosmos {
       }
 
       extra_bits_stored: u32
-      elems: Uint8Array | null
+      elems: Uint8Array
 
-      constructor(extra_bits_stored: u32 = 0, elems: Uint8Array | null = null) {
+      constructor(extra_bits_stored: u32 = 0, elems: Uint8Array = new Uint8Array(0)) {
         this.extra_bits_stored = extra_bits_stored
         this.elems = elems
       }
@@ -518,17 +1243,11 @@ export namespace cosmos {
         writer.uint32(16)
         writer.uint64(message.gas_limit)
 
-        const payer = message.payer
-        if (payer !== null) {
-          writer.uint32(26)
-          writer.string(payer)
-        }
+        writer.uint32(26)
+        writer.string(message.payer)
 
-        const granter = message.granter
-        if (granter !== null) {
-          writer.uint32(34)
-          writer.string(granter)
-        }
+        writer.uint32(34)
+        writer.string(message.granter)
       }
 
       static decode(reader: Reader, length: i32): Fee {
@@ -565,14 +1284,14 @@ export namespace cosmos {
 
       amount: Array<cosmos.v1.Coin>
       gas_limit: u64
-      payer: string | null
-      granter: string | null
+      payer: string
+      granter: string
 
       constructor(
         amount: Array<cosmos.v1.Coin> = [],
         gas_limit: u64 = 0,
-        payer: string | null = null,
-        granter: string | null = null,
+        payer: string = '',
+        granter: string = '',
       ) {
         this.amount = amount
         this.gas_limit = gas_limit
@@ -591,11 +1310,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const tipper = message.tipper
-        if (tipper !== null) {
-          writer.uint32(18)
-          writer.string(tipper)
-        }
+        writer.uint32(18)
+        writer.string(message.tipper)
       }
 
       static decode(reader: Reader, length: i32): Tip {
@@ -623,9 +1339,9 @@ export namespace cosmos {
       }
 
       amount: Array<cosmos.v1.Coin>
-      tipper: string | null
+      tipper: string
 
-      constructor(amount: Array<cosmos.v1.Coin> = [], tipper: string | null = null) {
+      constructor(amount: Array<cosmos.v1.Coin> = [], tipper: string = '') {
         this.amount = amount
         this.tipper = tipper
       }
@@ -633,17 +1349,11 @@ export namespace cosmos {
 
     export class Coin {
       static encode(message: Coin, writer: Writer): void {
-        const denom = message.denom
-        if (denom !== null) {
-          writer.uint32(10)
-          writer.string(denom)
-        }
+        writer.uint32(10)
+        writer.string(message.denom)
 
-        const amount = message.amount
-        if (amount !== null) {
-          writer.uint32(18)
-          writer.string(amount)
-        }
+        writer.uint32(18)
+        writer.string(message.amount)
       }
 
       static decode(reader: Reader, length: i32): Coin {
@@ -670,10 +1380,10 @@ export namespace cosmos {
         return message
       }
 
-      denom: string | null
-      amount: string | null
+      denom: string
+      amount: string
 
-      constructor(denom: string | null = null, amount: string | null = null) {
+      constructor(denom: string = '', amount: string = '') {
         this.denom = denom
         this.amount = amount
       }
@@ -681,17 +1391,11 @@ export namespace cosmos {
 
     export class Any {
       static encode(message: Any, writer: Writer): void {
-        const type_url = message.type_url
-        if (type_url !== null) {
-          writer.uint32(10)
-          writer.string(type_url)
-        }
+        writer.uint32(10)
+        writer.string(message.type_url)
 
-        const value = message.value
-        if (value !== null) {
-          writer.uint32(18)
-          writer.bytes(value)
-        }
+        writer.uint32(18)
+        writer.bytes(message.value)
       }
 
       static decode(reader: Reader, length: i32): Any {
@@ -718,10 +1422,10 @@ export namespace cosmos {
         return message
       }
 
-      type_url: string | null
-      value: Uint8Array | null
+      type_url: string
+      value: Uint8Array
 
-      constructor(type_url: string | null = null, value: Uint8Array | null = null) {
+      constructor(type_url: string = '', value: Uint8Array = new Uint8Array(0)) {
         this.type_url = type_url
         this.value = value
       }
@@ -729,11 +1433,8 @@ export namespace cosmos {
 
     export class PubKey {
       static encode(message: PubKey, writer: Writer): void {
-        const key = message.key
-        if (key !== null) {
-          writer.uint32(10)
-          writer.bytes(key)
-        }
+        writer.uint32(10)
+        writer.bytes(message.key)
       }
 
       static decode(reader: Reader, length: i32): PubKey {
@@ -756,26 +1457,20 @@ export namespace cosmos {
         return message
       }
 
-      key: Uint8Array | null
+      key: Uint8Array
 
-      constructor(key: Uint8Array | null = null) {
+      constructor(key: Uint8Array = new Uint8Array(0)) {
         this.key = key
       }
     }
 
     export class MsgSend {
       static encode(message: MsgSend, writer: Writer): void {
-        const from_address = message.from_address
-        if (from_address !== null) {
-          writer.uint32(10)
-          writer.string(from_address)
-        }
+        writer.uint32(10)
+        writer.string(message.from_address)
 
-        const to_address = message.to_address
-        if (to_address !== null) {
-          writer.uint32(18)
-          writer.string(to_address)
-        }
+        writer.uint32(18)
+        writer.string(message.to_address)
 
         const amount = message.amount
         for (let i = 0; i < amount.length; ++i) {
@@ -814,13 +1509,13 @@ export namespace cosmos {
         return message
       }
 
-      from_address: string | null
-      to_address: string | null
+      from_address: string
+      to_address: string
       amount: Array<cosmos.v1.Coin>
 
       constructor(
-        from_address: string | null = null,
-        to_address: string | null = null,
+        from_address: string = '',
+        to_address: string = '',
         amount: Array<cosmos.v1.Coin> = [],
       ) {
         this.from_address = from_address
@@ -886,23 +1581,14 @@ export namespace cosmos {
 
     export class MsgVerifyInvariant {
       static encode(message: MsgVerifyInvariant, writer: Writer): void {
-        const sender = message.sender
-        if (sender !== null) {
-          writer.uint32(10)
-          writer.string(sender)
-        }
+        writer.uint32(10)
+        writer.string(message.sender)
 
-        const invariant_module_name = message.invariant_module_name
-        if (invariant_module_name !== null) {
-          writer.uint32(18)
-          writer.string(invariant_module_name)
-        }
+        writer.uint32(18)
+        writer.string(message.invariant_module_name)
 
-        const invariant_route = message.invariant_route
-        if (invariant_route !== null) {
-          writer.uint32(26)
-          writer.string(invariant_route)
-        }
+        writer.uint32(26)
+        writer.string(message.invariant_route)
       }
 
       static decode(reader: Reader, length: i32): MsgVerifyInvariant {
@@ -933,14 +1619,14 @@ export namespace cosmos {
         return message
       }
 
-      sender: string | null
-      invariant_module_name: string | null
-      invariant_route: string | null
+      sender: string
+      invariant_module_name: string
+      invariant_route: string
 
       constructor(
-        sender: string | null = null,
-        invariant_module_name: string | null = null,
-        invariant_route: string | null = null,
+        sender: string = '',
+        invariant_module_name: string = '',
+        invariant_route: string = '',
       ) {
         this.sender = sender
         this.invariant_module_name = invariant_module_name
@@ -950,17 +1636,11 @@ export namespace cosmos {
 
     export class MsgSetWithdrawAddress {
       static encode(message: MsgSetWithdrawAddress, writer: Writer): void {
-        const delegator_address = message.delegator_address
-        if (delegator_address !== null) {
-          writer.uint32(10)
-          writer.string(delegator_address)
-        }
+        writer.uint32(10)
+        writer.string(message.delegator_address)
 
-        const withdraw_address = message.withdraw_address
-        if (withdraw_address !== null) {
-          writer.uint32(18)
-          writer.string(withdraw_address)
-        }
+        writer.uint32(18)
+        writer.string(message.withdraw_address)
       }
 
       static decode(reader: Reader, length: i32): MsgSetWithdrawAddress {
@@ -987,13 +1667,10 @@ export namespace cosmos {
         return message
       }
 
-      delegator_address: string | null
-      withdraw_address: string | null
+      delegator_address: string
+      withdraw_address: string
 
-      constructor(
-        delegator_address: string | null = null,
-        withdraw_address: string | null = null,
-      ) {
+      constructor(delegator_address: string = '', withdraw_address: string = '') {
         this.delegator_address = delegator_address
         this.withdraw_address = withdraw_address
       }
@@ -1001,17 +1678,11 @@ export namespace cosmos {
 
     export class MsgWithdrawDelegatorReward {
       static encode(message: MsgWithdrawDelegatorReward, writer: Writer): void {
-        const delegator_address = message.delegator_address
-        if (delegator_address !== null) {
-          writer.uint32(10)
-          writer.string(delegator_address)
-        }
+        writer.uint32(10)
+        writer.string(message.delegator_address)
 
-        const validator_address = message.validator_address
-        if (validator_address !== null) {
-          writer.uint32(18)
-          writer.string(validator_address)
-        }
+        writer.uint32(18)
+        writer.string(message.validator_address)
       }
 
       static decode(reader: Reader, length: i32): MsgWithdrawDelegatorReward {
@@ -1038,13 +1709,10 @@ export namespace cosmos {
         return message
       }
 
-      delegator_address: string | null
-      validator_address: string | null
+      delegator_address: string
+      validator_address: string
 
-      constructor(
-        delegator_address: string | null = null,
-        validator_address: string | null = null,
-      ) {
+      constructor(delegator_address: string = '', validator_address: string = '') {
         this.delegator_address = delegator_address
         this.validator_address = validator_address
       }
@@ -1052,11 +1720,8 @@ export namespace cosmos {
 
     export class MsgWithdrawValidatorCommission {
       static encode(message: MsgWithdrawValidatorCommission, writer: Writer): void {
-        const validator_address = message.validator_address
-        if (validator_address !== null) {
-          writer.uint32(10)
-          writer.string(validator_address)
-        }
+        writer.uint32(10)
+        writer.string(message.validator_address)
       }
 
       static decode(reader: Reader, length: i32): MsgWithdrawValidatorCommission {
@@ -1079,9 +1744,9 @@ export namespace cosmos {
         return message
       }
 
-      validator_address: string | null
+      validator_address: string
 
-      constructor(validator_address: string | null = null) {
+      constructor(validator_address: string = '') {
         this.validator_address = validator_address
       }
     }
@@ -1096,11 +1761,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const depositor = message.depositor
-        if (depositor !== null) {
-          writer.uint32(18)
-          writer.string(depositor)
-        }
+        writer.uint32(18)
+        writer.string(message.depositor)
       }
 
       static decode(reader: Reader, length: i32): MsgFundCommunityPool {
@@ -1128,9 +1790,9 @@ export namespace cosmos {
       }
 
       amount: Array<cosmos.v1.Coin>
-      depositor: string | null
+      depositor: string
 
-      constructor(amount: Array<cosmos.v1.Coin> = [], depositor: string | null = null) {
+      constructor(amount: Array<cosmos.v1.Coin> = [], depositor: string = '') {
         this.amount = amount
         this.depositor = depositor
       }
@@ -1138,11 +1800,8 @@ export namespace cosmos {
 
     export class MsgSubmitEvidence {
       static encode(message: MsgSubmitEvidence, writer: Writer): void {
-        const submitter = message.submitter
-        if (submitter !== null) {
-          writer.uint32(10)
-          writer.string(submitter)
-        }
+        writer.uint32(10)
+        writer.string(message.submitter)
 
         const evidence = message.evidence
         if (evidence !== null) {
@@ -1177,13 +1836,10 @@ export namespace cosmos {
         return message
       }
 
-      submitter: string | null
+      submitter: string
       evidence: cosmos.v1.Any | null
 
-      constructor(
-        submitter: string | null = null,
-        evidence: cosmos.v1.Any | null = null,
-      ) {
+      constructor(submitter: string = '', evidence: cosmos.v1.Any | null = null) {
         this.submitter = submitter
         this.evidence = evidence
       }
@@ -1207,11 +1863,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const proposer = message.proposer
-        if (proposer !== null) {
-          writer.uint32(26)
-          writer.string(proposer)
-        }
+        writer.uint32(26)
+        writer.string(message.proposer)
       }
 
       static decode(reader: Reader, length: i32): MsgSubmitProposal {
@@ -1244,12 +1897,12 @@ export namespace cosmos {
 
       content: cosmos.v1.Any | null
       initial_deposit: Array<cosmos.v1.Coin>
-      proposer: string | null
+      proposer: string
 
       constructor(
         content: cosmos.v1.Any | null = null,
         initial_deposit: Array<cosmos.v1.Coin> = [],
-        proposer: string | null = null,
+        proposer: string = '',
       ) {
         this.content = content
         this.initial_deposit = initial_deposit
@@ -1262,11 +1915,8 @@ export namespace cosmos {
         writer.uint32(8)
         writer.uint64(message.proposal_id)
 
-        const voter = message.voter
-        if (voter !== null) {
-          writer.uint32(18)
-          writer.string(voter)
-        }
+        writer.uint32(18)
+        writer.string(message.voter)
 
         writer.uint32(24)
         writer.int32(message.option)
@@ -1301,12 +1951,12 @@ export namespace cosmos {
       }
 
       proposal_id: u64
-      voter: string | null
+      voter: string
       option: cosmos.v1.VoteOption
 
       constructor(
         proposal_id: u64 = 0,
-        voter: string | null = null,
+        voter: string = '',
         option: cosmos.v1.VoteOption = 0,
       ) {
         this.proposal_id = proposal_id
@@ -1320,11 +1970,8 @@ export namespace cosmos {
         writer.uint32(8)
         writer.uint64(message.proposal_id)
 
-        const depositor = message.depositor
-        if (depositor !== null) {
-          writer.uint32(18)
-          writer.string(depositor)
-        }
+        writer.uint32(18)
+        writer.string(message.depositor)
 
         const amount = message.amount
         for (let i = 0; i < amount.length; ++i) {
@@ -1364,12 +2011,12 @@ export namespace cosmos {
       }
 
       proposal_id: u64
-      depositor: string | null
+      depositor: string
       amount: Array<cosmos.v1.Coin>
 
       constructor(
         proposal_id: u64 = 0,
-        depositor: string | null = null,
+        depositor: string = '',
         amount: Array<cosmos.v1.Coin> = [],
       ) {
         this.proposal_id = proposal_id
@@ -1380,11 +2027,8 @@ export namespace cosmos {
 
     export class MsgUnjail {
       static encode(message: MsgUnjail, writer: Writer): void {
-        const validator_addr = message.validator_addr
-        if (validator_addr !== null) {
-          writer.uint32(10)
-          writer.string(validator_addr)
-        }
+        writer.uint32(10)
+        writer.string(message.validator_addr)
       }
 
       static decode(reader: Reader, length: i32): MsgUnjail {
@@ -1407,9 +2051,9 @@ export namespace cosmos {
         return message
       }
 
-      validator_addr: string | null
+      validator_addr: string
 
-      constructor(validator_addr: string | null = null) {
+      constructor(validator_addr: string = '') {
         this.validator_addr = validator_addr
       }
     }
@@ -1432,23 +2076,14 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const min_self_delegation = message.min_self_delegation
-        if (min_self_delegation !== null) {
-          writer.uint32(26)
-          writer.string(min_self_delegation)
-        }
+        writer.uint32(26)
+        writer.string(message.min_self_delegation)
 
-        const delegator_address = message.delegator_address
-        if (delegator_address !== null) {
-          writer.uint32(34)
-          writer.string(delegator_address)
-        }
+        writer.uint32(34)
+        writer.string(message.delegator_address)
 
-        const validator_address = message.validator_address
-        if (validator_address !== null) {
-          writer.uint32(42)
-          writer.string(validator_address)
-        }
+        writer.uint32(42)
+        writer.string(message.validator_address)
 
         const pubkey = message.pubkey
         if (pubkey !== null) {
@@ -1516,18 +2151,18 @@ export namespace cosmos {
 
       description: cosmos.v1.Description | null
       commission: cosmos.v1.CommissionRates | null
-      min_self_delegation: string | null
-      delegator_address: string | null
-      validator_address: string | null
+      min_self_delegation: string
+      delegator_address: string
+      validator_address: string
       pubkey: cosmos.v1.Any | null
       value: cosmos.v1.Coin | null
 
       constructor(
         description: cosmos.v1.Description | null = null,
         commission: cosmos.v1.CommissionRates | null = null,
-        min_self_delegation: string | null = null,
-        delegator_address: string | null = null,
-        validator_address: string | null = null,
+        min_self_delegation: string = '',
+        delegator_address: string = '',
+        validator_address: string = '',
         pubkey: cosmos.v1.Any | null = null,
         value: cosmos.v1.Coin | null = null,
       ) {
@@ -1551,23 +2186,14 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const validator_address = message.validator_address
-        if (validator_address !== null) {
-          writer.uint32(18)
-          writer.string(validator_address)
-        }
+        writer.uint32(18)
+        writer.string(message.validator_address)
 
-        const commission_rate = message.commission_rate
-        if (commission_rate !== null) {
-          writer.uint32(26)
-          writer.string(commission_rate)
-        }
+        writer.uint32(26)
+        writer.string(message.commission_rate)
 
-        const min_self_delegation = message.min_self_delegation
-        if (min_self_delegation !== null) {
-          writer.uint32(34)
-          writer.string(min_self_delegation)
-        }
+        writer.uint32(34)
+        writer.string(message.min_self_delegation)
       }
 
       static decode(reader: Reader, length: i32): MsgEditValidator {
@@ -1603,15 +2229,15 @@ export namespace cosmos {
       }
 
       description: cosmos.v1.Description | null
-      validator_address: string | null
-      commission_rate: string | null
-      min_self_delegation: string | null
+      validator_address: string
+      commission_rate: string
+      min_self_delegation: string
 
       constructor(
         description: cosmos.v1.Description | null = null,
-        validator_address: string | null = null,
-        commission_rate: string | null = null,
-        min_self_delegation: string | null = null,
+        validator_address: string = '',
+        commission_rate: string = '',
+        min_self_delegation: string = '',
       ) {
         this.description = description
         this.validator_address = validator_address
@@ -1622,17 +2248,11 @@ export namespace cosmos {
 
     export class MsgDelegate {
       static encode(message: MsgDelegate, writer: Writer): void {
-        const delegator_address = message.delegator_address
-        if (delegator_address !== null) {
-          writer.uint32(10)
-          writer.string(delegator_address)
-        }
+        writer.uint32(10)
+        writer.string(message.delegator_address)
 
-        const validator_address = message.validator_address
-        if (validator_address !== null) {
-          writer.uint32(18)
-          writer.string(validator_address)
-        }
+        writer.uint32(18)
+        writer.string(message.validator_address)
 
         const amount = message.amount
         if (amount !== null) {
@@ -1671,13 +2291,13 @@ export namespace cosmos {
         return message
       }
 
-      delegator_address: string | null
-      validator_address: string | null
+      delegator_address: string
+      validator_address: string
       amount: cosmos.v1.Coin | null
 
       constructor(
-        delegator_address: string | null = null,
-        validator_address: string | null = null,
+        delegator_address: string = '',
+        validator_address: string = '',
         amount: cosmos.v1.Coin | null = null,
       ) {
         this.delegator_address = delegator_address
@@ -1688,23 +2308,14 @@ export namespace cosmos {
 
     export class MsgBeginRedelegate {
       static encode(message: MsgBeginRedelegate, writer: Writer): void {
-        const delegator_address = message.delegator_address
-        if (delegator_address !== null) {
-          writer.uint32(10)
-          writer.string(delegator_address)
-        }
+        writer.uint32(10)
+        writer.string(message.delegator_address)
 
-        const validator_src_address = message.validator_src_address
-        if (validator_src_address !== null) {
-          writer.uint32(18)
-          writer.string(validator_src_address)
-        }
+        writer.uint32(18)
+        writer.string(message.validator_src_address)
 
-        const validator_dst_address = message.validator_dst_address
-        if (validator_dst_address !== null) {
-          writer.uint32(26)
-          writer.string(validator_dst_address)
-        }
+        writer.uint32(26)
+        writer.string(message.validator_dst_address)
 
         const amount = message.amount
         if (amount !== null) {
@@ -1747,15 +2358,15 @@ export namespace cosmos {
         return message
       }
 
-      delegator_address: string | null
-      validator_src_address: string | null
-      validator_dst_address: string | null
+      delegator_address: string
+      validator_src_address: string
+      validator_dst_address: string
       amount: cosmos.v1.Coin | null
 
       constructor(
-        delegator_address: string | null = null,
-        validator_src_address: string | null = null,
-        validator_dst_address: string | null = null,
+        delegator_address: string = '',
+        validator_src_address: string = '',
+        validator_dst_address: string = '',
         amount: cosmos.v1.Coin | null = null,
       ) {
         this.delegator_address = delegator_address
@@ -1767,17 +2378,11 @@ export namespace cosmos {
 
     export class MsgUndelegate {
       static encode(message: MsgUndelegate, writer: Writer): void {
-        const delegator_address = message.delegator_address
-        if (delegator_address !== null) {
-          writer.uint32(10)
-          writer.string(delegator_address)
-        }
+        writer.uint32(10)
+        writer.string(message.delegator_address)
 
-        const validator_address = message.validator_address
-        if (validator_address !== null) {
-          writer.uint32(18)
-          writer.string(validator_address)
-        }
+        writer.uint32(18)
+        writer.string(message.validator_address)
 
         const amount = message.amount
         if (amount !== null) {
@@ -1816,13 +2421,13 @@ export namespace cosmos {
         return message
       }
 
-      delegator_address: string | null
-      validator_address: string | null
+      delegator_address: string
+      validator_address: string
       amount: cosmos.v1.Coin | null
 
       constructor(
-        delegator_address: string | null = null,
-        validator_address: string | null = null,
+        delegator_address: string = '',
+        validator_address: string = '',
         amount: cosmos.v1.Coin | null = null,
       ) {
         this.delegator_address = delegator_address
@@ -1833,17 +2438,11 @@ export namespace cosmos {
 
     export class MsgCreateVestingAccount {
       static encode(message: MsgCreateVestingAccount, writer: Writer): void {
-        const from_address = message.from_address
-        if (from_address !== null) {
-          writer.uint32(10)
-          writer.string(from_address)
-        }
+        writer.uint32(10)
+        writer.string(message.from_address)
 
-        const to_address = message.to_address
-        if (to_address !== null) {
-          writer.uint32(18)
-          writer.string(to_address)
-        }
+        writer.uint32(18)
+        writer.string(message.to_address)
 
         const amount = message.amount
         if (amount !== null) {
@@ -1896,15 +2495,15 @@ export namespace cosmos {
         return message
       }
 
-      from_address: string | null
-      to_address: string | null
+      from_address: string
+      to_address: string
       amount: cosmos.v1.Coin | null
       end_time: i64
       delayed: bool
 
       constructor(
-        from_address: string | null = null,
-        to_address: string | null = null,
+        from_address: string = '',
+        to_address: string = '',
         amount: cosmos.v1.Coin | null = null,
         end_time: i64 = 0,
         delayed: bool = false,
@@ -1919,17 +2518,11 @@ export namespace cosmos {
 
     export class MsgTransfer {
       static encode(message: MsgTransfer, writer: Writer): void {
-        const source_port = message.source_port
-        if (source_port !== null) {
-          writer.uint32(10)
-          writer.string(source_port)
-        }
+        writer.uint32(10)
+        writer.string(message.source_port)
 
-        const source_channel = message.source_channel
-        if (source_channel !== null) {
-          writer.uint32(18)
-          writer.string(source_channel)
-        }
+        writer.uint32(18)
+        writer.string(message.source_channel)
 
         const token = message.token
         if (token !== null) {
@@ -1939,17 +2532,11 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const sender = message.sender
-        if (sender !== null) {
-          writer.uint32(34)
-          writer.string(sender)
-        }
+        writer.uint32(34)
+        writer.string(message.sender)
 
-        const receiver = message.receiver
-        if (receiver !== null) {
-          writer.uint32(42)
-          writer.string(receiver)
-        }
+        writer.uint32(42)
+        writer.string(message.receiver)
 
         const timeout_height = message.timeout_height
         if (timeout_height !== null) {
@@ -2007,20 +2594,20 @@ export namespace cosmos {
         return message
       }
 
-      source_port: string | null
-      source_channel: string | null
+      source_port: string
+      source_channel: string
       token: cosmos.v1.Coin | null
-      sender: string | null
-      receiver: string | null
+      sender: string
+      receiver: string
       timeout_height: cosmos.v1.Height | null
       timeout_timestamp: u64
 
       constructor(
-        source_port: string | null = null,
-        source_channel: string | null = null,
+        source_port: string = '',
+        source_channel: string = '',
         token: cosmos.v1.Coin | null = null,
-        sender: string | null = null,
-        receiver: string | null = null,
+        sender: string = '',
+        receiver: string = '',
         timeout_height: cosmos.v1.Height | null = null,
         timeout_timestamp: u64 = 0,
       ) {
@@ -2036,11 +2623,8 @@ export namespace cosmos {
 
     export class MsgChannelOpenInit {
       static encode(message: MsgChannelOpenInit, writer: Writer): void {
-        const port_id = message.port_id
-        if (port_id !== null) {
-          writer.uint32(10)
-          writer.string(port_id)
-        }
+        writer.uint32(10)
+        writer.string(message.port_id)
 
         const channel = message.channel
         if (channel !== null) {
@@ -2050,11 +2634,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(26)
-          writer.string(signer)
-        }
+        writer.uint32(26)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgChannelOpenInit {
@@ -2085,14 +2666,14 @@ export namespace cosmos {
         return message
       }
 
-      port_id: string | null
+      port_id: string
       channel: cosmos.v1.Channel | null
-      signer: string | null
+      signer: string
 
       constructor(
-        port_id: string | null = null,
+        port_id: string = '',
         channel: cosmos.v1.Channel | null = null,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.port_id = port_id
         this.channel = channel
@@ -2102,17 +2683,11 @@ export namespace cosmos {
 
     export class MsgChannelOpenTry {
       static encode(message: MsgChannelOpenTry, writer: Writer): void {
-        const port_id = message.port_id
-        if (port_id !== null) {
-          writer.uint32(10)
-          writer.string(port_id)
-        }
+        writer.uint32(10)
+        writer.string(message.port_id)
 
-        const previous_channel_id = message.previous_channel_id
-        if (previous_channel_id !== null) {
-          writer.uint32(18)
-          writer.string(previous_channel_id)
-        }
+        writer.uint32(18)
+        writer.string(message.previous_channel_id)
 
         const channel = message.channel
         if (channel !== null) {
@@ -2122,17 +2697,11 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const counterparty_version = message.counterparty_version
-        if (counterparty_version !== null) {
-          writer.uint32(34)
-          writer.string(counterparty_version)
-        }
+        writer.uint32(34)
+        writer.string(message.counterparty_version)
 
-        const proof_init = message.proof_init
-        if (proof_init !== null) {
-          writer.uint32(42)
-          writer.bytes(proof_init)
-        }
+        writer.uint32(42)
+        writer.bytes(message.proof_init)
 
         const proof_height = message.proof_height
         if (proof_height !== null) {
@@ -2142,11 +2711,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(58)
-          writer.string(signer)
-        }
+        writer.uint32(58)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgChannelOpenTry {
@@ -2193,22 +2759,22 @@ export namespace cosmos {
         return message
       }
 
-      port_id: string | null
-      previous_channel_id: string | null
+      port_id: string
+      previous_channel_id: string
       channel: cosmos.v1.Channel | null
-      counterparty_version: string | null
-      proof_init: Uint8Array | null
+      counterparty_version: string
+      proof_init: Uint8Array
       proof_height: cosmos.v1.Height | null
-      signer: string | null
+      signer: string
 
       constructor(
-        port_id: string | null = null,
-        previous_channel_id: string | null = null,
+        port_id: string = '',
+        previous_channel_id: string = '',
         channel: cosmos.v1.Channel | null = null,
-        counterparty_version: string | null = null,
-        proof_init: Uint8Array | null = null,
+        counterparty_version: string = '',
+        proof_init: Uint8Array = new Uint8Array(0),
         proof_height: cosmos.v1.Height | null = null,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.port_id = port_id
         this.previous_channel_id = previous_channel_id
@@ -2222,35 +2788,20 @@ export namespace cosmos {
 
     export class MsgChannelOpenAck {
       static encode(message: MsgChannelOpenAck, writer: Writer): void {
-        const port_id = message.port_id
-        if (port_id !== null) {
-          writer.uint32(10)
-          writer.string(port_id)
-        }
+        writer.uint32(10)
+        writer.string(message.port_id)
 
-        const channel_id = message.channel_id
-        if (channel_id !== null) {
-          writer.uint32(18)
-          writer.string(channel_id)
-        }
+        writer.uint32(18)
+        writer.string(message.channel_id)
 
-        const counterparty_channel_id = message.counterparty_channel_id
-        if (counterparty_channel_id !== null) {
-          writer.uint32(26)
-          writer.string(counterparty_channel_id)
-        }
+        writer.uint32(26)
+        writer.string(message.counterparty_channel_id)
 
-        const counterparty_version = message.counterparty_version
-        if (counterparty_version !== null) {
-          writer.uint32(34)
-          writer.string(counterparty_version)
-        }
+        writer.uint32(34)
+        writer.string(message.counterparty_version)
 
-        const proof_try = message.proof_try
-        if (proof_try !== null) {
-          writer.uint32(42)
-          writer.bytes(proof_try)
-        }
+        writer.uint32(42)
+        writer.bytes(message.proof_try)
 
         const proof_height = message.proof_height
         if (proof_height !== null) {
@@ -2260,11 +2811,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(58)
-          writer.string(signer)
-        }
+        writer.uint32(58)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgChannelOpenAck {
@@ -2311,22 +2859,22 @@ export namespace cosmos {
         return message
       }
 
-      port_id: string | null
-      channel_id: string | null
-      counterparty_channel_id: string | null
-      counterparty_version: string | null
-      proof_try: Uint8Array | null
+      port_id: string
+      channel_id: string
+      counterparty_channel_id: string
+      counterparty_version: string
+      proof_try: Uint8Array
       proof_height: cosmos.v1.Height | null
-      signer: string | null
+      signer: string
 
       constructor(
-        port_id: string | null = null,
-        channel_id: string | null = null,
-        counterparty_channel_id: string | null = null,
-        counterparty_version: string | null = null,
-        proof_try: Uint8Array | null = null,
+        port_id: string = '',
+        channel_id: string = '',
+        counterparty_channel_id: string = '',
+        counterparty_version: string = '',
+        proof_try: Uint8Array = new Uint8Array(0),
         proof_height: cosmos.v1.Height | null = null,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.port_id = port_id
         this.channel_id = channel_id
@@ -2340,23 +2888,14 @@ export namespace cosmos {
 
     export class MsgChannelOpenConfirm {
       static encode(message: MsgChannelOpenConfirm, writer: Writer): void {
-        const port_id = message.port_id
-        if (port_id !== null) {
-          writer.uint32(10)
-          writer.string(port_id)
-        }
+        writer.uint32(10)
+        writer.string(message.port_id)
 
-        const channel_id = message.channel_id
-        if (channel_id !== null) {
-          writer.uint32(18)
-          writer.string(channel_id)
-        }
+        writer.uint32(18)
+        writer.string(message.channel_id)
 
-        const proof_ack = message.proof_ack
-        if (proof_ack !== null) {
-          writer.uint32(26)
-          writer.bytes(proof_ack)
-        }
+        writer.uint32(26)
+        writer.bytes(message.proof_ack)
 
         const proof_height = message.proof_height
         if (proof_height !== null) {
@@ -2366,11 +2905,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(42)
-          writer.string(signer)
-        }
+        writer.uint32(42)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgChannelOpenConfirm {
@@ -2409,18 +2945,18 @@ export namespace cosmos {
         return message
       }
 
-      port_id: string | null
-      channel_id: string | null
-      proof_ack: Uint8Array | null
+      port_id: string
+      channel_id: string
+      proof_ack: Uint8Array
       proof_height: cosmos.v1.Height | null
-      signer: string | null
+      signer: string
 
       constructor(
-        port_id: string | null = null,
-        channel_id: string | null = null,
-        proof_ack: Uint8Array | null = null,
+        port_id: string = '',
+        channel_id: string = '',
+        proof_ack: Uint8Array = new Uint8Array(0),
         proof_height: cosmos.v1.Height | null = null,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.port_id = port_id
         this.channel_id = channel_id
@@ -2432,23 +2968,14 @@ export namespace cosmos {
 
     export class MsgChannelCloseInit {
       static encode(message: MsgChannelCloseInit, writer: Writer): void {
-        const port_id = message.port_id
-        if (port_id !== null) {
-          writer.uint32(10)
-          writer.string(port_id)
-        }
+        writer.uint32(10)
+        writer.string(message.port_id)
 
-        const channel_id = message.channel_id
-        if (channel_id !== null) {
-          writer.uint32(18)
-          writer.string(channel_id)
-        }
+        writer.uint32(18)
+        writer.string(message.channel_id)
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(26)
-          writer.string(signer)
-        }
+        writer.uint32(26)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgChannelCloseInit {
@@ -2479,15 +3006,11 @@ export namespace cosmos {
         return message
       }
 
-      port_id: string | null
-      channel_id: string | null
-      signer: string | null
+      port_id: string
+      channel_id: string
+      signer: string
 
-      constructor(
-        port_id: string | null = null,
-        channel_id: string | null = null,
-        signer: string | null = null,
-      ) {
+      constructor(port_id: string = '', channel_id: string = '', signer: string = '') {
         this.port_id = port_id
         this.channel_id = channel_id
         this.signer = signer
@@ -2496,23 +3019,14 @@ export namespace cosmos {
 
     export class MsgChannelCloseConfirm {
       static encode(message: MsgChannelCloseConfirm, writer: Writer): void {
-        const port_id = message.port_id
-        if (port_id !== null) {
-          writer.uint32(10)
-          writer.string(port_id)
-        }
+        writer.uint32(10)
+        writer.string(message.port_id)
 
-        const channel_id = message.channel_id
-        if (channel_id !== null) {
-          writer.uint32(18)
-          writer.string(channel_id)
-        }
+        writer.uint32(18)
+        writer.string(message.channel_id)
 
-        const proof_init = message.proof_init
-        if (proof_init !== null) {
-          writer.uint32(26)
-          writer.bytes(proof_init)
-        }
+        writer.uint32(26)
+        writer.bytes(message.proof_init)
 
         const proof_height = message.proof_height
         if (proof_height !== null) {
@@ -2522,11 +3036,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(42)
-          writer.string(signer)
-        }
+        writer.uint32(42)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgChannelCloseConfirm {
@@ -2565,18 +3076,18 @@ export namespace cosmos {
         return message
       }
 
-      port_id: string | null
-      channel_id: string | null
-      proof_init: Uint8Array | null
+      port_id: string
+      channel_id: string
+      proof_init: Uint8Array
       proof_height: cosmos.v1.Height | null
-      signer: string | null
+      signer: string
 
       constructor(
-        port_id: string | null = null,
-        channel_id: string | null = null,
-        proof_init: Uint8Array | null = null,
+        port_id: string = '',
+        channel_id: string = '',
+        proof_init: Uint8Array = new Uint8Array(0),
         proof_height: cosmos.v1.Height | null = null,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.port_id = port_id
         this.channel_id = channel_id
@@ -2596,11 +3107,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const proof_commitment = message.proof_commitment
-        if (proof_commitment !== null) {
-          writer.uint32(18)
-          writer.bytes(proof_commitment)
-        }
+        writer.uint32(18)
+        writer.bytes(message.proof_commitment)
 
         const proof_height = message.proof_height
         if (proof_height !== null) {
@@ -2610,11 +3118,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(34)
-          writer.string(signer)
-        }
+        writer.uint32(34)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgRecvPacket {
@@ -2650,15 +3155,15 @@ export namespace cosmos {
       }
 
       packet: cosmos.v1.Packet | null
-      proof_commitment: Uint8Array | null
+      proof_commitment: Uint8Array
       proof_height: cosmos.v1.Height | null
-      signer: string | null
+      signer: string
 
       constructor(
         packet: cosmos.v1.Packet | null = null,
-        proof_commitment: Uint8Array | null = null,
+        proof_commitment: Uint8Array = new Uint8Array(0),
         proof_height: cosmos.v1.Height | null = null,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.packet = packet
         this.proof_commitment = proof_commitment
@@ -2677,11 +3182,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const proof_unreceived = message.proof_unreceived
-        if (proof_unreceived !== null) {
-          writer.uint32(18)
-          writer.bytes(proof_unreceived)
-        }
+        writer.uint32(18)
+        writer.bytes(message.proof_unreceived)
 
         const proof_height = message.proof_height
         if (proof_height !== null) {
@@ -2694,11 +3196,8 @@ export namespace cosmos {
         writer.uint32(32)
         writer.uint64(message.next_sequence_recv)
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(42)
-          writer.string(signer)
-        }
+        writer.uint32(42)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgTimeout {
@@ -2738,17 +3237,17 @@ export namespace cosmos {
       }
 
       packet: cosmos.v1.Packet | null
-      proof_unreceived: Uint8Array | null
+      proof_unreceived: Uint8Array
       proof_height: cosmos.v1.Height | null
       next_sequence_recv: u64
-      signer: string | null
+      signer: string
 
       constructor(
         packet: cosmos.v1.Packet | null = null,
-        proof_unreceived: Uint8Array | null = null,
+        proof_unreceived: Uint8Array = new Uint8Array(0),
         proof_height: cosmos.v1.Height | null = null,
         next_sequence_recv: u64 = 0,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.packet = packet
         this.proof_unreceived = proof_unreceived
@@ -2768,17 +3267,11 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const proof_unreceived = message.proof_unreceived
-        if (proof_unreceived !== null) {
-          writer.uint32(18)
-          writer.bytes(proof_unreceived)
-        }
+        writer.uint32(18)
+        writer.bytes(message.proof_unreceived)
 
-        const proof_close = message.proof_close
-        if (proof_close !== null) {
-          writer.uint32(26)
-          writer.bytes(proof_close)
-        }
+        writer.uint32(26)
+        writer.bytes(message.proof_close)
 
         const proof_height = message.proof_height
         if (proof_height !== null) {
@@ -2791,11 +3284,8 @@ export namespace cosmos {
         writer.uint32(40)
         writer.uint64(message.next_sequence_recv)
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(50)
-          writer.string(signer)
-        }
+        writer.uint32(50)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgTimeoutOnClose {
@@ -2839,19 +3329,19 @@ export namespace cosmos {
       }
 
       packet: cosmos.v1.Packet | null
-      proof_unreceived: Uint8Array | null
-      proof_close: Uint8Array | null
+      proof_unreceived: Uint8Array
+      proof_close: Uint8Array
       proof_height: cosmos.v1.Height | null
       next_sequence_recv: u64
-      signer: string | null
+      signer: string
 
       constructor(
         packet: cosmos.v1.Packet | null = null,
-        proof_unreceived: Uint8Array | null = null,
-        proof_close: Uint8Array | null = null,
+        proof_unreceived: Uint8Array = new Uint8Array(0),
+        proof_close: Uint8Array = new Uint8Array(0),
         proof_height: cosmos.v1.Height | null = null,
         next_sequence_recv: u64 = 0,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.packet = packet
         this.proof_unreceived = proof_unreceived
@@ -2872,17 +3362,11 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const acknowledgement = message.acknowledgement
-        if (acknowledgement !== null) {
-          writer.uint32(18)
-          writer.bytes(acknowledgement)
-        }
+        writer.uint32(18)
+        writer.bytes(message.acknowledgement)
 
-        const proof_acked = message.proof_acked
-        if (proof_acked !== null) {
-          writer.uint32(26)
-          writer.bytes(proof_acked)
-        }
+        writer.uint32(26)
+        writer.bytes(message.proof_acked)
 
         const proof_height = message.proof_height
         if (proof_height !== null) {
@@ -2892,11 +3376,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(42)
-          writer.string(signer)
-        }
+        writer.uint32(42)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgAcknowledgement {
@@ -2936,17 +3417,17 @@ export namespace cosmos {
       }
 
       packet: cosmos.v1.Packet | null
-      acknowledgement: Uint8Array | null
-      proof_acked: Uint8Array | null
+      acknowledgement: Uint8Array
+      proof_acked: Uint8Array
       proof_height: cosmos.v1.Height | null
-      signer: string | null
+      signer: string
 
       constructor(
         packet: cosmos.v1.Packet | null = null,
-        acknowledgement: Uint8Array | null = null,
-        proof_acked: Uint8Array | null = null,
+        acknowledgement: Uint8Array = new Uint8Array(0),
+        proof_acked: Uint8Array = new Uint8Array(0),
         proof_height: cosmos.v1.Height | null = null,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.packet = packet
         this.acknowledgement = acknowledgement
@@ -2974,11 +3455,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(26)
-          writer.string(signer)
-        }
+        writer.uint32(26)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgCreateClient {
@@ -3011,12 +3489,12 @@ export namespace cosmos {
 
       client_state: cosmos.v1.Any | null
       consensus_state: cosmos.v1.Any | null
-      signer: string | null
+      signer: string
 
       constructor(
         client_state: cosmos.v1.Any | null = null,
         consensus_state: cosmos.v1.Any | null = null,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.client_state = client_state
         this.consensus_state = consensus_state
@@ -3026,11 +3504,8 @@ export namespace cosmos {
 
     export class MsgUpdateClient {
       static encode(message: MsgUpdateClient, writer: Writer): void {
-        const client_id = message.client_id
-        if (client_id !== null) {
-          writer.uint32(10)
-          writer.string(client_id)
-        }
+        writer.uint32(10)
+        writer.string(message.client_id)
 
         const header = message.header
         if (header !== null) {
@@ -3040,11 +3515,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(26)
-          writer.string(signer)
-        }
+        writer.uint32(26)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgUpdateClient {
@@ -3075,14 +3547,14 @@ export namespace cosmos {
         return message
       }
 
-      client_id: string | null
+      client_id: string
       header: cosmos.v1.Any | null
-      signer: string | null
+      signer: string
 
       constructor(
-        client_id: string | null = null,
+        client_id: string = '',
         header: cosmos.v1.Any | null = null,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.client_id = client_id
         this.header = header
@@ -3092,11 +3564,8 @@ export namespace cosmos {
 
     export class MsgUpgradeClient {
       static encode(message: MsgUpgradeClient, writer: Writer): void {
-        const client_id = message.client_id
-        if (client_id !== null) {
-          writer.uint32(10)
-          writer.string(client_id)
-        }
+        writer.uint32(10)
+        writer.string(message.client_id)
 
         const client_state = message.client_state
         if (client_state !== null) {
@@ -3114,23 +3583,14 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const proof_upgrade_client = message.proof_upgrade_client
-        if (proof_upgrade_client !== null) {
-          writer.uint32(34)
-          writer.bytes(proof_upgrade_client)
-        }
+        writer.uint32(34)
+        writer.bytes(message.proof_upgrade_client)
 
-        const proof_upgrade_consensus_state = message.proof_upgrade_consensus_state
-        if (proof_upgrade_consensus_state !== null) {
-          writer.uint32(42)
-          writer.bytes(proof_upgrade_consensus_state)
-        }
+        writer.uint32(42)
+        writer.bytes(message.proof_upgrade_consensus_state)
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(50)
-          writer.string(signer)
-        }
+        writer.uint32(50)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgUpgradeClient {
@@ -3173,20 +3633,20 @@ export namespace cosmos {
         return message
       }
 
-      client_id: string | null
+      client_id: string
       client_state: cosmos.v1.Any | null
       consensus_state: cosmos.v1.Any | null
-      proof_upgrade_client: Uint8Array | null
-      proof_upgrade_consensus_state: Uint8Array | null
-      signer: string | null
+      proof_upgrade_client: Uint8Array
+      proof_upgrade_consensus_state: Uint8Array
+      signer: string
 
       constructor(
-        client_id: string | null = null,
+        client_id: string = '',
         client_state: cosmos.v1.Any | null = null,
         consensus_state: cosmos.v1.Any | null = null,
-        proof_upgrade_client: Uint8Array | null = null,
-        proof_upgrade_consensus_state: Uint8Array | null = null,
-        signer: string | null = null,
+        proof_upgrade_client: Uint8Array = new Uint8Array(0),
+        proof_upgrade_consensus_state: Uint8Array = new Uint8Array(0),
+        signer: string = '',
       ) {
         this.client_id = client_id
         this.client_state = client_state
@@ -3199,11 +3659,8 @@ export namespace cosmos {
 
     export class MsgSubmitMisbehaviour {
       static encode(message: MsgSubmitMisbehaviour, writer: Writer): void {
-        const client_id = message.client_id
-        if (client_id !== null) {
-          writer.uint32(10)
-          writer.string(client_id)
-        }
+        writer.uint32(10)
+        writer.string(message.client_id)
 
         const misbehaviour = message.misbehaviour
         if (misbehaviour !== null) {
@@ -3213,11 +3670,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(26)
-          writer.string(signer)
-        }
+        writer.uint32(26)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgSubmitMisbehaviour {
@@ -3248,14 +3702,14 @@ export namespace cosmos {
         return message
       }
 
-      client_id: string | null
+      client_id: string
       misbehaviour: cosmos.v1.Any | null
-      signer: string | null
+      signer: string
 
       constructor(
-        client_id: string | null = null,
+        client_id: string = '',
         misbehaviour: cosmos.v1.Any | null = null,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.client_id = client_id
         this.misbehaviour = misbehaviour
@@ -3265,11 +3719,8 @@ export namespace cosmos {
 
     export class MsgConnectionOpenInit {
       static encode(message: MsgConnectionOpenInit, writer: Writer): void {
-        const client_id = message.client_id
-        if (client_id !== null) {
-          writer.uint32(10)
-          writer.string(client_id)
-        }
+        writer.uint32(10)
+        writer.string(message.client_id)
 
         const counterparty = message.counterparty
         if (counterparty !== null) {
@@ -3290,11 +3741,8 @@ export namespace cosmos {
         writer.uint32(32)
         writer.uint64(message.delay_period)
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(42)
-          writer.string(signer)
-        }
+        writer.uint32(42)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgConnectionOpenInit {
@@ -3339,18 +3787,18 @@ export namespace cosmos {
         return message
       }
 
-      client_id: string | null
+      client_id: string
       counterparty: cosmos.v1.ConnectionCounterparty | null
       version: cosmos.v1.ConnectionVersion | null
       delay_period: u64
-      signer: string | null
+      signer: string
 
       constructor(
-        client_id: string | null = null,
+        client_id: string = '',
         counterparty: cosmos.v1.ConnectionCounterparty | null = null,
         version: cosmos.v1.ConnectionVersion | null = null,
         delay_period: u64 = 0,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.client_id = client_id
         this.counterparty = counterparty
@@ -3362,17 +3810,11 @@ export namespace cosmos {
 
     export class MsgConnectionOpenTry {
       static encode(message: MsgConnectionOpenTry, writer: Writer): void {
-        const client_id = message.client_id
-        if (client_id !== null) {
-          writer.uint32(10)
-          writer.string(client_id)
-        }
+        writer.uint32(10)
+        writer.string(message.client_id)
 
-        const previous_connection_id = message.previous_connection_id
-        if (previous_connection_id !== null) {
-          writer.uint32(18)
-          writer.string(previous_connection_id)
-        }
+        writer.uint32(18)
+        writer.string(message.previous_connection_id)
 
         const client_state = message.client_state
         if (client_state !== null) {
@@ -3409,23 +3851,14 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const proof_init = message.proof_init
-        if (proof_init !== null) {
-          writer.uint32(66)
-          writer.bytes(proof_init)
-        }
+        writer.uint32(66)
+        writer.bytes(message.proof_init)
 
-        const proof_client = message.proof_client
-        if (proof_client !== null) {
-          writer.uint32(74)
-          writer.bytes(proof_client)
-        }
+        writer.uint32(74)
+        writer.bytes(message.proof_client)
 
-        const proof_consensus = message.proof_consensus
-        if (proof_consensus !== null) {
-          writer.uint32(82)
-          writer.bytes(proof_consensus)
-        }
+        writer.uint32(82)
+        writer.bytes(message.proof_consensus)
 
         const consensus_height = message.consensus_height
         if (consensus_height !== null) {
@@ -3435,11 +3868,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(98)
-          writer.string(signer)
-        }
+        writer.uint32(98)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgConnectionOpenTry {
@@ -3511,32 +3941,32 @@ export namespace cosmos {
         return message
       }
 
-      client_id: string | null
-      previous_connection_id: string | null
+      client_id: string
+      previous_connection_id: string
       client_state: cosmos.v1.Any | null
       counterparty: cosmos.v1.ConnectionCounterparty | null
       delay_period: u64
       counterparty_versions: Array<cosmos.v1.ConnectionVersion>
       proof_height: cosmos.v1.Height | null
-      proof_init: Uint8Array | null
-      proof_client: Uint8Array | null
-      proof_consensus: Uint8Array | null
+      proof_init: Uint8Array
+      proof_client: Uint8Array
+      proof_consensus: Uint8Array
       consensus_height: cosmos.v1.Height | null
-      signer: string | null
+      signer: string
 
       constructor(
-        client_id: string | null = null,
-        previous_connection_id: string | null = null,
+        client_id: string = '',
+        previous_connection_id: string = '',
         client_state: cosmos.v1.Any | null = null,
         counterparty: cosmos.v1.ConnectionCounterparty | null = null,
         delay_period: u64 = 0,
         counterparty_versions: Array<cosmos.v1.ConnectionVersion> = [],
         proof_height: cosmos.v1.Height | null = null,
-        proof_init: Uint8Array | null = null,
-        proof_client: Uint8Array | null = null,
-        proof_consensus: Uint8Array | null = null,
+        proof_init: Uint8Array = new Uint8Array(0),
+        proof_client: Uint8Array = new Uint8Array(0),
+        proof_consensus: Uint8Array = new Uint8Array(0),
         consensus_height: cosmos.v1.Height | null = null,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.client_id = client_id
         this.previous_connection_id = previous_connection_id
@@ -3555,17 +3985,11 @@ export namespace cosmos {
 
     export class MsgConnectionOpenAck {
       static encode(message: MsgConnectionOpenAck, writer: Writer): void {
-        const connection_id = message.connection_id
-        if (connection_id !== null) {
-          writer.uint32(10)
-          writer.string(connection_id)
-        }
+        writer.uint32(10)
+        writer.string(message.connection_id)
 
-        const counterparty_connection_id = message.counterparty_connection_id
-        if (counterparty_connection_id !== null) {
-          writer.uint32(18)
-          writer.string(counterparty_connection_id)
-        }
+        writer.uint32(18)
+        writer.string(message.counterparty_connection_id)
 
         const version = message.version
         if (version !== null) {
@@ -3591,23 +4015,14 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const proof_try = message.proof_try
-        if (proof_try !== null) {
-          writer.uint32(50)
-          writer.bytes(proof_try)
-        }
+        writer.uint32(50)
+        writer.bytes(message.proof_try)
 
-        const proof_client = message.proof_client
-        if (proof_client !== null) {
-          writer.uint32(58)
-          writer.bytes(proof_client)
-        }
+        writer.uint32(58)
+        writer.bytes(message.proof_client)
 
-        const proof_consensus = message.proof_consensus
-        if (proof_consensus !== null) {
-          writer.uint32(66)
-          writer.bytes(proof_consensus)
-        }
+        writer.uint32(66)
+        writer.bytes(message.proof_consensus)
 
         const consensus_height = message.consensus_height
         if (consensus_height !== null) {
@@ -3617,11 +4032,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(82)
-          writer.string(signer)
-        }
+        writer.uint32(82)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgConnectionOpenAck {
@@ -3683,28 +4095,28 @@ export namespace cosmos {
         return message
       }
 
-      connection_id: string | null
-      counterparty_connection_id: string | null
+      connection_id: string
+      counterparty_connection_id: string
       version: cosmos.v1.ConnectionVersion | null
       client_state: cosmos.v1.Any | null
       proof_height: cosmos.v1.Height | null
-      proof_try: Uint8Array | null
-      proof_client: Uint8Array | null
-      proof_consensus: Uint8Array | null
+      proof_try: Uint8Array
+      proof_client: Uint8Array
+      proof_consensus: Uint8Array
       consensus_height: cosmos.v1.Height | null
-      signer: string | null
+      signer: string
 
       constructor(
-        connection_id: string | null = null,
-        counterparty_connection_id: string | null = null,
+        connection_id: string = '',
+        counterparty_connection_id: string = '',
         version: cosmos.v1.ConnectionVersion | null = null,
         client_state: cosmos.v1.Any | null = null,
         proof_height: cosmos.v1.Height | null = null,
-        proof_try: Uint8Array | null = null,
-        proof_client: Uint8Array | null = null,
-        proof_consensus: Uint8Array | null = null,
+        proof_try: Uint8Array = new Uint8Array(0),
+        proof_client: Uint8Array = new Uint8Array(0),
+        proof_consensus: Uint8Array = new Uint8Array(0),
         consensus_height: cosmos.v1.Height | null = null,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.connection_id = connection_id
         this.counterparty_connection_id = counterparty_connection_id
@@ -3721,17 +4133,11 @@ export namespace cosmos {
 
     export class MsgConnectionOpenConfirm {
       static encode(message: MsgConnectionOpenConfirm, writer: Writer): void {
-        const connection_id = message.connection_id
-        if (connection_id !== null) {
-          writer.uint32(10)
-          writer.string(connection_id)
-        }
+        writer.uint32(10)
+        writer.string(message.connection_id)
 
-        const proof_ack = message.proof_ack
-        if (proof_ack !== null) {
-          writer.uint32(18)
-          writer.bytes(proof_ack)
-        }
+        writer.uint32(18)
+        writer.bytes(message.proof_ack)
 
         const proof_height = message.proof_height
         if (proof_height !== null) {
@@ -3741,11 +4147,8 @@ export namespace cosmos {
           writer.ldelim()
         }
 
-        const signer = message.signer
-        if (signer !== null) {
-          writer.uint32(34)
-          writer.string(signer)
-        }
+        writer.uint32(34)
+        writer.string(message.signer)
       }
 
       static decode(reader: Reader, length: i32): MsgConnectionOpenConfirm {
@@ -3780,16 +4183,16 @@ export namespace cosmos {
         return message
       }
 
-      connection_id: string | null
-      proof_ack: Uint8Array | null
+      connection_id: string
+      proof_ack: Uint8Array
       proof_height: cosmos.v1.Height | null
-      signer: string | null
+      signer: string
 
       constructor(
-        connection_id: string | null = null,
-        proof_ack: Uint8Array | null = null,
+        connection_id: string = '',
+        proof_ack: Uint8Array = new Uint8Array(0),
         proof_height: cosmos.v1.Height | null = null,
-        signer: string | null = null,
+        signer: string = '',
       ) {
         this.connection_id = connection_id
         this.proof_ack = proof_ack
@@ -3816,19 +4219,14 @@ export namespace cosmos {
 
         const connection_hops = message.connection_hops
         if (connection_hops.length !== 0) {
-          writer.uint32(34)
-          writer.fork()
           for (let i = 0; i < connection_hops.length; ++i) {
+            writer.uint32(34)
             writer.string(connection_hops[i])
           }
-          writer.ldelim()
         }
 
-        const version = message.version
-        if (version !== null) {
-          writer.uint32(42)
-          writer.string(version)
-        }
+        writer.uint32(42)
+        writer.string(message.version)
       }
 
       static decode(reader: Reader, length: i32): Channel {
@@ -3854,14 +4252,7 @@ export namespace cosmos {
               break
 
             case 4:
-              if ((tag & 7) === 2 && tag !== 26) {
-                const repeatedEnd: usize = reader.ptr + reader.uint32()
-                while (reader.ptr < repeatedEnd) {
-                  message.connection_hops.push(reader.string())
-                }
-              } else {
-                message.connection_hops.push(reader.string())
-              }
+              message.connection_hops.push(reader.string())
               break
 
             case 5:
@@ -3881,14 +4272,14 @@ export namespace cosmos {
       ordering: cosmos.v1.Order
       counterparty: cosmos.v1.ChannelCounterparty | null
       connection_hops: Array<string>
-      version: string | null
+      version: string
 
       constructor(
         state: cosmos.v1.State = 0,
         ordering: cosmos.v1.Order = 0,
         counterparty: cosmos.v1.ChannelCounterparty | null = null,
         connection_hops: Array<string> = [],
-        version: string | null = null,
+        version: string = '',
       ) {
         this.state = state
         this.ordering = ordering
@@ -3900,17 +4291,11 @@ export namespace cosmos {
 
     export class ChannelCounterparty {
       static encode(message: ChannelCounterparty, writer: Writer): void {
-        const port_id = message.port_id
-        if (port_id !== null) {
-          writer.uint32(10)
-          writer.string(port_id)
-        }
+        writer.uint32(10)
+        writer.string(message.port_id)
 
-        const channel_id = message.channel_id
-        if (channel_id !== null) {
-          writer.uint32(18)
-          writer.string(channel_id)
-        }
+        writer.uint32(18)
+        writer.string(message.channel_id)
       }
 
       static decode(reader: Reader, length: i32): ChannelCounterparty {
@@ -3937,10 +4322,10 @@ export namespace cosmos {
         return message
       }
 
-      port_id: string | null
-      channel_id: string | null
+      port_id: string
+      channel_id: string
 
-      constructor(port_id: string | null = null, channel_id: string | null = null) {
+      constructor(port_id: string = '', channel_id: string = '') {
         this.port_id = port_id
         this.channel_id = channel_id
       }
@@ -3948,23 +4333,14 @@ export namespace cosmos {
 
     export class CommissionRates {
       static encode(message: CommissionRates, writer: Writer): void {
-        const rate = message.rate
-        if (rate !== null) {
-          writer.uint32(10)
-          writer.string(rate)
-        }
+        writer.uint32(10)
+        writer.string(message.rate)
 
-        const max_rate = message.max_rate
-        if (max_rate !== null) {
-          writer.uint32(18)
-          writer.string(max_rate)
-        }
+        writer.uint32(18)
+        writer.string(message.max_rate)
 
-        const max_change_rate = message.max_change_rate
-        if (max_change_rate !== null) {
-          writer.uint32(26)
-          writer.string(max_change_rate)
-        }
+        writer.uint32(26)
+        writer.string(message.max_change_rate)
       }
 
       static decode(reader: Reader, length: i32): CommissionRates {
@@ -3995,14 +4371,14 @@ export namespace cosmos {
         return message
       }
 
-      rate: string | null
-      max_rate: string | null
-      max_change_rate: string | null
+      rate: string
+      max_rate: string
+      max_change_rate: string
 
       constructor(
-        rate: string | null = null,
-        max_rate: string | null = null,
-        max_change_rate: string | null = null,
+        rate: string = '',
+        max_rate: string = '',
+        max_change_rate: string = '',
       ) {
         this.rate = rate
         this.max_rate = max_rate
@@ -4012,17 +4388,11 @@ export namespace cosmos {
 
     export class ConnectionCounterparty {
       static encode(message: ConnectionCounterparty, writer: Writer): void {
-        const client_id = message.client_id
-        if (client_id !== null) {
-          writer.uint32(10)
-          writer.string(client_id)
-        }
+        writer.uint32(10)
+        writer.string(message.client_id)
 
-        const connection_id = message.connection_id
-        if (connection_id !== null) {
-          writer.uint32(18)
-          writer.string(connection_id)
-        }
+        writer.uint32(18)
+        writer.string(message.connection_id)
 
         const prefix = message.prefix
         if (prefix !== null) {
@@ -4061,13 +4431,13 @@ export namespace cosmos {
         return message
       }
 
-      client_id: string | null
-      connection_id: string | null
+      client_id: string
+      connection_id: string
       prefix: cosmos.v1.MerklePrefix | null
 
       constructor(
-        client_id: string | null = null,
-        connection_id: string | null = null,
+        client_id: string = '',
+        connection_id: string = '',
         prefix: cosmos.v1.MerklePrefix | null = null,
       ) {
         this.client_id = client_id
@@ -4078,20 +4448,15 @@ export namespace cosmos {
 
     export class ConnectionVersion {
       static encode(message: ConnectionVersion, writer: Writer): void {
-        const identifier = message.identifier
-        if (identifier !== null) {
-          writer.uint32(10)
-          writer.string(identifier)
-        }
+        writer.uint32(10)
+        writer.string(message.identifier)
 
         const features = message.features
         if (features.length !== 0) {
-          writer.uint32(18)
-          writer.fork()
           for (let i = 0; i < features.length; ++i) {
+            writer.uint32(18)
             writer.string(features[i])
           }
-          writer.ldelim()
         }
       }
 
@@ -4107,14 +4472,7 @@ export namespace cosmos {
               break
 
             case 2:
-              if ((tag & 7) === 2 && tag !== 26) {
-                const repeatedEnd: usize = reader.ptr + reader.uint32()
-                while (reader.ptr < repeatedEnd) {
-                  message.features.push(reader.string())
-                }
-              } else {
-                message.features.push(reader.string())
-              }
+              message.features.push(reader.string())
               break
 
             default:
@@ -4126,10 +4484,10 @@ export namespace cosmos {
         return message
       }
 
-      identifier: string | null
+      identifier: string
       features: Array<string>
 
-      constructor(identifier: string | null = null, features: Array<string> = []) {
+      constructor(identifier: string = '', features: Array<string> = []) {
         this.identifier = identifier
         this.features = features
       }
@@ -4137,35 +4495,20 @@ export namespace cosmos {
 
     export class Description {
       static encode(message: Description, writer: Writer): void {
-        const moniker = message.moniker
-        if (moniker !== null) {
-          writer.uint32(10)
-          writer.string(moniker)
-        }
+        writer.uint32(10)
+        writer.string(message.moniker)
 
-        const identity = message.identity
-        if (identity !== null) {
-          writer.uint32(18)
-          writer.string(identity)
-        }
+        writer.uint32(18)
+        writer.string(message.identity)
 
-        const website = message.website
-        if (website !== null) {
-          writer.uint32(26)
-          writer.string(website)
-        }
+        writer.uint32(26)
+        writer.string(message.website)
 
-        const security_contact = message.security_contact
-        if (security_contact !== null) {
-          writer.uint32(34)
-          writer.string(security_contact)
-        }
+        writer.uint32(34)
+        writer.string(message.security_contact)
 
-        const details = message.details
-        if (details !== null) {
-          writer.uint32(42)
-          writer.string(details)
-        }
+        writer.uint32(42)
+        writer.string(message.details)
       }
 
       static decode(reader: Reader, length: i32): Description {
@@ -4204,18 +4547,18 @@ export namespace cosmos {
         return message
       }
 
-      moniker: string | null
-      identity: string | null
-      website: string | null
-      security_contact: string | null
-      details: string | null
+      moniker: string
+      identity: string
+      website: string
+      security_contact: string
+      details: string
 
       constructor(
-        moniker: string | null = null,
-        identity: string | null = null,
-        website: string | null = null,
-        security_contact: string | null = null,
-        details: string | null = null,
+        moniker: string = '',
+        identity: string = '',
+        website: string = '',
+        security_contact: string = '',
+        details: string = '',
       ) {
         this.moniker = moniker
         this.identity = identity
@@ -4270,11 +4613,8 @@ export namespace cosmos {
 
     export class Input {
       static encode(message: Input, writer: Writer): void {
-        const address = message.address
-        if (address !== null) {
-          writer.uint32(10)
-          writer.string(address)
-        }
+        writer.uint32(10)
+        writer.string(message.address)
 
         const coins = message.coins
         for (let i = 0; i < coins.length; ++i) {
@@ -4309,10 +4649,10 @@ export namespace cosmos {
         return message
       }
 
-      address: string | null
+      address: string
       coins: Array<cosmos.v1.Coin>
 
-      constructor(address: string | null = null, coins: Array<cosmos.v1.Coin> = []) {
+      constructor(address: string = '', coins: Array<cosmos.v1.Coin> = []) {
         this.address = address
         this.coins = coins
       }
@@ -4320,11 +4660,8 @@ export namespace cosmos {
 
     export class Output {
       static encode(message: Output, writer: Writer): void {
-        const address = message.address
-        if (address !== null) {
-          writer.uint32(10)
-          writer.string(address)
-        }
+        writer.uint32(10)
+        writer.string(message.address)
 
         const coins = message.coins
         for (let i = 0; i < coins.length; ++i) {
@@ -4359,10 +4696,10 @@ export namespace cosmos {
         return message
       }
 
-      address: string | null
+      address: string
       coins: Array<cosmos.v1.Coin>
 
-      constructor(address: string | null = null, coins: Array<cosmos.v1.Coin> = []) {
+      constructor(address: string = '', coins: Array<cosmos.v1.Coin> = []) {
         this.address = address
         this.coins = coins
       }
@@ -4370,11 +4707,8 @@ export namespace cosmos {
 
     export class MerklePrefix {
       static encode(message: MerklePrefix, writer: Writer): void {
-        const key_prefix = message.key_prefix
-        if (key_prefix !== null) {
-          writer.uint32(10)
-          writer.bytes(key_prefix)
-        }
+        writer.uint32(10)
+        writer.bytes(message.key_prefix)
       }
 
       static decode(reader: Reader, length: i32): MerklePrefix {
@@ -4397,9 +4731,9 @@ export namespace cosmos {
         return message
       }
 
-      key_prefix: Uint8Array | null
+      key_prefix: Uint8Array
 
-      constructor(key_prefix: Uint8Array | null = null) {
+      constructor(key_prefix: Uint8Array = new Uint8Array(0)) {
         this.key_prefix = key_prefix
       }
     }
@@ -4409,35 +4743,20 @@ export namespace cosmos {
         writer.uint32(8)
         writer.uint64(message.sequence)
 
-        const source_port = message.source_port
-        if (source_port !== null) {
-          writer.uint32(18)
-          writer.string(source_port)
-        }
+        writer.uint32(18)
+        writer.string(message.source_port)
 
-        const source_channel = message.source_channel
-        if (source_channel !== null) {
-          writer.uint32(26)
-          writer.string(source_channel)
-        }
+        writer.uint32(26)
+        writer.string(message.source_channel)
 
-        const destination_port = message.destination_port
-        if (destination_port !== null) {
-          writer.uint32(34)
-          writer.string(destination_port)
-        }
+        writer.uint32(34)
+        writer.string(message.destination_port)
 
-        const destination_channel = message.destination_channel
-        if (destination_channel !== null) {
-          writer.uint32(42)
-          writer.string(destination_channel)
-        }
+        writer.uint32(42)
+        writer.string(message.destination_channel)
 
-        const data = message.data
-        if (data !== null) {
-          writer.uint32(50)
-          writer.bytes(data)
-        }
+        writer.uint32(50)
+        writer.bytes(message.data)
 
         const timeout_height = message.timeout_height
         if (timeout_height !== null) {
@@ -4500,21 +4819,21 @@ export namespace cosmos {
       }
 
       sequence: u64
-      source_port: string | null
-      source_channel: string | null
-      destination_port: string | null
-      destination_channel: string | null
-      data: Uint8Array | null
+      source_port: string
+      source_channel: string
+      destination_port: string
+      destination_channel: string
+      data: Uint8Array
       timeout_height: cosmos.v1.Height | null
       timeout_timestamp: u64
 
       constructor(
         sequence: u64 = 0,
-        source_port: string | null = null,
-        source_channel: string | null = null,
-        destination_port: string | null = null,
-        destination_channel: string | null = null,
-        data: Uint8Array | null = null,
+        source_port: string = '',
+        source_channel: string = '',
+        destination_port: string = '',
+        destination_channel: string = '',
+        data: Uint8Array = new Uint8Array(0),
         timeout_height: cosmos.v1.Height | null = null,
         timeout_timestamp: u64 = 0,
       ) {
@@ -4535,7 +4854,7 @@ export namespace cosmos {
         if (signed_header !== null) {
           writer.uint32(10)
           writer.fork()
-          t.v1.SignedHeader.encode(signed_header, writer)
+          cosmos.v1.SignedHeader.encode(signed_header, writer)
           writer.ldelim()
         }
 
@@ -4543,7 +4862,7 @@ export namespace cosmos {
         if (validator_set !== null) {
           writer.uint32(18)
           writer.fork()
-          t.v1.ValidatorSet.encode(validator_set, writer)
+          cosmos.v1.ValidatorSet.encode(validator_set, writer)
           writer.ldelim()
         }
 
@@ -4559,7 +4878,7 @@ export namespace cosmos {
         if (trusted_validators !== null) {
           writer.uint32(34)
           writer.fork()
-          t.v1.ValidatorSet.encode(trusted_validators, writer)
+          cosmos.v1.ValidatorSet.encode(trusted_validators, writer)
           writer.ldelim()
         }
       }
@@ -4572,11 +4891,17 @@ export namespace cosmos {
           const tag = reader.uint32()
           switch (tag >>> 3) {
             case 1:
-              message.signed_header = t.v1.SignedHeader.decode(reader, reader.uint32())
+              message.signed_header = cosmos.v1.SignedHeader.decode(
+                reader,
+                reader.uint32(),
+              )
               break
 
             case 2:
-              message.validator_set = t.v1.ValidatorSet.decode(reader, reader.uint32())
+              message.validator_set = cosmos.v1.ValidatorSet.decode(
+                reader,
+                reader.uint32(),
+              )
               break
 
             case 3:
@@ -4584,7 +4909,7 @@ export namespace cosmos {
               break
 
             case 4:
-              message.trusted_validators = t.v1.ValidatorSet.decode(
+              message.trusted_validators = cosmos.v1.ValidatorSet.decode(
                 reader,
                 reader.uint32(),
               )
@@ -4599,22 +4924,134 @@ export namespace cosmos {
         return message
       }
 
-      signed_header: t.v1.SignedHeader | null
-      validator_set: t.v1.ValidatorSet | null
+      signed_header: cosmos.v1.SignedHeader | null
+      validator_set: cosmos.v1.ValidatorSet | null
       trusted_height: cosmos.v1.Height | null
-      trusted_validators: t.v1.ValidatorSet | null
+      trusted_validators: cosmos.v1.ValidatorSet | null
 
       constructor(
-        signed_header: t.v1.SignedHeader | null = null,
-        validator_set: t.v1.ValidatorSet | null = null,
+        signed_header: cosmos.v1.SignedHeader | null = null,
+        validator_set: cosmos.v1.ValidatorSet | null = null,
         trusted_height: cosmos.v1.Height | null = null,
-        trusted_validators: t.v1.ValidatorSet | null = null,
+        trusted_validators: cosmos.v1.ValidatorSet | null = null,
       ) {
         this.signed_header = signed_header
         this.validator_set = validator_set
         this.trusted_height = trusted_height
         this.trusted_validators = trusted_validators
       }
+    }
+
+    export class MsgSwapWithinBatch {
+      static encode(message: MsgSwapWithinBatch, writer: Writer): void {
+        writer.uint32(10)
+        writer.string(message.swap_requester_address)
+
+        writer.uint32(16)
+        writer.uint64(message.pool_id)
+
+        writer.uint32(24)
+        writer.uint32(message.swap_type_id)
+
+        const offer_coin = message.offer_coin
+        if (offer_coin !== null) {
+          writer.uint32(34)
+          writer.fork()
+          cosmos.v1.Coin.encode(offer_coin, writer)
+          writer.ldelim()
+        }
+
+        writer.uint32(42)
+        writer.string(message.demand_coin_denom)
+
+        const offer_coin_fee = message.offer_coin_fee
+        if (offer_coin_fee !== null) {
+          writer.uint32(50)
+          writer.fork()
+          cosmos.v1.Coin.encode(offer_coin_fee, writer)
+          writer.ldelim()
+        }
+
+        writer.uint32(58)
+        writer.string(message.order_price)
+      }
+
+      static decode(reader: Reader, length: i32): MsgSwapWithinBatch {
+        const end: usize = length < 0 ? reader.end : reader.ptr + length
+        const message = new MsgSwapWithinBatch()
+
+        while (reader.ptr < end) {
+          const tag = reader.uint32()
+          switch (tag >>> 3) {
+            case 1:
+              message.swap_requester_address = reader.string()
+              break
+
+            case 2:
+              message.pool_id = reader.uint64()
+              break
+
+            case 3:
+              message.swap_type_id = reader.uint32()
+              break
+
+            case 4:
+              message.offer_coin = cosmos.v1.Coin.decode(reader, reader.uint32())
+              break
+
+            case 5:
+              message.demand_coin_denom = reader.string()
+              break
+
+            case 6:
+              message.offer_coin_fee = cosmos.v1.Coin.decode(reader, reader.uint32())
+              break
+
+            case 7:
+              message.order_price = reader.string()
+              break
+
+            default:
+              reader.skipType(tag & 7)
+              break
+          }
+        }
+
+        return message
+      }
+
+      swap_requester_address: string
+      pool_id: u64
+      swap_type_id: u32
+      offer_coin: cosmos.v1.Coin | null
+      demand_coin_denom: string
+      offer_coin_fee: cosmos.v1.Coin | null
+      order_price: string
+
+      constructor(
+        swap_requester_address: string = '',
+        pool_id: u64 = 0,
+        swap_type_id: u32 = 0,
+        offer_coin: cosmos.v1.Coin | null = null,
+        demand_coin_denom: string = '',
+        offer_coin_fee: cosmos.v1.Coin | null = null,
+        order_price: string = '',
+      ) {
+        this.swap_requester_address = swap_requester_address
+        this.pool_id = pool_id
+        this.swap_type_id = swap_type_id
+        this.offer_coin = offer_coin
+        this.demand_coin_denom = demand_coin_denom
+        this.offer_coin_fee = offer_coin_fee
+        this.order_price = order_price
+      }
+    }
+
+    export enum BlockIDFlag {
+      BLOCK_ID_FLAG_UNKNOWN = 0,
+      BLOCK_ID_FLAG_ABSENT = 1,
+      BLOCK_ID_FLAG_COMMIT = 2,
+      BLOCK_ID_FLAG_NIL = 3,
     }
 
     export enum SignMode {
@@ -4645,6 +5082,50 @@ export namespace cosmos {
       VOTE_OPTION_ABSTAIN = 2,
       VOTE_OPTION_NO = 3,
       VOTE_OPTION_NO_WITH_VETO = 4,
+    }
+
+    export function decodeBlockID(a: Uint8Array): BlockID {
+      return Protobuf.decode<BlockID>(a, BlockID.decode)
+    }
+
+    export function decodeCommit(a: Uint8Array): Commit {
+      return Protobuf.decode<Commit>(a, Commit.decode)
+    }
+
+    export function decodeCommitSig(a: Uint8Array): CommitSig {
+      return Protobuf.decode<CommitSig>(a, CommitSig.decode)
+    }
+
+    export function decodeConsensus(a: Uint8Array): Consensus {
+      return Protobuf.decode<Consensus>(a, Consensus.decode)
+    }
+
+    export function decodeHeader(a: Uint8Array): Header {
+      return Protobuf.decode<Header>(a, Header.decode)
+    }
+
+    export function decodePublicKey(a: Uint8Array): PublicKey {
+      return Protobuf.decode<PublicKey>(a, PublicKey.decode)
+    }
+
+    export function decodePartSetHeader(a: Uint8Array): PartSetHeader {
+      return Protobuf.decode<PartSetHeader>(a, PartSetHeader.decode)
+    }
+
+    export function decodeSignedHeader(a: Uint8Array): SignedHeader {
+      return Protobuf.decode<SignedHeader>(a, SignedHeader.decode)
+    }
+
+    export function decodeTimestamp(a: Uint8Array): Timestamp {
+      return Protobuf.decode<Timestamp>(a, Timestamp.decode)
+    }
+
+    export function decodeValidator(a: Uint8Array): Validator {
+      return Protobuf.decode<Validator>(a, Validator.decode)
+    }
+
+    export function decodeValidatorSet(a: Uint8Array): ValidatorSet {
+      return Protobuf.decode<ValidatorSet>(a, ValidatorSet.decode)
     }
 
     export function decodeTx(a: Uint8Array): Tx {
@@ -4907,6 +5388,10 @@ export namespace cosmos {
 
     export function decodeCosmosHeader(a: Uint8Array): CosmosHeader {
       return Protobuf.decode<CosmosHeader>(a, CosmosHeader.decode)
+    }
+
+    export function decodeMsgSwapWithinBatch(a: Uint8Array): MsgSwapWithinBatch {
+      return Protobuf.decode<MsgSwapWithinBatch>(a, MsgSwapWithinBatch.decode)
     }
   }
 }

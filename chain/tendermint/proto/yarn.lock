@@ -27,8 +27,10 @@ array-flatten@1.1.1:
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-1.1.1.tgz#9a5f699051b1e7073328f2a008968b64ea2955d2"
   integrity sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=
 
-"as-proto@file:../../../../as-proto/packages/as-proto-gen":
-  version "0.2.0"
+as-proto-gen@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/as-proto-gen/-/as-proto-gen-0.2.3.tgz#1b52cf232fe603f60129369055d4abcfae85d630"
+  integrity sha512-B5Hncx+IoRL4B+G+seJ0JkbEcjU7y00AxddgAerHiLagpQA23VoQZ4k4RO8sV+9DAqsEbK1bepzFLejEXYPZGA==
   dependencies:
     google-protobuf "^3.19.2"
     prettier "^2.5.0"
@@ -326,7 +328,7 @@ path-to-regexp@0.1.7:
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-0.1.7.tgz#df604178005f522f15eb4490e7247a1bfaa67f8c"
   integrity sha1-32BBeABfUi8V60SQ5yR6G/qmf4w=
 
-prettier@^2.5.0, prettier@^2.5.1:
+prettier@^2.4.1, prettier@^2.5.0, prettier@^2.5.1:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.6.2.tgz#e26d71a18a74c3d0f0597f55f01fb6c06c206032"
   integrity sha512-PkUpF+qoXTqhOeWL9fu7As8LXsIUZ1WYaJiY/a7McAQzxjk82OF0tibkFXVCDImZtWxbvojFjerkiLb0/q8mew==

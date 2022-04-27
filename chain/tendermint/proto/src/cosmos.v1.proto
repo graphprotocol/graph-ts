@@ -4,9 +4,103 @@ package cosmos.v1;
 
 option go_package = "github.com/figment-networks/tendermint-protobuf-def/cosmos";
 
-import "t.v1.proto";
 import "gogo.proto";
 import "google/protobuf/descriptor.proto";
+import "annotations.proto";
+
+// BlockIdFlag indicates which BlockID the signature is for
+enum BlockIDFlag {
+  option (gogoproto.goproto_enum_stringer) = true;
+  option (gogoproto.goproto_enum_prefix)   = false;
+
+  BLOCK_ID_FLAG_UNKNOWN = 0 [(gogoproto.enumvalue_customname) = "BlockIDFlagUnknown"];
+  BLOCK_ID_FLAG_ABSENT  = 1 [(gogoproto.enumvalue_customname) = "BlockIDFlagAbsent"];
+  BLOCK_ID_FLAG_COMMIT  = 2 [(gogoproto.enumvalue_customname) = "BlockIDFlagCommit"];
+  BLOCK_ID_FLAG_NIL     = 3 [(gogoproto.enumvalue_customname) = "BlockIDFlagNil"];
+}
+
+message BlockID {
+  bytes         hash            = 1;
+  PartSetHeader part_set_header = 2 [(gogoproto.nullable) = false];
+}
+
+message Commit {
+  int64              height     = 1; // must be > 0
+  int32              round      = 2; // must be > 0
+  BlockID            block_id   = 3 [(gogoproto.nullable) = false, (gogoproto.customname) = "BlockID"];
+  repeated CommitSig signatures = 4 [(gogoproto.nullable) = false];
+}
+
+message CommitSig {
+  BlockIDFlag block_id_flag     = 1; // must match those in the enum above
+  bytes       validator_address = 2; // hash 256 20 bytes - this is the first 20 characters of a 32-byte key -
+                                     // SHA256(pubkey)[:20]
+  Timestamp timestamp = 3 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+  bytes     signature = 4; // length should be > 0 and < 64
+}
+
+message Consensus {
+  option (gogoproto.equal) = true;
+
+  uint64 block = 1;
+  uint64 app   = 2;
+}
+
+message Header {
+  Consensus version              = 1 [(gogoproto.nullable) = false];
+  string    chain_id             = 2 [(gogoproto.customname) = "ChainID"];
+  uint64    height               = 3;
+  Timestamp time                 = 4 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+  BlockID   last_block_id        = 5 [(gogoproto.nullable) = false];
+  bytes     last_commit_hash     = 6;  // hash 256 32 bytes
+  bytes     data_hash            = 7;  // hash 256 32 bytes
+  bytes     validators_hash      = 8;  // hash 256 32 bytes
+  bytes     next_validators_hash = 9;  // hash 256 32 bytes
+  bytes     consensus_hash       = 10; // hash 256 32 bytes
+  bytes     app_hash             = 11; // determined by application, not a fixed length
+  bytes     last_results_hash    = 12; // hash 256 32 bytes - first block will be results of an empty hash
+  bytes     evidence_hash        = 13; // hash sha256 32 bytes
+  bytes     proposer_address     = 14; // hash 256 20 bytes - this is the first 20 characters of a 32-byte key -
+                                       // SHA256(pubkey)[:20]
+}
+
+message PublicKey {
+  option (gogoproto.compare) = true;
+  option (gogoproto.equal)   = true;
+
+  oneof sum {
+    bytes ed25519   = 1;
+    bytes secp256k1 = 2;
+  }
+}
+
+message PartSetHeader {
+  uint32 total = 1;
+  bytes  hash  = 2; // hash 256 32 bytes
+}
+
+message SignedHeader {
+  Header header = 1;
+  Commit commit = 2;
+}
+
+message Timestamp {
+  int64 seconds = 1;
+  int32 nanos   = 2;
+}
+
+message Validator {
+  bytes     address           = 1;
+  PublicKey pub_key           = 2 [(gogoproto.nullable) = false]; // must be > 0
+  int64     voting_power      = 3;
+  int64     proposer_priority = 4;
+}
+
+message ValidatorSet {
+  repeated Validator validators         = 1; // cannot be empty or nil
+  Validator          proposer           = 2; // cannot be nil
+  int64              total_voting_power = 3;
+}
 
 enum SignMode {
   SIGN_MODE_UNSPECIFIED       = 0;
@@ -67,9 +161,9 @@ message CompactBitArray {
 message Fee {
   repeated Coin amount = 1 [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 
-  uint64 gas_limit     = 2;
-  string payer         = 3 [(scalar) = "cosmos.AddressString"];
-  string granter       = 4 [(scalar) = "cosmos.AddressString"];
+  uint64 gas_limit = 2;
+  string payer     = 3 [(scalar) = "cosmos.AddressString"];
+  string granter   = 4 [(scalar) = "cosmos.AddressString"];
 }
 
 message Tip {
@@ -78,7 +172,7 @@ message Tip {
 }
 
 message Coin {
-  option(gogoproto.equal) = true;
+  option (gogoproto.equal) = true;
 
   string denom  = 1;
   string amount = 2 [(scalar) = "cosmos.Int", (gogoproto.customtype) = "Int", (gogoproto.nullable) = false];
@@ -116,9 +210,9 @@ enum VoteOption {
 }
 
 message MsgSend {
-  string        from_address  = 1 [(gogoproto.moretags) = "yaml:\"from_address\""];
-  string        to_address    = 2 [(gogoproto.moretags) = "yaml:\"to_address\""];
-  repeated Coin amount        = 3 [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  string        from_address = 1 [(gogoproto.moretags) = "yaml:\"from_address\""];
+  string        to_address   = 2 [(gogoproto.moretags) = "yaml:\"to_address\""];
+  repeated Coin amount = 3 [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
 message MsgMultiSend {
@@ -142,10 +236,12 @@ message MsgWithdrawDelegatorReward {
   string validator_address = 2 [(gogoproto.moretags) = "yaml:\"validator_address\""];
 }
 
-message MsgWithdrawValidatorCommission { string validator_address = 1 [(gogoproto.moretags) = "yaml:\"validator_address\""]; }
+message MsgWithdrawValidatorCommission {
+  string validator_address = 1 [(gogoproto.moretags) = "yaml:\"validator_address\""];
+}
 
 message MsgFundCommunityPool {
-  repeated Coin amount    = 1 [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  repeated Coin amount = 1 [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
   string        depositor = 2;
 }
 
@@ -155,10 +251,12 @@ message MsgSubmitEvidence {
 }
 
 message MsgSubmitProposal {
-  Any           content = 1 [(accepts_interface) = "Content"];
-  repeated Coin initial_deposit =
-      2 [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
-         (gogoproto.moretags) = "yaml:\"initial_deposit\""];
+  Any           content         = 1 [(accepts_interface) = "Content"];
+  repeated Coin initial_deposit = 2 [
+    (gogoproto.nullable)     = false,
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
+    (gogoproto.moretags)     = "yaml:\"initial_deposit\""
+  ];
   string proposer = 3;
 }
 
@@ -171,7 +269,7 @@ message MsgVote {
 message MsgDeposit {
   uint64        proposal_id = 1 [(gogoproto.jsontag) = "proposal_id", (gogoproto.moretags) = "yaml:\"proposal_id\""];
   string        depositor   = 2;
-  repeated Coin amount      = 3 [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  repeated Coin amount = 3 [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
 message MsgUnjail {
@@ -181,21 +279,24 @@ message MsgUnjail {
 message MsgCreateValidator {
   Description     description         = 1 [(gogoproto.nullable) = false];
   CommissionRates commission          = 2 [(gogoproto.nullable) = false];
-  string          min_self_delegation = 3 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-                                  (gogoproto.moretags) = "yaml:\"min_self_delegation\"", (gogoproto.nullable) = false];
-  string          delegator_address   = 4 [(gogoproto.moretags) = "yaml:\"delegator_address\""];
-  string          validator_address   = 5 [(gogoproto.moretags) = "yaml:\"validator_address\""];
-  Any             pubkey              = 6 [(accepts_interface) = "cosmos.crypto.PubKey"];
-  Coin            value               = 7 [(gogoproto.nullable) = false];
+  string          min_self_delegation = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.moretags)   = "yaml:\"min_self_delegation\"",
+    (gogoproto.nullable)   = false
+  ];
+  string delegator_address = 4 [(gogoproto.moretags) = "yaml:\"delegator_address\""];
+  string validator_address = 5 [(gogoproto.moretags) = "yaml:\"validator_address\""];
+  Any    pubkey            = 6 [(accepts_interface) = "cosmos.crypto.PubKey"];
+  Coin   value             = 7 [(gogoproto.nullable) = false];
 }
 
 message MsgEditValidator {
   Description description       = 1 [(gogoproto.nullable) = false];
   string      validator_address = 2 [(gogoproto.moretags) = "yaml:\"address\""];
-  string      commission_rate =
-      3 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.moretags) = "yaml:\"commission_rate\""];
-  string min_self_delegation = 4 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-                                  (gogoproto.moretags)   = "yaml:\"min_self_delegation\""];
+  string      commission_rate   = 3
+      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.moretags) = "yaml:\"commission_rate\""];
+  string min_self_delegation = 4
+      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.moretags) = "yaml:\"min_self_delegation\""];
 }
 
 message MsgDelegate {
@@ -374,8 +475,8 @@ message MsgConnectionOpenAck {
   bytes             proof_try                  = 6 [(gogoproto.moretags) = "yaml:\"proof_try\""];
   bytes             proof_client               = 7 [(gogoproto.moretags) = "yaml:\"proof_client\""];
   bytes             proof_consensus            = 8 [(gogoproto.moretags) = "yaml:\"proof_consensus\""];
-  Height            consensus_height           = 9 [(gogoproto.moretags) = "yaml:\"consensus_height\"", (gogoproto.nullable) = false];
-  string            signer                     = 10;
+  Height            consensus_height = 9 [(gogoproto.moretags) = "yaml:\"consensus_height\"", (gogoproto.nullable) = false];
+  string            signer           = 10;
 }
 
 message MsgConnectionOpenConfirm {
@@ -399,11 +500,17 @@ message ChannelCounterparty {
 }
 
 message CommissionRates {
-  string rate            = 1 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
-  string max_rate        = 2 [(gogoproto.moretags)   = "yaml:\"max_rate\"",
-                       (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
-  string max_change_rate = 3 [(gogoproto.moretags)   = "yaml:\"max_change_rate\"",
-                              (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  string rate     = 1 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  string max_rate = 2 [
+    (gogoproto.moretags)   = "yaml:\"max_rate\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false
+  ];
+  string max_change_rate = 3 [
+    (gogoproto.moretags)   = "yaml:\"max_change_rate\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false
+  ];
 }
 
 message ConnectionCounterparty {
@@ -440,7 +547,9 @@ message Output {
   repeated Coin coins   = 2 [(gogoproto.nullable) = false, (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
-message MerklePrefix { bytes key_prefix = 1 [(gogoproto.moretags) = "yaml:\"key_prefix\""]; }
+message MerklePrefix {
+  bytes key_prefix = 1 [(gogoproto.moretags) = "yaml:\"key_prefix\""];
+}
 
 message Packet {
   uint64 sequence            = 1;
@@ -454,15 +563,65 @@ message Packet {
 }
 
 message CosmosHeader {
-  t.v1.SignedHeader signed_header       = 1 [(gogoproto.embed) = true, (gogoproto.moretags) = "yaml:\"signed_header\""];
-  t.v1.ValidatorSet validator_set       = 2 [(gogoproto.moretags) = "yaml:\"validator_set\""];
-  Height trusted_height                 = 3 [(gogoproto.nullable) = false, (gogoproto.moretags) = "yaml:\"trusted_height\""];
-  t.v1.ValidatorSet trusted_validators  = 4 [(gogoproto.moretags) = "yaml:\"trusted_validators\""];
+  SignedHeader signed_header      = 1 [(gogoproto.embed) = true, (gogoproto.moretags) = "yaml:\"signed_header\""];
+  ValidatorSet validator_set      = 2 [(gogoproto.moretags) = "yaml:\"validator_set\""];
+  Height            trusted_height     = 3 [(gogoproto.nullable) = false, (gogoproto.moretags) = "yaml:\"trusted_height\""];
+  ValidatorSet trusted_validators = 4 [(gogoproto.moretags) = "yaml:\"trusted_validators\""];
 }
 
-extend google.protobuf.MessageOptions { string implements_interface = 93001; }
+extend google.protobuf.MessageOptions {
+  string implements_interface = 93001;
+}
 
 extend google.protobuf.FieldOptions {
   string accepts_interface = 93001;
   string scalar            = 93002;
+}
+
+message MsgSwapWithinBatch {
+  string swap_requester_address = 1 [
+    (gogoproto.moretags)                                        = "yaml:\"swap_requester_address\"",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "account address of the origin of this message",
+      example: "\"cosmos1e35y69rhrt7y4yce5l5u73sjnxu0l33wvznyun\"",
+      format: "sdk.AccAddress"
+    }
+  ];
+  uint64 pool_id = 2 [
+    (gogoproto.moretags)                                        = "yaml:\"pool_id\"",
+    (gogoproto.jsontag)                                         = "pool_id",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = { example: "\"1\"", format: "uint64" }
+  ];
+  uint32 swap_type_id = 3 [
+    (gogoproto.moretags)                                        = "yaml:\"swap_type_id\"",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = { example: "\"1\"", format: "uint32" }
+  ];
+  cosmos.v1.Coin offer_coin = 4 [
+    (gogoproto.nullable)                                        = false,
+    (gogoproto.moretags)                                        = "yaml:\"offer_coin\"",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "{\"denom\": \"denomX\", \"amount\": \"1000000\"}",
+      format: "sdk.Coin"
+    }
+  ];
+  string demand_coin_denom = 5 [
+    (gogoproto.moretags)                                        = "yaml:\"demand_coin_denom\"",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "\"denomB\"",
+    }
+  ];
+  cosmos.v1.Coin offer_coin_fee = 6 [
+    (gogoproto.nullable)                                        = false,
+    (gogoproto.moretags)                                        = "yaml:\"offer_coin_fee\"",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      example: "{\"denom\": \"denomX\", \"amount\": \"5000\"}",
+      format: "sdk.Coin"
+    }
+  ];
+  string order_price = 7 [
+    (gogoproto.moretags)                                        = "yaml:\"order_price\"",
+    (gogoproto.customtype)                                      = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)                                        = false,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = { example: "\"1.1\"", format: "sdk.Dec" }
+  ];
 }

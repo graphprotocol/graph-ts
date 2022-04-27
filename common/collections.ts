@@ -286,7 +286,7 @@ export class Bytes extends ByteArray {
   }
 
   static toUint8Array(bts: Bytes): Uint8Array {
-    return changetype<Uint8Array>(bts);
+    return changetype<Uint8Array>(bts)
   }
 
   /**

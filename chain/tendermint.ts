@@ -16,6 +16,19 @@ export namespace tendermint {
     BLOCK_ID_FLAG_NIL = 3,
   }
 
+  export enum SignMode {
+    SIGN_MODE_UNSPECIFIED = 0,
+    SIGN_MODE_DIRECT = 1,
+    SIGN_MODE_TEXTUAL = 2,
+    SIGN_MODE_LEGACY_AMINO_JSON = 127,
+  }
+
+  export enum ScalarType {
+    SCALAR_TYPE_UNSPECIFIED = 0,
+    SCALAR_TYPE_STRING = 1,
+    SCALAR_TYPE_BYTES = 2,
+  }
+
   export class EventList {
     public newBlock: EventBlock
     public transaction: Array<EventTx>
@@ -478,17 +491,11 @@ export namespace tendermint {
   export class TxResult {
     public height: u64
     public index: u32
-    public tx: Bytes
+    public tx: Tx
     public result: ResponseDeliverTx
     public hash: Bytes
 
-    constructor(
-      height: u64,
-      index: u32,
-      tx: Bytes,
-      result: ResponseDeliverTx,
-      hash: Bytes,
-    ) {
+    constructor(height: u64, index: u32, tx: Tx, result: ResponseDeliverTx, hash: Bytes) {
       this.height = height
       this.index = index
       this.tx = tx
@@ -557,6 +564,321 @@ export namespace tendermint {
 
     constructor(appVersion: u64) {
       this.appVersion = appVersion
+    }
+  }
+
+  export class Any {
+    public typeUrl: string
+    public value: Bytes
+
+    constructor(typeUrl: string, value: Bytes) {
+      this.typeUrl = typeUrl
+      this.value = value
+    }
+  }
+  export class MultiSignature {
+    public signatures: Array<Bytes>
+
+    constructor(signatures: Array<Bytes>) {
+      this.signatures = signatures
+    }
+  }
+
+  export class CompactBitArray {
+    public extraBitsStored: u32
+    public elems: Bytes
+
+    constructor(extraBitsStored: u32, elems: Bytes) {
+      this.extraBitsStored = extraBitsStored
+      this.elems = elems
+    }
+  }
+
+  export class SignatureDescriptors {
+    public signatures: Array<SignatureDescriptor>
+
+    constructor(signatures: Array<SignatureDescriptor>) {
+      this.signatures = signatures
+    }
+  }
+
+  export class Single {
+    public mode: SignMode
+    public signature: Bytes
+
+    constructor(mode: SignMode, signature: Bytes) {
+      this.mode = mode
+      this.signature = signature
+    }
+  }
+
+  export class Multi {
+    public bitarray: CompactBitArray
+    public signatures: Array<Data>
+
+    constructor(bitarray: CompactBitArray, signatures: Array<Data>) {
+      this.bitarray = bitarray
+      this.signatures = signatures
+    }
+  }
+
+  export class Data {
+    public single: Single
+    public multi: Multi
+
+    constructor(single: Single, multi: Multi) {
+      this.single = single
+      this.multi = multi
+    }
+  }
+
+  export class SignatureDescriptor {
+    public publicKey: Any
+    public data: Data
+    public sequence: u64
+
+    constructor(publicKey: Any, data: Data, sequence: u64) {
+      this.publicKey = publicKey
+      this.data = data
+      this.sequence = sequence
+    }
+  }
+
+  export class InterfaceDescriptor {
+    public name: string
+    public description: string
+
+    constructor(name: string, description: string) {
+      this.name = name
+      this.description = description
+    }
+  }
+
+  export class ScalarDescriptor {
+    public name: string
+    public description: string
+    public fieldType: Array<ScalarType>
+
+    constructor(name: string, description: string, fieldType: Array<ScalarType>) {
+      this.name = name
+      this.description = description
+      this.fieldType = fieldType
+    }
+  }
+
+  export class Coin {
+    public denom: string
+    public amount: string
+
+    constructor(denom: string, amount: string) {
+      this.denom = denom
+      this.amount = amount
+    }
+  }
+
+  export class DecCoin {
+    public denom: string
+    public amount: string
+
+    constructor(denom: string, amount: string) {
+      this.denom = denom
+      this.amount = amount
+    }
+  }
+
+  export class IntProto {
+    public int: string
+
+    constructor(int: string) {
+      this.int = int
+    }
+  }
+
+  export class DecProto {
+    public dec: string
+
+    constructor(dec: string) {
+      this.dec = dec
+    }
+  }
+
+  export class Tx {
+    public body: TxBody
+    public authInfo: AuthInfo
+    public signatures: Array<Bytes>
+
+    constructor(body: TxBody, authInfo: AuthInfo, signatures: Array<Bytes>) {
+      this.body = body
+      this.authInfo = authInfo
+      this.signatures = signatures
+    }
+  }
+
+  export class TxRaw {
+    public bodyBytes: Bytes
+    public authInfoBytes: Bytes
+    public signatures: Array<Bytes>
+
+    constructor(bodyBytes: Bytes, authInfoBytes: Bytes, signatures: Array<Bytes>) {
+      this.bodyBytes = bodyBytes
+      this.authInfoBytes = authInfoBytes
+      this.signatures = signatures
+    }
+  }
+
+  export class SignDoc {
+    public bodyBytes: Bytes
+    public authInfoBytes: Bytes
+    public chainId: string
+    public accountNumber: u64
+
+    constructor(
+      bodyBytes: Bytes,
+      authInfoBytes: Bytes,
+      chainId: string,
+      accountNumber: u64,
+    ) {
+      this.bodyBytes = bodyBytes
+      this.authInfoBytes = authInfoBytes
+      this.chainId = chainId
+      this.accountNumber = accountNumber
+    }
+  }
+
+  export class SignDocDirectAux {
+    public bodyBytes: Bytes
+    public publicKey: Any
+    public chainId: string
+    public accountNumber: u64
+    public sequence: u64
+    public tip: Tip
+
+    constructor(
+      bodyBytes: Bytes,
+      publicKey: Any,
+      chainId: string,
+      accountNumber: u64,
+      sequence: u64,
+      tip: Tip,
+    ) {
+      this.bodyBytes = bodyBytes
+      this.publicKey = publicKey
+      this.chainId = chainId
+      this.accountNumber = accountNumber
+      this.sequence = sequence
+      this.tip = tip
+    }
+  }
+
+  export class TxBody {
+    public messages: Array<Any>
+    public memo: string
+    public timeoutHeight: u64
+    public extensionOptions: Array<Any>
+    public nonCriticalExtensionOptions: Array<Any>
+
+    constructor(
+      messages: Array<Any>,
+      memo: string,
+      timeoutHeight: u64,
+      extensionOptions: Array<Any>,
+      nonCriticalExtensionOptions: Array<Any>,
+    ) {
+      this.messages = messages
+      this.memo = memo
+      this.timeoutHeight = timeoutHeight
+      this.extensionOptions = extensionOptions
+      this.nonCriticalExtensionOptions = nonCriticalExtensionOptions
+    }
+  }
+
+  export class AuthInfo {
+    public signerInfos: Array<SignerInfo>
+    public fee: Fee
+    public tip: Tip
+
+    constructor(signerInfos: Array<SignerInfo>, fee: Fee, tip: Tip) {
+      this.signerInfos = signerInfos
+      this.fee = fee
+      this.tip = tip
+    }
+  }
+
+  export class SignerInfo {
+    public publicKey: Any
+    public modeInfo: ModeInfo
+    public sequence: u64
+
+    constructor(publicKey: Any, modeInfo: ModeInfo, sequence: u64) {
+      this.publicKey = publicKey
+      this.modeInfo = modeInfo
+      this.sequence = sequence
+    }
+  }
+
+  export class ModeInfo {
+    public single: ModeInfoSingle
+    public multi: ModeInfoMulti
+
+    constructor(single: ModeInfoSingle, multi: ModeInfoMulti) {
+      this.single = single
+      this.multi = multi
+    }
+  }
+
+  export class ModeInfoSingle {
+    public mode: SignMode
+
+    constructor(mode: SignMode) {
+      this.mode = mode
+    }
+  }
+
+  export class ModeInfoMulti {
+    public bitarray: CompactBitArray
+    public modeInfos: Array<ModeInfo>
+
+    constructor(bitarray: CompactBitArray, modeInfos: Array<ModeInfo>) {
+      this.bitarray = bitarray
+      this.modeInfos = modeInfos
+    }
+  }
+
+  export class Fee {
+    public amount: Array<Coin>
+    public gasLimit: u64
+    public payer: string
+    public granter: string
+
+    constructor(amount: Array<Coin>, gasLimit: u64, payer: string, granter: string) {
+      this.amount = amount
+      this.gasLimit = gasLimit
+      this.payer = payer
+      this.granter = granter
+    }
+  }
+
+  export class Tip {
+    public amount: Array<Coin>
+    public tipper: string
+
+    constructor(amount: Array<Coin>, tipper: string) {
+      this.amount = amount
+      this.tipper = tipper
+    }
+  }
+
+  export class AuxSignerData {
+    public address: string
+    public signDoc: SignDocDirectAux
+    public mode: SignMode
+    public sig: Bytes
+
+    constructor(address: string, signDoc: SignDocDirectAux, mode: SignMode, sig: Bytes) {
+      this.address = address
+      this.signDoc = signDoc
+      this.mode = mode
+      this.sig = sig
     }
   }
 }
