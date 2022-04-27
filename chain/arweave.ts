@@ -34,7 +34,7 @@ export namespace arweave {
       public diff: Bytes,
       public hash: Bytes,
       public txRoot: Bytes,
-      public txs: string[],
+      public txs: Bytes[],
       public walletList: Bytes,
       public rewardAddr: Bytes,
       public tags: Tag[],
@@ -64,6 +64,16 @@ export namespace arweave {
       public dataRoot: Bytes,
       public signature: Bytes,
       public reward: Bytes,
+    ) {}
+  }
+
+  /**
+   * An Arweave transaction with block ptr
+   */
+  export class TransactionWithBlockPtr {
+    constructor(
+      public tx: Transaction,
+      public block: Block,
     ) {}
   }
 }
