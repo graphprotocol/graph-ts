@@ -7,7 +7,6 @@
   "main": "index.ts",
   "ascMain": "index.ts",
   "dependencies": {
-    "as-proto": "^v0.2.0",
     "assemblyscript": "0.19.10"
   },
   "devDependencies": {
