@@ -8,6 +8,7 @@ import {
   Wrapped,
 } from '../common/collections'
 import { JSONValue, Value } from '../common/value'
+import { arweave } from '../chain/arweave'
 import { ethereum } from '../chain/ethereum'
 import { near } from '../chain/near'
 import { tendermint } from '../chain/tendermint'
@@ -444,6 +445,20 @@ export function id_of_type(typeId: TypeId): usize {
       return idof<Array<Uint8Array>>()
     case TypeId.ArrayLog:
       return idof<Array<ethereum.Log>>()
+    case TypeId.ArweaveBlock:
+      return idof<arweave.Block>()
+    case TypeId.ArweaveProofOfAccess:
+      return idof<arweave.ProofOfAccess>()
+    case TypeId.ArweaveTag:
+      return idof<arweave.Tag>()
+    case TypeId.ArweaveTagArray:
+      return idof<Array<arweave.Tag>>()
+    case TypeId.ArweaveTransaction:
+      return idof<arweave.Transaction>()
+    case TypeId.ArweaveTransactionArray:
+      return idof<Array<arweave.Transaction>>()
+    case TypeId.ArweaveTransactionWithBlockPtr:
+      return idof<arweave.TransactionWithBlockPtr>()
     default:
       return 0
   }
