@@ -13,6 +13,21 @@ import { ethereum } from '../chain/ethereum'
 import { near } from '../chain/near'
 import { tendermint } from '../chain/tendermint'
 
+/**
+ * Contains type IDs and their discriminants for every blockchain supported by Graph-Node.
+ *
+ * Each variant corresponds to the unique ID of an AssemblyScript concrete class used by
+ * Graph-Node's runtime.
+ *
+ * # Rules for updating this enum
+ *
+ * 1. The discriminants must have the same value as their counterparts in `IndexForAscTypeId` enum
+ *    from `graph-node`'s `graph::runtime` module. If not, the runtime will fail to determine the
+ *    correct class during allocation.
+ * 2. Each supported blockchain has a reserved space of 1,000 * contiguous variants.
+ * 3. Once defined, items and their discriminants cannot be changed, as this would break running
+ *    subgraphs compiled in previous versions of this representation.
+ */
 export enum TypeId {
   String = 0,
   ArrayBuffer = 1,
@@ -66,6 +81,7 @@ export enum TypeId {
   ArrayF32 = 49,
   ArrayF64 = 50,
   ArrayBigDecimal = 51,
+
   // Near types
   NearArrayDataReceiver = 52,
   NearArrayCryptoHash = 53,
@@ -77,7 +93,7 @@ export enum TypeId {
   NearArrayChunkHeader = 59,
   NearAccessKeyPermissionValue = 60,
   NearActionValue = 61,
-  NearDirection = 62, // not used in graph-node, could be removed
+  NearDirection = 62, // not used in graph-node anymore. Can be ignored.
   NearPublicKey = 63,
   NearSignature = 64,
   NearFunctionCallPermission = 65,
@@ -102,61 +118,91 @@ export enum TypeId {
   NearChunkHeader = 84,
   NearBlock = 85,
   NearReceiptWithOutcome = 86,
-  // Tendermint types
-  TendermintArrayEventTx = 87,
-  TendermintArrayEvent = 88,
-  TendermintArrayCommitSig = 89,
-  TendermintArrayBytes = 90,
-  TendermintArrayEvidence = 91,
-  TendermintArrayEventAttribute = 92,
-  TendermintBlockIDFlagEnum = 93,
-  TendermintSignedMsgTypeEnum = 94,
-  TendermintEventList = 95,
-  TendermintEventBlock = 96,
-  TendermintResponseBeginBlock = 97,
-  TendermintResponseEndBlock = 98,
-  TendermintValidatorUpdate = 99,
-  TendermintArrayValidatorUpdate = 100,
-  TendermintConsensusParams = 101,
-  TendermintBlockParams = 102,
-  TendermintEvidenceParams = 103,
-  TendermintValidatorParams = 104,
-  TendermintVersionParams = 105,
-  TendermintBlock = 106,
-  TendermintCommit = 107,
-  TendermintCommitSig = 108,
-  TendermintHeader = 109,
-  TendermintConsensus = 110,
-  TendermintBlockID = 111,
-  TendermintPartSetHeader = 112,
-  TendermintData = 113,
-  TendermintEvidence = 114,
-  TendermintDuplicateVoteEvidence = 115,
-  TendermintEventTx = 116,
-  TendermintEventVote = 117,
-  TendermintLightClientAttackEvidence = 118,
-  TendermintLightBlock = 119,
-  TendermintValidatorSet = 120,
-  TendermintSignedHeader = 121,
-  TendermintEvidenceList = 122,
-  TendermintValidator = 123,
-  TendermintArrayValidator = 124,
-  TendermintPublicKey = 125,
-  TendermintTxResult = 126,
-  TendermintResponseDeliverTx = 127,
-  TendermintEvent = 128,
-  TendermintEventAttribute = 129,
-  TendermintEventValidatorSetUpdates = 130,
-  TendermintDuration = 131,
-  TendermintTimestamp = 132,
-  TendermintEventData = 133,
-  // More ethereum types
-  TransactionReceipt = 134,
-  Log = 135,
-  ArrayH256 = 136,
-  ArrayLog = 137,
+  /*
+  Reserved discriminant space for more Near type IDs: [87, 999]:
+  Continue to add more Near type IDs here. e.g.:
+  ```
+  NextNearType = 87,
+  AnotherNearType = 88,
+  ...
+  LastNearType = 999,
+  ```
+  */
 
-  // Arweave types
+  // Reserved discriminant space for more Ethereum type IDs: [1000, 1499]
+  TransactionReceipt = 1000,
+  Log = 1001,
+  ArrayH256 = 1002,
+  ArrayLog = 1003,
+  /*
+  Continue to add more Ethereum type IDs here. e.g.:
+  ```
+  NextEthereumType = 1004,
+  AnotherEthereumType = 1005,
+  ...
+  LastEthereumType = 1499,
+  ```
+  */
+
+  // Reserved discriminant space for Tendermint type IDs: [1,500, 2,499]
+  TendermintArrayBytes = 1500,
+  TendermintArrayCommitSig = 1501,
+  TendermintArrayEvent = 1502,
+  TendermintArrayEventAttribute = 1503,
+  TendermintArrayEventTx = 1504,
+  TendermintArrayEvidence = 1505,
+  TendermintArrayValidator = 1506,
+  TendermintArrayValidatorUpdate = 1507,
+  TendermintBlock = 1508,
+  TendermintBlockID = 1509,
+  TendermintBlockIDFlagEnum = 1510,
+  TendermintBlockParams = 1511,
+  TendermintCommit = 1512,
+  TendermintCommitSig = 1513,
+  TendermintConsensus = 1514,
+  TendermintConsensusParams = 1515,
+  TendermintData = 1516,
+  TendermintDuplicateVoteEvidence = 1517,
+  TendermintDuration = 1518,
+  TendermintEvent = 1519,
+  TendermintEventAttribute = 1520,
+  TendermintEventBlock = 1521,
+  TendermintEventData = 1522,
+  TendermintEventList = 1523,
+  TendermintEventTx = 1524,
+  TendermintEventValidatorSetUpdates = 1525,
+  TendermintEventVote = 1526,
+  TendermintEvidence = 1527,
+  TendermintEvidenceList = 1528,
+  TendermintEvidenceParams = 1529,
+  TendermintHeader = 1530,
+  TendermintLightBlock = 1531,
+  TendermintLightClientAttackEvidence = 1532,
+  TendermintPartSetHeader = 1533,
+  TendermintPublicKey = 1534,
+  TendermintResponseBeginBlock = 1535,
+  TendermintResponseDeliverTx = 1536,
+  TendermintResponseEndBlock = 1537,
+  TendermintSignedHeader = 1538,
+  TendermintSignedMsgTypeEnum = 1539,
+  TendermintTimestamp = 1540,
+  TendermintTxResult = 1541,
+  TendermintValidator = 1542,
+  TendermintValidatorParams = 1543,
+  TendermintValidatorSet = 1544,
+  TendermintValidatorUpdate = 1545,
+  TendermintVersionParams = 1546,
+  /*
+  Continue to add more Tendermint type IDs here. e.g.:
+  ```
+  NextTendermintType = 1547,
+  AnotherTendermintType = 1547,
+  ...
+  LastTendermintType = 2499,
+  ```
+  */
+
+  // Reserved discriminant space for Tendermint type IDs: [2,500, 3,499]
   ArweaveBlock = 2500,
   ArweaveProofOfAccess = 2501,
   ArweaveTag = 2502,
@@ -164,6 +210,8 @@ export enum TypeId {
   ArweaveTransaction = 2504,
   ArweaveTransactionArray = 2505,
   ArweaveTransactionWithBlockPtr = 2506,
+  // Reserved discriminant space for a future blockchain type IDs: [3,500, 4,499]
+>>>>>>> main
 }
 
 export function id_of_type(typeId: TypeId): usize {
