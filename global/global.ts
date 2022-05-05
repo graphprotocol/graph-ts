@@ -210,8 +210,17 @@ export enum TypeId {
   ArweaveTransaction = 2504,
   ArweaveTransactionArray = 2505,
   ArweaveTransactionWithBlockPtr = 2506,
+  /*
+  Continue to add more Arweave type IDs here. e.g.:
+  ```
+  NextArweaveType = 1547,
+  AnotherArweaveType = 1547,
+  ...
+  LastArweaveType = 2499,
+  ```
+  */
+
   // Reserved discriminant space for a future blockchain type IDs: [3,500, 4,499]
->>>>>>> main
 }
 
 export function id_of_type(typeId: TypeId): usize {
