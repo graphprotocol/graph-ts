@@ -12,6 +12,21 @@ import { ethereum } from '../chain/ethereum'
 import { near } from '../chain/near'
 import { cosmos } from '../chain/cosmos'
 
+/**
+ * Contains type IDs and their discriminants for every blockchain supported by Graph-Node.
+ *
+ * Each variant corresponds to the unique ID of an AssemblyScript concrete class used by
+ * Graph-Node's runtime.
+ *
+ * # Rules for updating this enum
+ *
+ * 1. The discriminants must have the same value as their counterparts in `IndexForAscTypeId` enum
+ *    from `graph-node`'s `graph::runtime` module. If not, the runtime will fail to determine the
+ *    correct class during allocation.
+ * 2. Each supported blockchain has a reserved space of 1,000 * contiguous variants.
+ * 3. Once defined, items and their discriminants cannot be changed, as this would break running
+ *    subgraphs compiled in previous versions of this representation.
+ */
 export enum TypeId {
   String = 0,
   ArrayBuffer = 1,
@@ -65,6 +80,7 @@ export enum TypeId {
   ArrayF32 = 49,
   ArrayF64 = 50,
   ArrayBigDecimal = 51,
+
   // Near types
   NearArrayDataReceiver = 52,
   NearArrayCryptoHash = 53,
@@ -76,7 +92,7 @@ export enum TypeId {
   NearArrayChunkHeader = 59,
   NearAccessKeyPermissionValue = 60,
   NearActionValue = 61,
-  NearDirection = 62, // not used in graph-node, could be removed
+  NearDirection = 62, // not used in graph-node anymore. Can be ignored.
   NearPublicKey = 63,
   NearSignature = 64,
   NearFunctionCallPermission = 65,
@@ -101,12 +117,33 @@ export enum TypeId {
   NearChunkHeader = 84,
   NearBlock = 85,
   NearReceiptWithOutcome = 86,
-  // More ethereum types
-  TransactionReceipt = 134,
-  Log = 135,
-  ArrayH256 = 136,
-  ArrayLog = 137,
-  // Cosmos types
+  /*
+  Reserved discriminant space for more Near type IDs: [87, 999]:
+  Continue to add more Near type IDs here. e.g.:
+  ```
+  NextNearType = 87,
+  AnotherNearType = 88,
+  ...
+  LastNearType = 999,
+  ```
+  */
+
+  // Reserved discriminant space for more Ethereum type IDs: [1000, 1499]
+  TransactionReceipt = 1000,
+  Log = 1001,
+  ArrayH256 = 1002,
+  ArrayLog = 1003,
+  /*
+  Continue to add more Ethereum type IDs here. e.g.:
+  ```
+  NextEthereumType = 1004,
+  AnotherEthereumType = 1005,
+  ...
+  LastEthereumType = 1499,
+  ```
+  */
+
+  // Reserved discriminant space for Cosmos type IDs: [1,500, 2,499]
   CosmosAny = 1500,
   CosmosArrayAny = 1501,
   CosmosArrayBytes = 1502,
@@ -169,6 +206,17 @@ export enum TypeId {
   CosmosValidatorSetUpdates = 1559,
   CosmosValidatorUpdate = 1560,
   CosmosVersionParams = 1561,
+  /*
+  Continue to add more Cosmos type IDs here. e.g.:
+  ```
+  NextCosmosType = 1562,
+  AnotherCosmosType = 1563,
+  ...
+  LastCosmosType = 2499,
+  ```
+  */
+
+  // Reserved discriminant space for a future blockchain type IDs: [2,500, 3,499]
 }
 
 export function id_of_type(typeId: TypeId): usize {
