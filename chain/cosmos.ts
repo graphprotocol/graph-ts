@@ -185,7 +185,7 @@ export namespace cosmos {
 
     getAttributeValue(key: string): string {
       const attribute = this.getAttribute(key)
-      return attribute ? attribute.value : ""
+      return attribute ? attribute.value : ''
     }
   }
 
