@@ -285,10 +285,6 @@ export class Bytes extends ByteArray {
     return changetype<Bytes>(uint8Array)
   }
 
-  static toUint8Array(bts: Bytes): Uint8Array {
-    return changetype<Uint8Array>(bts)
-  }
-
   /**
    * Convert the string `hex` which must consist of an even number of
    * hexadecimal digits to a `ByteArray`. The string `hex` can optionally
