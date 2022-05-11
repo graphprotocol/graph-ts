@@ -374,6 +374,20 @@ export namespace cosmos {
       this.eventType = eventType
       this.attributes = attributes
     }
+
+    getAttribute(key: string): EventAttribute | null {
+      for (let i = 0; i < this.attributes.length; i++) {
+        if (this.attributes[i].key == key) {
+          return this.attributes[i]
+        }
+      }
+      return null
+    }
+
+    getAttributeValue(key: string): string {
+      const attribute = this.getAttribute(key)
+      return attribute ? attribute.value : ""
+    }
   }
 
   export class EventAttribute {
