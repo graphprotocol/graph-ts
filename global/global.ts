@@ -213,10 +213,10 @@ export enum TypeId {
   /*
   Continue to add more Arweave type IDs here. e.g.:
   ```
-  NextArweaveType = 1547,
-  AnotherArweaveType = 1547,
+  NextArweaveType = 2507,
+  AnotherArweaveType = 2508,
   ...
-  LastArweaveType = 2499,
+  LastArweaveType = 3499,
   ```
   */
 
