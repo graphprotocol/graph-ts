@@ -71,9 +71,6 @@ export namespace arweave {
    * An Arweave transaction with block ptr
    */
   export class TransactionWithBlockPtr {
-    constructor(
-      public tx: Transaction,
-      public block: Block,
-    ) {}
+    constructor(public tx: Transaction, public block: Block) {}
   }
 }
