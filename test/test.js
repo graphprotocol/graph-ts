@@ -32,7 +32,7 @@ async function main() {
   fs.copyFileSync('chain/arweave.ts', 'test/temp_lib/chain/arweave.ts')
   fs.copyFileSync('chain/ethereum.ts', 'test/temp_lib/chain/ethereum.ts')
   fs.copyFileSync('chain/near.ts', 'test/temp_lib/chain/near.ts')
-  fs.copyFileSync('chain/tendermint.ts', 'test/temp_lib/chain/tendermint.ts')
+  fs.copyFileSync('chain/cosmos.ts', 'test/temp_lib/chain/cosmos.ts')
   fs.copyFileSync('index.ts', 'test/temp_lib/index.ts')
 
   try {
@@ -66,7 +66,7 @@ async function main() {
     fs.unlinkSync('test/temp_lib/chain/arweave.ts')
     fs.unlinkSync('test/temp_lib/chain/ethereum.ts')
     fs.unlinkSync('test/temp_lib/chain/near.ts')
-    fs.unlinkSync('test/temp_lib/chain/tendermint.ts')
+    fs.unlinkSync('test/temp_lib/chain/cosmos.ts')
     fs.rmdirSync('test/temp_lib/chain')
     fs.unlinkSync('test/temp_lib/index.ts')
     fs.rmdirSync('test/temp_lib')

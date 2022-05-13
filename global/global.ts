@@ -11,7 +11,7 @@ import { JSONValue, Value } from '../common/value'
 import { arweave } from '../chain/arweave'
 import { ethereum } from '../chain/ethereum'
 import { near } from '../chain/near'
-import { tendermint } from '../chain/tendermint'
+import { cosmos } from '../chain/cosmos'
 
 /**
  * Contains type IDs and their discriminants for every blockchain supported by Graph-Node.
@@ -144,61 +144,76 @@ export enum TypeId {
   ```
   */
 
-  // Reserved discriminant space for Tendermint type IDs: [1,500, 2,499]
-  TendermintArrayBytes = 1500,
-  TendermintArrayCommitSig = 1501,
-  TendermintArrayEvent = 1502,
-  TendermintArrayEventAttribute = 1503,
-  TendermintArrayEventTx = 1504,
-  TendermintArrayEvidence = 1505,
-  TendermintArrayValidator = 1506,
-  TendermintArrayValidatorUpdate = 1507,
-  TendermintBlock = 1508,
-  TendermintBlockID = 1509,
-  TendermintBlockIDFlagEnum = 1510,
-  TendermintBlockParams = 1511,
-  TendermintCommit = 1512,
-  TendermintCommitSig = 1513,
-  TendermintConsensus = 1514,
-  TendermintConsensusParams = 1515,
-  TendermintData = 1516,
-  TendermintDuplicateVoteEvidence = 1517,
-  TendermintDuration = 1518,
-  TendermintEvent = 1519,
-  TendermintEventAttribute = 1520,
-  TendermintEventBlock = 1521,
-  TendermintEventData = 1522,
-  TendermintEventList = 1523,
-  TendermintEventTx = 1524,
-  TendermintEventValidatorSetUpdates = 1525,
-  TendermintEventVote = 1526,
-  TendermintEvidence = 1527,
-  TendermintEvidenceList = 1528,
-  TendermintEvidenceParams = 1529,
-  TendermintHeader = 1530,
-  TendermintLightBlock = 1531,
-  TendermintLightClientAttackEvidence = 1532,
-  TendermintPartSetHeader = 1533,
-  TendermintPublicKey = 1534,
-  TendermintResponseBeginBlock = 1535,
-  TendermintResponseDeliverTx = 1536,
-  TendermintResponseEndBlock = 1537,
-  TendermintSignedHeader = 1538,
-  TendermintSignedMsgTypeEnum = 1539,
-  TendermintTimestamp = 1540,
-  TendermintTxResult = 1541,
-  TendermintValidator = 1542,
-  TendermintValidatorParams = 1543,
-  TendermintValidatorSet = 1544,
-  TendermintValidatorUpdate = 1545,
-  TendermintVersionParams = 1546,
+  // Reserved discriminant space for Cosmos type IDs: [1,500, 2,499]
+  CosmosAny = 1500,
+  CosmosArrayAny = 1501,
+  CosmosArrayBytes = 1502,
+  CosmosArrayCoin = 1503,
+  CosmosArrayCommitSig = 1504,
+  CosmosArrayEvent = 1505,
+  CosmosArrayEventAttribute = 1506,
+  CosmosArrayEvidence = 1507,
+  CosmosArrayModeInfo = 1508,
+  CosmosArraySignerInfo = 1509,
+  CosmosArrayTxResult = 1510,
+  CosmosArrayValidator = 1511,
+  CosmosArrayValidatorUpdate = 1512,
+  CosmosAuthInfo = 1513,
+  CosmosBlock = 1514,
+  CosmosBlockID = 1515,
+  CosmosBlockIDFlagEnum = 1516,
+  CosmosBlockParams = 1517,
+  CosmosCoin = 1518,
+  CosmosCommit = 1519,
+  CosmosCommitSig = 1520,
+  CosmosCompactBitArray = 1521,
+  CosmosConsensus = 1522,
+  CosmosConsensusParams = 1523,
+  CosmosDuplicateVoteEvidence = 1524,
+  CosmosDuration = 1525,
+  CosmosEvent = 1526,
+  CosmosEventAttribute = 1527,
+  CosmosEventData = 1528,
+  CosmosEventVote = 1529,
+  CosmosEvidence = 1530,
+  CosmosEvidenceList = 1531,
+  CosmosEvidenceParams = 1532,
+  CosmosFee = 1533,
+  CosmosHeader = 1534,
+  CosmosHeaderOnlyBlock = 1535,
+  CosmosLightBlock = 1536,
+  CosmosLightClientAttackEvidence = 1537,
+  CosmosModeInfo = 1538,
+  CosmosModeInfoMulti = 1539,
+  CosmosModeInfoSingle = 1540,
+  CosmosPartSetHeader = 1541,
+  CosmosPublicKey = 1542,
+  CosmosResponseBeginBlock = 1543,
+  CosmosResponseDeliverTx = 1544,
+  CosmosResponseEndBlock = 1545,
+  CosmosSignModeEnum = 1546,
+  CosmosSignedHeader = 1547,
+  CosmosSignedMsgTypeEnum = 1548,
+  CosmosSignerInfo = 1549,
+  CosmosTimestamp = 1550,
+  CosmosTip = 1551,
+  CosmosTransactionData = 1552,
+  CosmosTx = 1553,
+  CosmosTxBody = 1554,
+  CosmosTxResult = 1555,
+  CosmosValidator = 1556,
+  CosmosValidatorParams = 1557,
+  CosmosValidatorSet = 1558,
+  CosmosValidatorSetUpdates = 1559,
+  CosmosValidatorUpdate = 1560,
+  CosmosVersionParams = 1561,
   /*
-  Continue to add more Tendermint type IDs here. e.g.:
+  Continue to add more Cosmos type IDs here. e.g.:
   ```
-  NextTendermintType = 1547,
-  AnotherTendermintType = 1547,
+  NextCosmosType = 1562,
+  AnotherCosmosType = 1563,
   ...
-  LastTendermintType = 2499,
+  LastCosmosType = 2499,
   ```
   */
 
@@ -400,100 +415,6 @@ export function id_of_type(typeId: TypeId): usize {
       return idof<near.Block>()
     case TypeId.NearReceiptWithOutcome:
       return idof<near.ReceiptWithOutcome>()
-    case TypeId.TendermintArrayEventTx:
-      return idof<Array<tendermint.EventTx>>()
-    case TypeId.TendermintArrayEvent:
-      return idof<Array<tendermint.Event>>()
-    case TypeId.TendermintArrayCommitSig:
-      return idof<Array<tendermint.CommitSig>>()
-    case TypeId.TendermintArrayBytes:
-      return idof<Array<Bytes>>()
-    case TypeId.TendermintArrayEvidence:
-      return idof<Array<tendermint.Evidence>>()
-    case TypeId.TendermintArrayEventAttribute:
-      return idof<Array<tendermint.EventAttribute>>()
-    case TypeId.TendermintBlockIDFlagEnum:
-      return idof<Array<tendermint.BlockIDFlag>>()
-    case TypeId.TendermintSignedMsgTypeEnum:
-      return idof<Array<tendermint.SignedMsgType>>()
-    case TypeId.TendermintEventList:
-      return idof<tendermint.EventList>()
-    case TypeId.TendermintEventBlock:
-      return idof<tendermint.EventBlock>()
-    case TypeId.TendermintResponseBeginBlock:
-      return idof<tendermint.ResponseBeginBlock>()
-    case TypeId.TendermintResponseEndBlock:
-      return idof<tendermint.ResponseEndBlock>()
-    case TypeId.TendermintValidatorUpdate:
-      return idof<tendermint.ValidatorUpdate>()
-    case TypeId.TendermintArrayValidatorUpdate:
-      return idof<Array<tendermint.ValidatorUpdate>>()
-    case TypeId.TendermintConsensusParams:
-      return idof<tendermint.ConsensusParams>()
-    case TypeId.TendermintBlockParams:
-      return idof<tendermint.BlockParams>()
-    case TypeId.TendermintEvidenceParams:
-      return idof<tendermint.EvidenceParams>()
-    case TypeId.TendermintValidatorParams:
-      return idof<tendermint.ValidatorParams>()
-    case TypeId.TendermintVersionParams:
-      return idof<tendermint.VersionParams>()
-    case TypeId.TendermintBlock:
-      return idof<tendermint.Block>()
-    case TypeId.TendermintCommit:
-      return idof<tendermint.Commit>()
-    case TypeId.TendermintCommitSig:
-      return idof<tendermint.CommitSig>()
-    case TypeId.TendermintHeader:
-      return idof<tendermint.Header>()
-    case TypeId.TendermintConsensus:
-      return idof<tendermint.Consensus>()
-    case TypeId.TendermintBlockID:
-      return idof<tendermint.BlockID>()
-    case TypeId.TendermintPartSetHeader:
-      return idof<tendermint.PartSetHeader>()
-    case TypeId.TendermintData:
-      return idof<tendermint.Data>()
-    case TypeId.TendermintEvidence:
-      return idof<tendermint.Evidence>()
-    case TypeId.TendermintDuplicateVoteEvidence:
-      return idof<tendermint.DuplicateVoteEvidence>()
-    case TypeId.TendermintEventTx:
-      return idof<tendermint.EventTx>()
-    case TypeId.TendermintEventVote:
-      return idof<tendermint.EventVote>()
-    case TypeId.TendermintLightClientAttackEvidence:
-      return idof<tendermint.LightClientAttackEvidence>()
-    case TypeId.TendermintLightBlock:
-      return idof<tendermint.LightBlock>()
-    case TypeId.TendermintValidatorSet:
-      return idof<tendermint.ValidatorSet>()
-    case TypeId.TendermintSignedHeader:
-      return idof<tendermint.SignedHeader>()
-    case TypeId.TendermintEvidenceList:
-      return idof<tendermint.EvidenceList>()
-    case TypeId.TendermintValidator:
-      return idof<tendermint.Validator>()
-    case TypeId.TendermintArrayValidator:
-      return idof<Array<tendermint.Validator>>()
-    case TypeId.TendermintPublicKey:
-      return idof<tendermint.PublicKey>()
-    case TypeId.TendermintTxResult:
-      return idof<tendermint.TxResult>()
-    case TypeId.TendermintResponseDeliverTx:
-      return idof<tendermint.ResponseDeliverTx>()
-    case TypeId.TendermintEvent:
-      return idof<tendermint.Event>()
-    case TypeId.TendermintEventAttribute:
-      return idof<tendermint.EventAttribute>()
-    case TypeId.TendermintEventValidatorSetUpdates:
-      return idof<tendermint.EventValidatorSetUpdates>()
-    case TypeId.TendermintDuration:
-      return idof<tendermint.Duration>()
-    case TypeId.TendermintTimestamp:
-      return idof<tendermint.Timestamp>()
-    case TypeId.TendermintEventData:
-      return idof<tendermint.EventData>()
     case TypeId.TransactionReceipt:
       return idof<ethereum.TransactionReceipt>()
     case TypeId.Log:
@@ -502,6 +423,133 @@ export function id_of_type(typeId: TypeId): usize {
       return idof<Array<Uint8Array>>()
     case TypeId.ArrayLog:
       return idof<Array<ethereum.Log>>()
+    case TypeId.CosmosAny:
+      return idof<cosmos.Any>()
+    case TypeId.CosmosArrayAny:
+      return idof<Array<cosmos.Any>>()
+    case TypeId.CosmosArrayBytes:
+      return idof<Array<Bytes>>()
+    case TypeId.CosmosArrayCoin:
+      return idof<Array<cosmos.Coin>>()
+    case TypeId.CosmosArrayCommitSig:
+      return idof<Array<cosmos.CommitSig>>()
+    case TypeId.CosmosArrayEvent:
+      return idof<Array<cosmos.Event>>()
+    case TypeId.CosmosArrayEventAttribute:
+      return idof<Array<cosmos.EventAttribute>>()
+    case TypeId.CosmosArrayEvidence:
+      return idof<Array<cosmos.Evidence>>()
+    case TypeId.CosmosArrayModeInfo:
+      return idof<Array<cosmos.ModeInfo>>()
+    case TypeId.CosmosArraySignerInfo:
+      return idof<Array<cosmos.SignerInfo>>()
+    case TypeId.CosmosArrayTxResult:
+      return idof<Array<cosmos.TxResult>>()
+    case TypeId.CosmosArrayValidator:
+      return idof<Array<cosmos.Validator>>()
+    case TypeId.CosmosArrayValidatorUpdate:
+      return idof<Array<cosmos.ValidatorUpdate>>()
+    case TypeId.CosmosAuthInfo:
+      return idof<cosmos.AuthInfo>()
+    case TypeId.CosmosBlock:
+      return idof<cosmos.Block>()
+    case TypeId.CosmosBlockID:
+      return idof<cosmos.BlockID>()
+    case TypeId.CosmosBlockIDFlagEnum:
+      return idof<Array<cosmos.BlockIDFlag>>()
+    case TypeId.CosmosBlockParams:
+      return idof<cosmos.BlockParams>()
+    case TypeId.CosmosCoin:
+      return idof<cosmos.Coin>()
+    case TypeId.CosmosCommit:
+      return idof<cosmos.Commit>()
+    case TypeId.CosmosCommitSig:
+      return idof<cosmos.CommitSig>()
+    case TypeId.CosmosCompactBitArray:
+      return idof<cosmos.CompactBitArray>()
+    case TypeId.CosmosConsensus:
+      return idof<cosmos.Consensus>()
+    case TypeId.CosmosConsensusParams:
+      return idof<cosmos.ConsensusParams>()
+    case TypeId.CosmosDuplicateVoteEvidence:
+      return idof<cosmos.DuplicateVoteEvidence>()
+    case TypeId.CosmosDuration:
+      return idof<cosmos.Duration>()
+    case TypeId.CosmosEvent:
+      return idof<cosmos.Event>()
+    case TypeId.CosmosEventAttribute:
+      return idof<cosmos.EventAttribute>()
+    case TypeId.CosmosEventData:
+      return idof<cosmos.EventData>()
+    case TypeId.CosmosEventVote:
+      return idof<cosmos.EventVote>()
+    case TypeId.CosmosEvidence:
+      return idof<cosmos.Evidence>()
+    case TypeId.CosmosEvidenceList:
+      return idof<cosmos.EvidenceList>()
+    case TypeId.CosmosEvidenceParams:
+      return idof<cosmos.EvidenceParams>()
+    case TypeId.CosmosFee:
+      return idof<cosmos.Fee>()
+    case TypeId.CosmosHeader:
+      return idof<cosmos.Header>()
+    case TypeId.CosmosHeaderOnlyBlock:
+      return idof<cosmos.HeaderOnlyBlock>()
+    case TypeId.CosmosLightBlock:
+      return idof<cosmos.LightBlock>()
+    case TypeId.CosmosLightClientAttackEvidence:
+      return idof<cosmos.LightClientAttackEvidence>()
+    case TypeId.CosmosModeInfo:
+      return idof<cosmos.ModeInfo>()
+    case TypeId.CosmosModeInfoMulti:
+      return idof<cosmos.ModeInfoMulti>()
+    case TypeId.CosmosModeInfoSingle:
+      return idof<cosmos.ModeInfoSingle>()
+    case TypeId.CosmosPartSetHeader:
+      return idof<cosmos.PartSetHeader>()
+    case TypeId.CosmosPublicKey:
+      return idof<cosmos.PublicKey>()
+    case TypeId.CosmosResponseBeginBlock:
+      return idof<cosmos.ResponseBeginBlock>()
+    case TypeId.CosmosResponseDeliverTx:
+      return idof<cosmos.ResponseDeliverTx>()
+    case TypeId.CosmosResponseEndBlock:
+      return idof<cosmos.ResponseEndBlock>()
+    case TypeId.CosmosSignModeEnum:
+      return idof<Array<cosmos.SignMode>>()
+    case TypeId.CosmosSignedHeader:
+      return idof<cosmos.SignedHeader>()
+    case TypeId.CosmosSignedMsgTypeEnum:
+      return idof<Array<cosmos.SignedMsgType>>()
+    case TypeId.CosmosSignerInfo:
+      return idof<cosmos.SignerInfo>()
+    case TypeId.CosmosTimestamp:
+      return idof<cosmos.Timestamp>()
+    case TypeId.CosmosTip:
+      return idof<cosmos.Tip>()
+    case TypeId.CosmosTransactionData:
+      return idof<cosmos.TransactionData>()
+    case TypeId.CosmosTx:
+      return idof<cosmos.Tx>()
+    case TypeId.CosmosTxBody:
+      return idof<cosmos.TxBody>()
+    case TypeId.CosmosTxResult:
+      return idof<cosmos.TxResult>()
+    case TypeId.CosmosValidator:
+      return idof<cosmos.Validator>()
+    case TypeId.CosmosValidatorParams:
+      return idof<cosmos.ValidatorParams>()
+    case TypeId.CosmosValidatorSet:
+      return idof<cosmos.ValidatorSet>()
+    case TypeId.CosmosValidatorSetUpdates:
+      return idof<cosmos.ValidatorSetUpdates>()
+    case TypeId.CosmosValidatorUpdate:
+      return idof<cosmos.ValidatorUpdate>()
+    case TypeId.CosmosVersionParams:
+      return idof<cosmos.VersionParams>()
+    /**
+     * Arweave type ids
+     */
     case TypeId.ArweaveBlock:
       return idof<arweave.Block>()
     case TypeId.ArweaveProofOfAccess:
