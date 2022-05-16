@@ -8,6 +8,7 @@ import {
   Wrapped,
 } from '../common/collections'
 import { JSONValue, Value } from '../common/value'
+import { arweave } from '../chain/arweave'
 import { ethereum } from '../chain/ethereum'
 import { near } from '../chain/near'
 import { cosmos } from '../chain/cosmos'
@@ -216,7 +217,25 @@ export enum TypeId {
   ```
   */
 
-  // Reserved discriminant space for a future blockchain type IDs: [2,500, 3,499]
+  // Reserved discriminant space for Tendermint type IDs: [2,500, 3,499]
+  ArweaveBlock = 2500,
+  ArweaveProofOfAccess = 2501,
+  ArweaveTag = 2502,
+  ArweaveTagArray = 2503,
+  ArweaveTransaction = 2504,
+  ArweaveTransactionArray = 2505,
+  ArweaveTransactionWithBlockPtr = 2506,
+  /*
+  Continue to add more Arweave type IDs here. e.g.:
+  ```
+  NextArweaveType = 2507,
+  AnotherArweaveType = 2508,
+  ...
+  LastArweaveType = 3499,
+  ```
+  */
+
+  // Reserved discriminant space for a future blockchain type IDs: [3,500, 4,499]
 }
 
 export function id_of_type(typeId: TypeId): usize {
@@ -528,6 +547,23 @@ export function id_of_type(typeId: TypeId): usize {
       return idof<cosmos.ValidatorUpdate>()
     case TypeId.CosmosVersionParams:
       return idof<cosmos.VersionParams>()
+    /**
+     * Arweave type ids
+     */
+    case TypeId.ArweaveBlock:
+      return idof<arweave.Block>()
+    case TypeId.ArweaveProofOfAccess:
+      return idof<arweave.ProofOfAccess>()
+    case TypeId.ArweaveTag:
+      return idof<arweave.Tag>()
+    case TypeId.ArweaveTagArray:
+      return idof<Array<arweave.Tag>>()
+    case TypeId.ArweaveTransaction:
+      return idof<arweave.Transaction>()
+    case TypeId.ArweaveTransactionArray:
+      return idof<Array<arweave.Transaction>>()
+    case TypeId.ArweaveTransactionWithBlockPtr:
+      return idof<arweave.TransactionWithBlockPtr>()
     default:
       return 0
   }
