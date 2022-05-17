@@ -26,6 +26,10 @@ export namespace cosmos {
     constructor(public tx: TxResult, public block: HeaderOnlyBlock) {}
   }
 
+  export class MessageData {
+    constructor(public message: Any, public block: HeaderOnlyBlock) {}
+  }
+
   export class Header {
     constructor(
       public version: Consensus,
