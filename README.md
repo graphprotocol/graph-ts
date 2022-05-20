@@ -59,7 +59,7 @@ Refer to the `helper-functions.ts` file in this repository for a few common func
 
 ## API
 
-Documentation on the API can be found [here](https://thegraph.com/docs/assemblyscript-api#api-reference).
+Documentation on the API can be found [here](https://thegraph.com/docs/en/developer/assemblyscript-api/).
 
 For examples of `graph-ts` in use take a look at one of the following subgraphs:
 * https://github.com/graphprotocol/ens-subgraph
