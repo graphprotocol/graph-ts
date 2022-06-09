@@ -2,7 +2,7 @@ import '../common/eager_offset'
 import { Bytes, Wrapped } from '../common/collections'
 import { Address, BigInt } from '../common/numbers'
 
-/** Host Ethereum interface */
+/** Host Candle interface */
 export declare namespace candle {
   function call(call: SmartContractCall): Array<Value> | null
   function encode(token: Value): Bytes | null
@@ -10,7 +10,7 @@ export declare namespace candle {
 }
 
 export namespace candle {
-  /** Type hint for Ethereum values. */
+  /** Type hint for Candle values. */
   export enum ValueKind {
     ADDRESS = 0,
     FIXED_BYTES = 1,
@@ -25,14 +25,14 @@ export namespace candle {
   }
 
   /**
-   * Pointer type for Ethereum value data.
+   * Pointer type for Candle value data.
    *
    * Big enough to fit any pointer or native `this.data`.
    */
   export type ValuePayload = u64
 
   /**
-   * A dynamically typed value used when accessing Ethereum data.
+   * A dynamically typed value used when accessing Candle data.
    */
   export class Value {
     constructor(public kind: ValueKind, public data: ValuePayload) {}
@@ -50,19 +50,19 @@ export namespace candle {
     }
 
     toAddress(): Address {
-      assert(this.kind == ValueKind.ADDRESS, 'Ethereum value is not an address')
+      assert(this.kind == ValueKind.ADDRESS, 'Candle value is not an address')
       return changetype<Address>(this.data as u32)
     }
 
     toBoolean(): boolean {
-      assert(this.kind == ValueKind.BOOL, 'Ethereum value is not a boolean.')
+      assert(this.kind == ValueKind.BOOL, 'Candle value is not a boolean.')
       return this.data != 0
     }
 
     toBytes(): Bytes {
       assert(
         this.kind == ValueKind.FIXED_BYTES || this.kind == ValueKind.BYTES,
-        'Ethereum value is not bytes.',
+        'Candle value is not bytes.',
       )
       return changetype<Bytes>(this.data as u32)
     }
@@ -70,7 +70,7 @@ export namespace candle {
     toI32(): i32 {
       assert(
         this.kind == ValueKind.INT || this.kind == ValueKind.UINT,
-        'Ethereum value is not an int or uint.',
+        'Candle value is not an int or uint.',
       )
       let bigInt = changetype<BigInt>(this.data as u32)
       return bigInt.toI32()
@@ -79,33 +79,33 @@ export namespace candle {
     toBigInt(): BigInt {
       assert(
         this.kind == ValueKind.INT || this.kind == ValueKind.UINT,
-        'Ethereum value is not an int or uint.',
+        'Candle value is not an int or uint.',
       )
       return changetype<BigInt>(this.data as u32)
     }
 
     toString(): string {
-      assert(this.kind == ValueKind.STRING, 'Ethereum value is not a string.')
+      assert(this.kind == ValueKind.STRING, 'Candle value is not a string.')
       return changetype<string>(this.data as u32)
     }
 
     toArray(): Array<Value> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
-        'Ethereum value is not an array.',
+        'Candle value is not an array.',
       )
       return changetype<Array<Value>>(this.data as u32)
     }
 
     toTuple(): Tuple {
-      assert(this.kind == ValueKind.TUPLE, 'Ethereum value is not a tuple.')
+      assert(this.kind == ValueKind.TUPLE, 'Candle value is not a tuple.')
       return changetype<Tuple>(this.data as u32)
     }
 
     toTupleArray<T extends Tuple>(): Array<T> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
-        'Ethereum value is not an array.',
+        'Candle value is not an array.',
       )
       let valueArray = this.toArray()
       let out = new Array<T>(valueArray.length)
@@ -118,7 +118,7 @@ export namespace candle {
     toBooleanArray(): Array<boolean> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
-        'Ethereum value is not an array or fixed array.',
+        'Candle value is not an array or fixed array.',
       )
       let valueArray = this.toArray()
       let out = new Array<boolean>(valueArray.length)
@@ -131,7 +131,7 @@ export namespace candle {
     toBytesArray(): Array<Bytes> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
-        'Ethereum value is not an array or fixed array.',
+        'Candle value is not an array or fixed array.',
       )
       let valueArray = this.toArray()
       let out = new Array<Bytes>(valueArray.length)
@@ -144,7 +144,7 @@ export namespace candle {
     toAddressArray(): Array<Address> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
-        'Ethereum value is not an array or fixed array.',
+        'Candle value is not an array or fixed array.',
       )
       let valueArray = this.toArray()
       let out = new Array<Address>(valueArray.length)
@@ -157,7 +157,7 @@ export namespace candle {
     toStringArray(): Array<string> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
-        'Ethereum value is not an array or fixed array.',
+        'Candle value is not an array or fixed array.',
       )
       let valueArray = this.toArray()
       let out = new Array<string>(valueArray.length)
@@ -170,7 +170,7 @@ export namespace candle {
     toI32Array(): Array<i32> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
-        'Ethereum value is not an array or fixed array.',
+        'Candle value is not an array or fixed array.',
       )
       let valueArray = this.toArray()
       let out = new Array<i32>(valueArray.length)
@@ -183,7 +183,7 @@ export namespace candle {
     toBigIntArray(): Array<BigInt> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
-        'Ethereum value is not an array or fixed array.',
+        'Candle value is not an array or fixed array.',
       )
       let valueArray = this.toArray()
       let out = new Array<BigInt>(valueArray.length)
@@ -312,7 +312,7 @@ export namespace candle {
   }
 
   /**
-   * Common representation for Ethereum tuples / Solidity structs.
+   * Common representation for Candle tuples / Solidity structs.
    *
    * This base class stores the tuple/struct values in an array. The Graph CLI
    * code generation then creates subclasses that provide named getters to
@@ -321,7 +321,7 @@ export namespace candle {
   export class Tuple extends Array<Value> {}
 
   /**
-   * An Ethereum block.
+   * An Candle block.
    */
   export class Block {
     constructor(
@@ -344,7 +344,7 @@ export namespace candle {
   }
 
   /**
-   * An Ethereum transaction.
+   * An Candle transaction.
    */
   export class Transaction {
     constructor(
@@ -361,7 +361,7 @@ export namespace candle {
   }
 
   /**
-   * An Ethereum transaction receipt.
+   * An Candle transaction receipt.
    */
   export class TransactionReceipt {
     constructor(
@@ -380,7 +380,7 @@ export namespace candle {
   }
 
   /**
-   * An Ethereum event log.
+   * An Candle event log.
    */
   export class Log {
     constructor(
@@ -399,7 +399,7 @@ export namespace candle {
   }
 
   /**
-   * Common representation for Ethereum smart contract calls.
+   * Common representation for Candle smart contract calls.
    */
   export class Call {
     constructor(
@@ -413,7 +413,7 @@ export namespace candle {
   }
 
   /**
-   * Common representation for Ethereum smart contract events.
+   * Common representation for Candle smart contract events.
    */
   export class Event {
     constructor(
@@ -429,7 +429,7 @@ export namespace candle {
   }
 
   /**
-   * A dynamically-typed Ethereum event parameter.
+   * A dynamically-typed Candle event parameter.
    */
   export class EventParam {
     constructor(public name: string, public value: Value) {}
@@ -458,7 +458,7 @@ export namespace candle {
   }
 
   /**
-   * Low-level interaction with Ethereum smart contracts
+   * Low-level interaction with Candle smart contracts
    */
   export class SmartContract {
     _name: string

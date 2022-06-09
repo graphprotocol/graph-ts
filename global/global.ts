@@ -9,6 +9,7 @@ import {
 } from '../common/collections'
 import { JSONValue, Value } from '../common/value'
 import { arweave } from '../chain/arweave'
+import { candle } from '../chain/candle'
 import { ethereum } from '../chain/ethereum'
 import { near } from '../chain/near'
 import { cosmos } from '../chain/cosmos'
