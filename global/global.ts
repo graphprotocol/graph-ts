@@ -146,22 +146,22 @@ export enum TypeId {
 
   // Reserved discriminant space for Cosmos type IDs: [1,500, 2,499]
   CosmosAny = 1500,
-  CosmosArrayAny = 1501,
-  CosmosArrayBytes = 1502,
-  CosmosArrayCoin = 1503,
-  CosmosArrayCommitSig = 1504,
-  CosmosArrayEvent = 1505,
-  CosmosArrayEventAttribute = 1506,
-  CosmosArrayEvidence = 1507,
-  CosmosArrayModeInfo = 1508,
-  CosmosArraySignerInfo = 1509,
-  CosmosArrayTxResult = 1510,
-  CosmosArrayValidator = 1511,
-  CosmosArrayValidatorUpdate = 1512,
+  CosmosAnyArray = 1501,
+  CosmosBytesArray = 1502,
+  CosmosCoinArray = 1503,
+  CosmosCommitSigArray = 1504,
+  CosmosEventArray = 1505,
+  CosmosEventAttributeArray = 1506,
+  CosmosEvidenceArray = 1507,
+  CosmosModeInfoArray = 1508,
+  CosmosSignerInfoArray = 1509,
+  CosmosTxResultArray = 1510,
+  CosmosValidatorArray = 1511,
+  CosmosValidatorUpdateArray = 1512,
   CosmosAuthInfo = 1513,
   CosmosBlock = 1514,
-  CosmosBlockID = 1515,
-  CosmosBlockIDFlagEnum = 1516,
+  CosmosBlockId = 1515,
+  CosmosBlockIdFlagEnum = 1516,
   CosmosBlockParams = 1517,
   CosmosCoin = 1518,
   CosmosCommit = 1519,
@@ -425,37 +425,37 @@ export function id_of_type(typeId: TypeId): usize {
       return idof<Array<ethereum.Log>>()
     case TypeId.CosmosAny:
       return idof<cosmos.Any>()
-    case TypeId.CosmosArrayAny:
+    case TypeId.CosmosAnyArray:
       return idof<Array<cosmos.Any>>()
-    case TypeId.CosmosArrayBytes:
+    case TypeId.CosmosBytesArray:
       return idof<Array<Bytes>>()
-    case TypeId.CosmosArrayCoin:
+    case TypeId.CosmosCoinArray:
       return idof<Array<cosmos.Coin>>()
-    case TypeId.CosmosArrayCommitSig:
+    case TypeId.CosmosCommitSigArray:
       return idof<Array<cosmos.CommitSig>>()
-    case TypeId.CosmosArrayEvent:
+    case TypeId.CosmosEventArray:
       return idof<Array<cosmos.Event>>()
-    case TypeId.CosmosArrayEventAttribute:
+    case TypeId.CosmosEventAttributeArray:
       return idof<Array<cosmos.EventAttribute>>()
-    case TypeId.CosmosArrayEvidence:
+    case TypeId.CosmosEvidenceArray:
       return idof<Array<cosmos.Evidence>>()
-    case TypeId.CosmosArrayModeInfo:
+    case TypeId.CosmosModeInfoArray:
       return idof<Array<cosmos.ModeInfo>>()
-    case TypeId.CosmosArraySignerInfo:
+    case TypeId.CosmosSignerInfoArray:
       return idof<Array<cosmos.SignerInfo>>()
-    case TypeId.CosmosArrayTxResult:
+    case TypeId.CosmosTxResultArray:
       return idof<Array<cosmos.TxResult>>()
-    case TypeId.CosmosArrayValidator:
+    case TypeId.CosmosValidatorArray:
       return idof<Array<cosmos.Validator>>()
-    case TypeId.CosmosArrayValidatorUpdate:
+    case TypeId.CosmosValidatorUpdateArray:
       return idof<Array<cosmos.ValidatorUpdate>>()
     case TypeId.CosmosAuthInfo:
       return idof<cosmos.AuthInfo>()
     case TypeId.CosmosBlock:
       return idof<cosmos.Block>()
-    case TypeId.CosmosBlockID:
+    case TypeId.CosmosBlockId:
       return idof<cosmos.BlockID>()
-    case TypeId.CosmosBlockIDFlagEnum:
+    case TypeId.CosmosBlockIdFlagEnum:
       return idof<Array<cosmos.BlockIDFlag>>()
     case TypeId.CosmosBlockParams:
       return idof<cosmos.BlockParams>()
