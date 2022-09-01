@@ -22,6 +22,7 @@ export namespace ethereum {
     FIXED_ARRAY = 7,
     ARRAY = 8,
     TUPLE = 9,
+    MATRIX = 10,
   }
 
   /**
@@ -100,6 +101,14 @@ export namespace ethereum {
     toTuple(): Tuple {
       assert(this.kind == ValueKind.TUPLE, 'Ethereum value is not a tuple.')
       return changetype<Tuple>(this.data as u32)
+    }
+
+    toMatrix(): Array<Array<Value>> {
+      assert(
+        this.kind == ValueKind.MATRIX,
+        'Ethereum value is not a matrix.',
+      )
+      return changetype<Array<Array<Value>>>(this.data as u32)
     }
 
     toTupleArray<T extends Tuple>(): Array<T> {
@@ -189,6 +198,84 @@ export namespace ethereum {
       let out = new Array<BigInt>(valueArray.length)
       for (let i: i32 = 0; i < valueArray.length; i++) {
         out[i] = valueArray[i].toBigInt()
+      }
+      return out
+    }
+
+    toBooleanMatrix(): Array<Array<boolean>> {
+      assert(
+        this.kind == ValueKind.MATRIX,
+        'Ethereum value is not a matrix.',
+      )
+      let valueMatrix = this.toMatrix()
+      let out = new Array<Array<boolean>>(valueMatrix.length)
+      for (let i: i32 = 0; i < valueMatrix.length; i++) {
+        out[i] = valueMatrix[i].toBooleanArray()
+      }
+      return out
+    }
+
+    toBytesMatrix(): Array<Array<Bytes>> {
+      assert(
+        this.kind == ValueKind.MATRIX,
+        'Ethereum value is not a matrix.',
+      )
+      let valueMatrix = this.toMatrix()
+      let out = new Array<Array<Bytes>>(valueMatrix.length)
+      for (let i: i32 = 0; i < valueMatrix.length; i++) {
+        out[i] = valueMatrix[i].toBytesArray()
+      }
+      return out
+    }
+
+    toAddressMatrix(): Array<Array<Address>> {
+      assert(
+        this.kind == ValueKind.MATRIX,
+        'Ethereum value is not a matrix.',
+      )
+      let valueMatrix = this.toMatrix()
+      let out = new Array<Array<Address>>(valueMatrix.length)
+      for (let i: i32 = 0; i < valueMatrix.length; i++) {
+        out[i] = valueMatrix[i].toAddressArray()
+      }
+      return out
+    }
+
+    toStringMatrix(): Array<Array<string>> {
+      assert(
+        this.kind == ValueKind.MATRIX,
+        'Ethereum value is not a matrix.',
+      )
+      let valueMatrix = this.toMatrix()
+      let out = new Array<Array<string>>(valueMatrix.length)
+      for (let i: i32 = 0; i < valueMatrix.length; i++) {
+        out[i] = valueMatrix[i].toStringArray()
+      }
+      return out
+    }
+
+    toI32Matrix(): Array<Array<i32>> {
+      assert(
+        this.kind == ValueKind.MATRIX,
+        'Ethereum value is not a matrix.',
+      )
+      let valueMatrix = this.toMatrix()
+      let out = new Array<Array<i32>>(valueMatrix.length)
+      for (let i: i32 = 0; i < valueMatrix.length; i++) {
+        out[i] = valueMatrix[i].toI32Array()
+      }
+      return out
+    }
+
+    toBigIntMatrix(): Array<Array<BigInt>> {
+      assert(
+        this.kind == ValueKind.MATRIX,
+        'Ethereum value is not a matrix.',
+      )
+      let valueMatrix = this.toMatrix()
+      let out = new Array<Array<BigInt>>(valueMatrix.length)
+      for (let i: i32 = 0; i < valueMatrix.length; i++) {
+        out[i] = valueMatrix[i].toBigIntArray()
       }
       return out
     }
