@@ -325,6 +325,10 @@ export namespace ethereum {
       return new Value(ValueKind.TUPLE, changetype<u32>(values))
     }
 
+    static fromMatrix(values: Array<Array<Value>>): Value {
+      return new Value(ValueKind.MATRIX, changetype<u32>(values))
+    }
+
     static fromTupleArray(values: Array<Tuple>): Value {
       let out = new Array<Value>(values.length)
       for (let i: i32 = 0; i < values.length; i++) {
@@ -395,6 +399,70 @@ export namespace ethereum {
         out[i] = Value.fromUnsignedBigInt(values[i])
       }
       return Value.fromArray(out)
+    }
+
+    static fromBooleanMatrix(values: Array<Array<boolean>>): Value {
+      let out = new Array<Array<Value>>(values.length)
+      for (let i: i32 = 0; i < values.length; i++) {
+        out[i] = Value.fromBooleanArray(values[i])
+      }
+      return Value.fromMatrix(out)
+    }
+
+    static fromBytesMatrix(values: Array<Array<Bytes>>): Value {
+      let out = new Array<Array<Value>>(values.length)
+      for (let i: i32 = 0; i < values.length; i++) {
+        out[i] = Value.fromBytesArray(values[i])
+      }
+      return Value.fromMatrix(out)
+    }
+
+    static fromFixedBytesMatrix(values: Array<Array<Bytes>>): Value {
+      let out = new Array<Array<Value>>(values.length)
+      for (let i: i32 = 0; i < values.length; i++) {
+        out[i] = Value.fromFixedBytesArray(values[i])
+      }
+      return Value.fromMatrix(out)
+    }
+
+    static fromAddressMatrix(values: Array<Array<Address>>): Value {
+      let out = new Array<Array<Value>>(values.length)
+      for (let i: i32 = 0; i < values.length; i++) {
+        out[i] = Value.fromAddressArray(values[i])
+      }
+      return Value.fromMatrix(out)
+    }
+
+    static fromStringMatrix(values: Array<Array<string>>): Value {
+      let out = new Array<Array<Value>>(values.length)
+      for (let i: i32 = 0; i < values.length; i++) {
+        out[i] = Value.fromStringArray(values[i])
+      }
+      return Value.fromMatrix(out)
+    }
+
+    static fromI32Matrix(values: Array<Array<i32>>): Value {
+      let out = new Array<Array<Value>>(values.length)
+      for (let i: i32 = 0; i < values.length; i++) {
+        out[i] = Value.fromI32Array(values[i])
+      }
+      return Value.fromMatrix(out)
+    }
+
+    static fromSignedBigIntMatrix(values: Array<Array<BigInt>>): Value {
+      let out = new Array<Array<Value>>(values.length)
+      for (let i: i32 = 0; i < values.length; i++) {
+        out[i] = Value.fromSignedBigIntArray(values[i])
+      }
+      return Value.fromMatrix(out)
+    }
+
+    static fromUnsignedBigIntMatrix(values: Array<Array<BigInt>>): Value {
+      let out = new Array<Array<Value>>(values.length)
+      for (let i: i32 = 0; i < values.length; i++) {
+        out[i] = Value.fromUnsignedBigIntArray(values[i])
+      }
+      return Value.fromMatrix(out)
     }
   }
 
