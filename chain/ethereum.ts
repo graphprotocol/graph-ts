@@ -124,6 +124,22 @@ export namespace ethereum {
       return out
     }
 
+    toTupleMatrix<T extends Tuple>(): Array<Array<T>> {
+      assert(
+        this.kind == ValueKind.MATRIX,
+        'Ethereum value is not a matrix.',
+      )
+      let valueMatrix = this.toMatrix()
+      let out = new Array<Array<T>>(valueMatrix.length)
+      for (let i: i32 = 0; i < valueMatrix.length; i++) {
+        out[i] = new Array<T>(valueMatrix[i].length)
+        for (let j: i32 = 0; j < valueMatrix[i].length; j++) {
+          out[i][j] = changetype<T>(valueMatrix[i][j].toTuple())
+        }
+      }
+      return out
+    }
+
     toBooleanArray(): Array<boolean> {
       assert(
         this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
@@ -353,6 +369,17 @@ export namespace ethereum {
         out[i] = Value.fromTuple(values[i])
       }
       return Value.fromArray(out)
+    }
+
+    static fromTupleMatrix(values: Array<Array<Tuple>>): Value {
+      let out = new Array<Array<Value>>(values.length)
+      for (let i: i32 = 0; i < values.length; i++) {
+        out[i] = new Array<Value>(values[i].length)
+        for (let j: i32 = 0; j < values[i].length; j++) {
+          out[i][j] = Value.fromTuple(values[i][j])
+        }
+      }
+      return Value.fromMatrix(out)
     }
 
     static fromBooleanArray(values: Array<boolean>): Value {
