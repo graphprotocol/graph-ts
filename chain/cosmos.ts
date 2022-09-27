@@ -19,7 +19,11 @@ export namespace cosmos {
   }
 
   export class EventData {
-    constructor(public event: Event, public block: HeaderOnlyBlock) {}
+    constructor(
+      public event: Event,
+      public block: HeaderOnlyBlock,
+      public tx: TransactionContext,
+    ) {}
   }
 
   export class TransactionData {
@@ -27,7 +31,21 @@ export namespace cosmos {
   }
 
   export class MessageData {
-    constructor(public message: Any, public block: HeaderOnlyBlock) {}
+    constructor(
+      public message: Any,
+      public block: HeaderOnlyBlock,
+      public tx: TransactionContext,
+    ) {}
+  }
+
+  export class TransactionContext {
+    constructor(
+      public hash: Bytes,
+      public index: u32,
+      public code: u32,
+      public gasWanted: i64,
+      public gasUsed: i64,
+    ) {}
   }
 
   export class Header {

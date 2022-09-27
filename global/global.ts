@@ -208,11 +208,12 @@ export enum TypeId {
   CosmosValidatorUpdate = 1560,
   CosmosVersionParams = 1561,
   CosmosMessageData = 1562,
+  CosmosTransactionContext = 1563,
   /*
   Continue to add more Cosmos type IDs here. e.g.:
   ```
-  NextCosmosType = 1563,
-  AnotherCosmosType = 1564,
+  NextCosmosType = 1564,
+  AnotherCosmosType = 1565,
   ...
   LastCosmosType = 2499,
   ```
@@ -550,6 +551,8 @@ export function id_of_type(typeId: TypeId): usize {
       return idof<cosmos.VersionParams>()
     case TypeId.CosmosMessageData:
       return idof<cosmos.MessageData>()
+    case TypeId.CosmosTransactionContext:
+      return idof<cosmos.TransactionContext>()
     /**
      * Arweave type ids
      */
