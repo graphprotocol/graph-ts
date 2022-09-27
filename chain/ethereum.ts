@@ -103,11 +103,12 @@ export namespace ethereum {
     }
 
     toMatrix(): Array<Array<Value>> {
-      assert(
-        this.kind == ValueKind.ARRAY || this.kind == ValueKind.FIXED_ARRAY,
-        'Ethereum value is not an array (matrix conversion).',
-      )
-      return changetype<Array<Array<Value>>>(this.data as u32)
+      let valueArray = this.toArray()
+      let out = new Array<Array<Value>>(valueArray.length)
+      for (let i: i32 = 0; i < valueArray.length; i++) {
+        out[i] = valueArray[i].toArray()
+      }
+      return out
     }
 
     toTupleArray<T extends Tuple>(): Array<T> {
