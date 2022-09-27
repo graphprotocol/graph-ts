@@ -332,7 +332,11 @@ export namespace ethereum {
     }
 
     static fromMatrix(values: Array<Array<Value>>): Value {
-      return new Value(ValueKind.ARRAY, changetype<u32>(values))
+      let innerOut = new Array<Value>(values.length)
+      for (let i: i32 = 0; i < innerOut.length; i++) {
+        innerOut[i] = Value.fromArray(values[i])
+      }
+      return Value.fromArray(innerOut)
     }
 
     static fromTupleArray(values: Array<Tuple>): Value {
