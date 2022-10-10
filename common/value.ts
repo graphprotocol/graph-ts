@@ -86,6 +86,15 @@ export class Value {
     return changetype<Array<Value>>(this.data as u32)
   }
 
+  toMatrix(): Array<Array<Value>> {
+    let valueArray = this.toArray()
+    let out = new Array<Array<Value>>(valueArray.length)
+    for (let i: i32 = 0; i < valueArray.length; i++) {
+      out[i] = valueArray[i].toArray()
+    }
+    return out
+  }
+
   toBooleanArray(): Array<boolean> {
     let values = this.toArray()
     let output = new Array<boolean>(values.length)
@@ -138,6 +147,78 @@ export class Value {
       output[i] = values[i].toBigDecimal()
     }
     return output
+  }
+
+  toBooleanMatrix(): Array<Array<boolean>> {
+    let valueMatrix = this.toMatrix()
+    let out = new Array<Array<boolean>>(valueMatrix.length)
+    for (let i: i32 = 0; i < valueMatrix.length; i++) {
+      out[i] = new Array<boolean>(valueMatrix[i].length)
+      for (let j: i32 = 0; j < valueMatrix[i].length; j++) {
+        out[i][j] = valueMatrix[i][j].toBoolean()
+      }
+    }
+    return out
+  }
+
+  toBytesMatrix(): Array<Array<Bytes>> {
+    let valueMatrix = this.toMatrix()
+    let out = new Array<Array<Bytes>>(valueMatrix.length)
+    for (let i: i32 = 0; i < valueMatrix.length; i++) {
+      out[i] = new Array<Bytes>(valueMatrix[i].length)
+      for (let j: i32 = 0; j < valueMatrix[i].length; j++) {
+        out[i][j] = valueMatrix[i][j].toBytes()
+      }
+    }
+    return out
+  }
+
+  toAddressMatrix(): Array<Array<Address>> {
+    let valueMatrix = this.toMatrix()
+    let out = new Array<Array<Address>>(valueMatrix.length)
+    for (let i: i32 = 0; i < valueMatrix.length; i++) {
+      out[i] = new Array<Address>(valueMatrix[i].length)
+      for (let j: i32 = 0; j < valueMatrix[i].length; j++) {
+        out[i][j] = valueMatrix[i][j].toAddress()
+      }
+    }
+    return out
+  }
+
+  toStringMatrix(): Array<Array<string>> {
+    let valueMatrix = this.toMatrix()
+    let out = new Array<Array<string>>(valueMatrix.length)
+    for (let i: i32 = 0; i < valueMatrix.length; i++) {
+      out[i] = new Array<string>(valueMatrix[i].length)
+      for (let j: i32 = 0; j < valueMatrix[i].length; j++) {
+        out[i][j] = valueMatrix[i][j].toString()
+      }
+    }
+    return out
+  }
+
+  toI32Matrix(): Array<Array<i32>> {
+    let valueMatrix = this.toMatrix()
+    let out = new Array<Array<i32>>(valueMatrix.length)
+    for (let i: i32 = 0; i < valueMatrix.length; i++) {
+      out[i] = new Array<i32>(valueMatrix[i].length)
+      for (let j: i32 = 0; j < valueMatrix[i].length; j++) {
+        out[i][j] = valueMatrix[i][j].toI32()
+      }
+    }
+    return out
+  }
+
+  toBigIntMatrix(): Array<Array<BigInt>> {
+    let valueMatrix = this.toMatrix()
+    let out = new Array<Array<BigInt>>(valueMatrix.length)
+    for (let i: i32 = 0; i < valueMatrix.length; i++) {
+      out[i] = new Array<BigInt>(valueMatrix[i].length)
+      for (let j: i32 = 0; j < valueMatrix[i].length; j++) {
+        out[i][j] = valueMatrix[i][j].toBigInt()
+      }
+    }
+    return out
   }
 
   /** Return a string that indicates the kind of value `this` contains for
@@ -266,6 +347,69 @@ export class Value {
 
   static fromBigDecimal(n: BigDecimal): Value {
     return new Value(ValueKind.BIGDECIMAL, changetype<u32>(n))
+  }
+
+  static fromMatrix(values: Array<Array<Value>>): Value {
+    let innerOut = new Array<Value>(values.length)
+    for (let i: i32 = 0; i < innerOut.length; i++) {
+      innerOut[i] = Value.fromArray(values[i])
+    }
+    return Value.fromArray(innerOut)
+  }
+
+  static fromBooleanMatrix(values: Array<Array<boolean>>): Value {
+    let out = new Array<Array<Value>>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = new Array<Value>(values[i].length)
+      for (let j: i32 = 0; j < values[i].length; j++) {
+        out[i][j] = Value.fromBoolean(values[i][j])
+      }
+    }
+    return Value.fromMatrix(out)
+  }
+
+  static fromBytesMatrix(values: Array<Array<Bytes>>): Value {
+    let out = new Array<Array<Value>>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = new Array<Value>(values[i].length)
+      for (let j: i32 = 0; j < values[i].length; j++) {
+        out[i][j] = Value.fromBytes(values[i][j])
+      }
+    }
+    return Value.fromMatrix(out)
+  }
+
+  static fromAddressMatrix(values: Array<Array<Address>>): Value {
+    let out = new Array<Array<Value>>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = new Array<Value>(values[i].length)
+      for (let j: i32 = 0; j < values[i].length; j++) {
+        out[i][j] = Value.fromAddress(values[i][j])
+      }
+    }
+    return Value.fromMatrix(out)
+  }
+
+  static fromStringMatrix(values: Array<Array<string>>): Value {
+    let out = new Array<Array<Value>>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = new Array<Value>(values[i].length)
+      for (let j: i32 = 0; j < values[i].length; j++) {
+        out[i][j] = Value.fromString(values[i][j])
+      }
+    }
+    return Value.fromMatrix(out)
+  }
+
+  static fromI32Matrix(values: Array<Array<i32>>): Value {
+    let out = new Array<Array<Value>>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = new Array<Value>(values[i].length)
+      for (let j: i32 = 0; j < values[i].length; j++) {
+        out[i][j] = Value.fromI32(values[i][j])
+      }
+    }
+    return Value.fromMatrix(out)
   }
 }
 
