@@ -16,6 +16,11 @@ export declare namespace dataSource {
   function network(): string
   function context(): DataSourceContext
 }
+export namespace dataSource {
+  export function stringParam(): string {
+    return String.UTF8.decode(dataSource.address().buffer)
+  }
+}
 
 /** Context for dynamic data sources */
 export class DataSourceContext extends Entity {}
