@@ -19,6 +19,11 @@ export * from './common/datasource'
 import { Bytes, ByteArray, Entity } from './common/collections'
 import { Value } from './common/value'
 
+// Host Bus Interface
+export declare namespace bus {
+  function send(value: string): void
+}
+
 /**
  * Host store interface.
  */
