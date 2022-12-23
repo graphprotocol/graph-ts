@@ -411,6 +411,17 @@ export class Value {
     }
     return Value.fromMatrix(out)
   }
+
+  static fromBigIntMatrix(values: Array<Array<BigInt>>): Value {
+    let out = new Array<Array<Value>>(values.length)
+    for (let i: i32 = 0; i < values.length; i++) {
+      out[i] = new Array<Value>(values[i].length)
+      for (let j: i32 = 0; j < values[i].length; j++) {
+        out[i][j] = Value.fromBigInt(values[i][j])
+      }
+    }
+    return Value.fromMatrix(out)
+  }
 }
 
 /** Type hint for JSON values. */
